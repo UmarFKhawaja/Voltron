@@ -1,0 +1,10 @@
+apiVersion: api.cerbos.dev/v1
+derivedRoles:
+  name: "derived-roles_variable"
+  definitions:
+    - name: "owner"
+      parentRoles:
+        - "USER"
+      condition:
+        match:
+          expr: request.resource.attr.creatorId == request.principal.id
