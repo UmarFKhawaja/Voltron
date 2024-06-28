@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
-import { MatIconButton } from '@angular/material/button';
-import { MatToolbar } from '@angular/material/toolbar';
 import { RouterOutlet } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [CommonModule, MatIcon, MatIconButton, MatToolbar, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, MatButtonModule, MatIconModule, MatToolbarModule],
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.css'
 })
