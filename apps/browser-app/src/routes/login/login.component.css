@@ -1,0 +1,22 @@
+.container {
+  height: calc(100% - 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.holder {
+  width: 280px;
+  justify-content: center;
+  align-items: center;
+}
+
+.label {
+  text-align: center;
+}
+
+.button {
+  width: 100%;
+  margin: 4px;
+}

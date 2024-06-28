@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="holder">
+    <p class="label">
+      Register for a local account
+    </p>
+    <mat-form-field class="input">
+      <input matNativeControl type="email" placeholder="Email address" ngModel email/>
+    </mat-form-field>
+    <mat-form-field class="input">
+      <input matNativeControl type="text" placeholder="Username" ngModel pattern="[a-zA-Z_][a-zA-Z0-9_.-]*"/>
+    </mat-form-field>
+    <mat-form-field class="input">
+      <input matNativeControl type="password" placeholder="Password" ngModel/>
+    </mat-form-field>
+    <button mat-button class="button">
+      Register
+    </button>
+  </div>
+</div>

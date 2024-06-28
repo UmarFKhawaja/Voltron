@@ -1,8 +1,14 @@
 <mat-toolbar class="root">
-  <a class="brand-name" href="/">
+  <a class="brand-name" [routerLink]="'/'">
     <span>{{ title }}</span>
   </a>
   <span class="spacer"></span>
+  <a mat-button [routerLink]="'/app/login'">
+    <span>Login</span>
+  </a>
+  <a mat-button [routerLink]="'/app/register'">
+    <span>Register</span>
+  </a>
   <button mat-icon-button aria-label="Switch to light mode">
     <mat-icon>
       light_mode

@@ -10,5 +10,4 @@ import { TopBarComponent } from '../components/top-bar/top-bar.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  isSideBarOpen: boolean = true;
 }
