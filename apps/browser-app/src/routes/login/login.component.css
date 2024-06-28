@@ -7,9 +7,15 @@
 }
 
 .holder {
-  width: 280px;
+  width: 320px;
   justify-content: center;
   align-items: center;
+}
+
+.divider {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  width: 100%;
 }
 
 .label {
@@ -19,4 +25,8 @@
 .button {
   width: 100%;
   margin: 4px;
+}
+
+.input {
+  width: 100%;
 }
