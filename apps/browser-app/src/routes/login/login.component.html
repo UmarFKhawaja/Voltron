@@ -3,15 +3,17 @@
     <p class="label">
       Login to your account
     </p>
-    <mat-form-field class="input">
-      <input matNativeControl type="email" placeholder="Email address" ngModel email/>
-    </mat-form-field>
-    <mat-form-field class="input">
-      <input matNativeControl type="password" placeholder="Password" ngModel/>
-    </mat-form-field>
-    <button mat-button class="button">
-      Login
-    </button>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <mat-form-field class="input">
+        <input matNativeControl type="text" formControlName="username" placeholder="Username"/>
+      </mat-form-field>
+      <mat-form-field class="input">
+        <input matNativeControl type="password" formControlName="password" placeholder="Password"/>
+      </mat-form-field>
+      <button mat-button class="button" type="submit" [disabled]="!formGroup.valid">
+        Login
+      </button>
+    </form>
     <mat-divider class="divider"/>
     <button mat-button class="button">
       Continue with Apple
