@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-login',
@@ -30,25 +31,36 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  formGroup: FormGroup = new FormGroup({
-    username: new FormControl('', (control: AbstractControl) => {
-      const errors: Record<string, ValidationErrors | null> = {
-        email: Validators.email(control),
-        username: Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_.]+$/)(control)
-      };
+  formGroup: FormGroup;
 
-      const isValid: boolean = errors['email'] == null || errors['username'] == null;
-
-      return isValid
-        ? null
-        : {
-          invalid: 'Email address or user name must be provided'
+  constructor(
+    private readonly userService: UserService
+  ) {
+    this.formGroup = new FormGroup({
+      username: new FormControl('', (control: AbstractControl) => {
+        const errors: Record<string, ValidationErrors | null> = {
+          email: Validators.email(control),
+          username: Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_.]+$/)(control)
         };
-    }),
-    password: new FormControl('', Validators.required)
-  });
 
-  onSubmit() {
-    console.log(this.formGroup.value);
+        const isValid: boolean = errors['email'] == null || errors['username'] == null;
+
+        return isValid
+          ? null
+          : {
+            invalid: 'Email address or user name must be provided'
+          };
+      }),
+      password: new FormControl('', Validators.required)
+    });
+  }
+
+  async onSubmit() {
+    const {
+      username,
+      password
+    } = this.formGroup.value;
+
+    await this.userService.login(username, password)
   }
 }
