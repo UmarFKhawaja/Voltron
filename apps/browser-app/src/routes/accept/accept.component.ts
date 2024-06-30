@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Params, Router, RouterModule } from '@angular/router';
-import { RouteClient } from '../../clients/route.client';
-import { ACCESS_TOKEN, MESSAGES } from '../../constants';
+import { RouteClient } from '../../clients/route/route.client';
+import { MESSAGES } from '../../constants';
 import { RouteService } from '../../services/route/route.service';
-import { StorageService } from '../../services/storage/storage.service';
+import { TokenService } from '../../services/token/token.service';
 
 @Component({
   selector: 'app-accept',
@@ -28,7 +28,7 @@ export class AcceptComponent {
 
   constructor(
     private routeService: RouteService,
-    private storageService: StorageService
+    private tokenService: TokenService
   ) {
     this.method = '';
     this.token = '';
@@ -40,7 +40,7 @@ export class AcceptComponent {
       this.token = params['token'];
 
       if (this.token) {
-        this.storageService.saveToSession(ACCESS_TOKEN, this.token);
+        this.tokenService.saveToken(this.token);
 
         await router.navigate(['']);
       } else {

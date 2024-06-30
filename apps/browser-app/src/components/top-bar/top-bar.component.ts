@@ -4,6 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { TokenService } from '../../services/token/token.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -13,5 +15,33 @@ import { RouterModule } from '@angular/router';
   styleUrl: './top-bar.component.css'
 })
 export class TopBarComponent {
-  title: string = 'Voltron';
+  private readonly _title: string = 'Voltron';
+
+  private _isAuthenticated: boolean = false;
+
+  private _isAuthenticated$: Subscription = new Subscription();
+
+  constructor(
+    private readonly tokenService: TokenService
+  ) {
+    this._isAuthenticated = this.tokenService.isAuthenticated;
+  }
+
+  get title(): string {
+    return this._title;
+  }
+
+  get isAuthenticated(): boolean {
+    return this._isAuthenticated;
+  }
+
+  ngOnInit(): void {
+    this._isAuthenticated$ = this.tokenService.isAuthenticated$.subscribe((isAuthenticated: boolean): void => {
+      this._isAuthenticated = isAuthenticated;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._isAuthenticated$.unsubscribe();
+  }
 }

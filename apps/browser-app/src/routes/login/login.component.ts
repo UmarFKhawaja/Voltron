@@ -13,12 +13,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Observable } from 'rxjs';
-import { RouteClient } from '../../clients/route.client';
+import { RouterLink } from '@angular/router';
+import { Result, Token } from '@voltron/common-library';
+import { catchError, Observable, of, Subscription, tap } from 'rxjs';
+import { RouteClient } from '../../clients/route/route.client';
 import { MESSAGES } from '../../constants';
 import { RouteService } from '../../services/route/route.service';
+import { TokenService } from '../../services/token/token.service';
 import { UserService } from '../../services/user/user.service';
-import { Result, Token } from '@voltron/common-library';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +32,8 @@ import { Result, Token } from '@voltron/common-library';
     MatButtonModule,
     MatDividerModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    RouterLink
   ],
   providers: [
     RouteClient,
@@ -40,13 +43,16 @@ import { Result, Token } from '@voltron/common-library';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  formGroup: FormGroup;
+  private readonly _formGroup: FormGroup;
+
+  private _isAuthenticated$: Subscription = new Subscription();
 
   constructor(
-    private readonly userService: UserService,
-    private readonly routeService: RouteService
+    private readonly routeService: RouteService,
+    private readonly tokenService: TokenService,
+    private readonly userService: UserService
   ) {
-    this.formGroup = new FormGroup({
+    this._formGroup = new FormGroup({
       username: new FormControl('', [
         (control: AbstractControl) => {
           const errors: Record<string, ValidationErrors | null> = {
@@ -68,16 +74,49 @@ export class LoginComponent {
     });
   }
 
-  async onSubmit() {
+  get formGroup(): FormGroup {
+    return this._formGroup;
+  }
+
+  async ngOnInit(): Promise<void> {
+    if (this.tokenService.isAuthenticated) {
+      await this.routeService.navigate([''], {});
+    }
+
+    this._isAuthenticated$ = this.tokenService.isAuthenticated$.subscribe(async (isAuthenticated: boolean): Promise<void> => {
+      if (isAuthenticated) {
+        await this.routeService.navigate([''], {});
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._isAuthenticated$.unsubscribe();
+  }
+
+  async onSubmit(): Promise<void> {
     const {
       username,
       password
-    } = this.formGroup.value;
+    } = this._formGroup.value;
 
     if (password) {
       const result: Observable<Result<Token>> = await this.userService.loginWithPassword(username, password);
 
       result
+        .pipe(
+          tap((result: Result<Token>): void => {
+            if (result.success) {
+              const { access_token: accessToken } = result.data;
+
+              this.tokenService.saveToken(accessToken);
+            }
+          }),
+          catchError((error: unknown) => of<Result<Token>>({
+            success: false,
+            error: error as Error
+          }))
+        )
         .subscribe(async (result: Result<Token>): Promise<void> => {
           if (result.success) {
             await this.routeService.navigate([''], {});

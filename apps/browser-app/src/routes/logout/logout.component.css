@@ -1,0 +1,28 @@
+.container {
+  height: calc(100% - 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.holder {
+  width: 320px;
+  justify-content: center;
+  align-items: center;
+}
+
+.divider {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.label {
+  text-align: center;
+}
+
+.button {
+  width: 100%;
+  margin: 4px;
+}

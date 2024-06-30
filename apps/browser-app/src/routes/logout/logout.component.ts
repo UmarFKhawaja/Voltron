@@ -1,40 +1,38 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { Params, Router, RouterLink } from '@angular/router';
+import { Params, Router, RouterModule } from '@angular/router';
 import { RouteClient } from '../../clients/route/route.client';
-import { MESSAGES } from '../../constants';
 import { RouteService } from '../../services/route/route.service';
+import { TokenService } from '../../services/token/token.service';
 
 @Component({
-  selector: 'app-show-message',
+  selector: 'app-accept',
   standalone: true,
   imports: [
     CommonModule,
-    MatButtonModule,
-    RouterLink
+    RouterModule,
+    MatButtonModule
   ],
   providers: [
     RouteClient,
     RouteService
   ],
-  templateUrl: './show-message.component.html',
-  styleUrl: './show-message.component.css'
+  templateUrl: './logout.component.html',
+  styleUrl: './logout.component.css'
 })
-export class ShowMessageComponent {
-  code: string;
-
+export class LogoutComponent {
   constructor(
-    private routeService: RouteService
+    private routeService: RouteService,
+    private tokenService: TokenService
   ) {
-    this.code = '';
   }
 
   async ngOnInit(): Promise<void> {
     await this.routeService.parseParams(async (params: Params, router: Router): Promise<void> => {
-      this.code = params['code'];
+      this.tokenService.removeToken();
+
+      await router.navigate(['']);
     });
   }
-
-  protected readonly MESSAGES = MESSAGES;
 }

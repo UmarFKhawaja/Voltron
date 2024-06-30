@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Params, Router } from '@angular/router';
-import { RouteClient } from '../../clients/route.client';
+import { RouteClient } from '../../clients/route/route.client';
 
 @Injectable()
 export class RouteService {

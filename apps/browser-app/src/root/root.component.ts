@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TopBarComponent } from '../components/top-bar/top-bar.component';
@@ -5,7 +6,7 @@ import { TopBarComponent } from '../components/top-bar/top-bar.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TopBarComponent],
+  imports: [RouterOutlet, TopBarComponent, AsyncPipe],
   templateUrl: './root.component.html',
   styleUrl: './root.component.css'
 })
