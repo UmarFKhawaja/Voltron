@@ -5,10 +5,13 @@
     </p>
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
       <mat-form-field class="input">
-        <input matNativeControl type="email" formControlName="emailAddress" placeholder="Email address"/>
+        <input matNativeControl type="text" formControlName="displayName" placeholder="Display name"/>
       </mat-form-field>
       <mat-form-field class="input">
-        <input matNativeControl type="text" formControlName="userName" placeholder="Username"/>
+        <input matNativeControl type="text" formControlName="userName" placeholder="User name"/>
+      </mat-form-field>
+      <mat-form-field class="input">
+        <input matNativeControl type="email" formControlName="emailAddress" placeholder="Email address"/>
       </mat-form-field>
       <mat-form-field class="input">
         <input matNativeControl type="password" formControlName="password" placeholder="Password"/>

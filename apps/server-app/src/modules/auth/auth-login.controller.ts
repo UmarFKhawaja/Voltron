@@ -1,7 +1,6 @@
-import { Body, Controller, Logger, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Result, Token, User } from '@voltron/common-library';
 import { Request, Response } from 'express';
-import { Token } from '../../types/Token';
-import { User } from '../../types/User';
 import { AuthLocalAuthGuard } from './auth-local.guard';
 import { AuthStrategyService } from './auth-strategy.service';
 import { AuthTokenService } from './auth-token.service';
@@ -18,7 +17,7 @@ export class AuthLoginController {
 
   @UseGuards(AuthLocalAuthGuard)
   @Post('password')
-  async password(@Req() req: Request): Promise<Token> {
+  async password(@Req() req: Request): Promise<Result<Token>> {
     return this.tokenService.generateToken(req.user as User);
   }
 

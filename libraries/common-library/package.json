@@ -1,0 +1,11 @@
+{
+  "name": "@voltron/common-library",
+  "version": "0.0.0",
+  "dependencies": {
+    "tslib": "*"
+  },
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "private": true
+}

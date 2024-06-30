@@ -9,6 +9,7 @@ import { AuthLocalStrategy } from './auth-local.strategy';
 import { AuthLoginController } from './auth-login.controller';
 import { AuthLogoutController } from './auth-logout.controller';
 import { AuthMagicLoginStrategy } from './auth-magic-login.strategy';
+import { AuthRegisterController } from './auth-register.controller';
 import { AuthStrategyService } from './auth-strategy.service';
 import { AuthTokenService } from './auth-token.service';
 import { AuthUserService } from './auth-user.service';
@@ -27,6 +28,7 @@ import { AuthController } from './auth.controller';
   ],
   controllers: [
     AuthController,
+    AuthRegisterController,
     AuthLoginController,
     AuthLogoutController,
     AuthAcceptController,

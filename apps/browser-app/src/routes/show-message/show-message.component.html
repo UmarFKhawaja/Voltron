@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="holder" [ngSwitch]="code">
+    <p class="label" *ngSwitchCase="MESSAGES.REGISTER.CHECK_REGISTRATION">
+      We could not sign you up with those details. Make sure you are using a unique user name and email address.
+    </p>
+    <p class="label" *ngSwitchCase="MESSAGES.REGISTER.VERIFY_REGISTRATION">
+      We have sent a verification link to you. Check your email. Click the link to complete your sign up.
+    </p>
+    <p class="label" *ngSwitchCase="MESSAGES.LOGIN.PASSWORD.CHECK_AUTHENTICATION">
+      We could not sign you in using that username and password combination. Make sure you are typing both of those correctly.
+    </p>
+    <p class="label" *ngSwitchCase="MESSAGES.LOGIN.MAGIC_LOGIN.CHECK_AUTHENTICATION">
+      We could not sign you in using that username. Make sure you are typing it correctly.
+    </p>
+    <p class="label" *ngSwitchCase="MESSAGES.LOGIN.MAGIC_LOGIN.CONFIRM_AUTHENTICATION">
+      We have sent a confirmation link to you. Check your email. Click the link to complete your sign in.
+    </p>
+    <p class="label" *ngSwitchCase="MESSAGES.LOGIN.MAGIC_LOGIN.RETRY_AUTHENTICATION">
+      We could not find a token when trying to sign you in with a magic link. Make sure the magic link is correct and not too old.
+    </p>
+    <p class="label" *ngSwitchDefault>
+      You have made a wrong turn somewhere.
+    </p>
+    <a mat-button class="button" [routerLink]="'/'">
+      Return home
+    </a>
+  </div>
+</div>

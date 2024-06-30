@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { Account, ProviderType, User } from '@voltron/common-library';
 import { compareSync, hashSync } from 'bcryptjs';
 import dayjs from 'dayjs';
 import { v4 as generateUUID } from 'uuid';
-import { Account } from '../../types/Account';
-import { ProviderType } from '../../types/ProviderType';
-import { User } from '../../types/User';
 
 @Injectable()
 export class AuthUserService {
-  private readonly users: Record<string, User>;
+  private users: Record<string, User>;
 
   constructor() {
     this.users = {
@@ -39,6 +37,54 @@ export class AuthUserService {
     };
   }
 
+  async registerUser(displayName: string, userName: string, emailAddress: string, password: string): Promise<User> {
+    const executedAt: Date = dayjs().toDate();
+
+    let user: User | null = null;
+
+    if (!user) {
+      user = await this.findOne(emailAddress);
+
+      if (user) {
+        return user;
+      }
+    }
+
+    if (!user) {
+      user = await this.findOne(userName);
+
+      if (user) {
+        return user;
+      }
+    }
+
+    this.users[userName] = {
+      id: generateUUID(),
+      displayName,
+      userName,
+      emailAddress,
+      createdAt: executedAt,
+      updatedAt: executedAt,
+      accounts: [
+        ...(!!password ? [
+          {
+            id: generateUUID(),
+            providerType: ProviderType.LOCAL,
+            providerInfo: hashSync(password)
+          }
+        ] : [])
+      ]
+    };
+
+    return this.users[userName];
+  }
+
+  async getUser(id: string): Promise<User | null> {
+    const user: User | null = await this.getOne(id);
+
+    return user;
+  }
+
   async identifyUser(username: string): Promise<User | null> {
     const user: User | null = await this.findOne(username);
 
@@ -65,6 +111,10 @@ export class AuthUserService {
     const { accounts, ...result } = user;
 
     return { ...result, accounts: [] };
+  }
+
+  private async getOne(id: string): Promise<User | null> {
+    return Object.values(this.users).find((user: User): boolean => user.id === id) ?? null;
   }
 
   private async findOne(username: string): Promise<User | null> {

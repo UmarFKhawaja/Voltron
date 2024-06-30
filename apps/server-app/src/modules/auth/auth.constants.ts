@@ -6,6 +6,6 @@ export const JWT_CONSTANTS = {
 export const MAGIC_LOGIN_CONSTANTS = {
   secret: 'THIS IS A SECRET THREE',
   expiresIn: '10m',
-  baseURL: 'http://localhost:2280',
-  acceptPath: '/api/auth/accept/magic-login'
+  baseURL: 'http://localhost:2080',
+  acceptPath: '/app/accept/magic-login'
 };

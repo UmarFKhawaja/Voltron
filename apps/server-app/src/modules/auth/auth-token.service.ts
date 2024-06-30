@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Token } from '../../types/Token';
-import { User } from '../../types/User';
+import { Result, Token, User } from '@voltron/common-library';
 
 @Injectable()
 export class AuthTokenService {
@@ -10,7 +9,7 @@ export class AuthTokenService {
   ) {
   }
 
-  async generateToken(user: User): Promise<Token> {
+  async generateToken(user: User): Promise<Result<Token>> {
     const payload = {
       sub: user.id,
       displayName: user.displayName,
@@ -19,7 +18,10 @@ export class AuthTokenService {
     };
 
     return {
-      access_token: this.jwtService.sign(payload)
+      success: true,
+      data: {
+        access_token: this.jwtService.sign(payload)
+      }
     };
   }
 }

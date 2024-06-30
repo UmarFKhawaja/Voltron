@@ -1,4 +1,4 @@
-export interface Payload {
+export interface TokenPayload {
   sub: string;
   displayName: string;
   userName: string;
