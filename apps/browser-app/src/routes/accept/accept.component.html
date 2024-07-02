@@ -1,19 +1,19 @@
-<div class="container">
-  <div class="holder" [ngSwitch]="method">
-    <p class="label" *ngSwitchCase="'magic-login'">
+<app-container>
+  <app-holder [ngSwitch]="method">
+    <app-title *ngSwitchCase="'magic-login'">
       Wait please
-    </p>
-    <p class="label" *ngSwitchCase="'magic-login'">
+    </app-title>
+    <app-label *ngSwitchCase="'magic-login'">
       Accepting token...
-    </p>
-    <p class="token" *ngSwitchCase="'magic-login'">
+    </app-label>
+    <app-label *ngSwitchCase="'magic-login'">
       {{ token }}
-    </p>
-    <p class="label" *ngSwitchDefault>
+    </app-label>
+    <app-label *ngSwitchDefault>
       You have made a wrong turn somewhere
-    </p>
+    </app-label>
     <a mat-button class="button" [routerLink]="'/'" *ngSwitchDefault>
       Return home
     </a>
-  </div>
-</div>
+  </app-holder>
+</app-container>

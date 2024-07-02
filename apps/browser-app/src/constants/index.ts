@@ -2,17 +2,17 @@ export const ACCESS_TOKEN: string = 'access-token';
 
 export const MESSAGES = {
   REGISTER: {
-    CHECK_REGISTRATION: 'check-registration',
-    VERIFY_REGISTRATION: 'verify-registration'
+    CHECK: 'check-registration',
+    VERIFY: 'verify-registration'
   },
   LOGIN: {
     PASSWORD: {
-      CHECK_AUTHENTICATION: 'check-authentication'
+      CHECK: 'check-password'
     },
     MAGIC_LOGIN: {
-      CHECK_AUTHENTICATION: 'check-authentication',
-      CONFIRM_AUTHENTICATION: 'confirm-authentication',
-      RETRY_AUTHENTICATION: 'retry-authentication'
+      CHECK: 'check-magic-login',
+      CONFIRM: 'confirm-magic-login',
+      RETRY: 'retry-magic-login'
     },
     GOOGLE: {},
     GITHUB: {}

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -13,9 +13,9 @@ import { TokenService } from '../../services/token/token.service';
   standalone: true,
   imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatToolbarModule],
   templateUrl: './top-bar.component.html',
-  styleUrl: './top-bar.component.css'
+  styleUrl: './top-bar.component.scss'
 })
-export class TopBarComponent {
+export class TopBarComponent implements OnInit, OnDestroy {
   private readonly _title: string = 'Voltron';
 
   private _isAuthenticated: boolean = false;

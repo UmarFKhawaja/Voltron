@@ -1,8 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Params, Router, RouterLink } from '@angular/router';
 import { RouteClient } from '../../clients/route/route.client';
+import { ContainerComponent } from '../../components/container/container.component';
+import { HolderComponent } from '../../components/holder/holder.component';
+import { LabelComponent } from '../../components/label/label.component';
+import { TitleComponent } from '../../components/title/title.component';
 import { MESSAGES } from '../../constants';
 import { RouteService } from '../../services/route/route.service';
 
@@ -12,7 +16,11 @@ import { RouteService } from '../../services/route/route.service';
   imports: [
     CommonModule,
     MatButtonModule,
-    RouterLink
+    RouterLink,
+    ContainerComponent,
+    HolderComponent,
+    TitleComponent,
+    LabelComponent
   ],
   providers: [
     RouteClient,
@@ -21,7 +29,7 @@ import { RouteService } from '../../services/route/route.service';
   templateUrl: './show-message.component.html',
   styleUrl: './show-message.component.css'
 })
-export class ShowMessageComponent {
+export class ShowMessageComponent implements OnInit {
   code: string;
 
   constructor(
@@ -31,6 +39,7 @@ export class ShowMessageComponent {
   }
 
   async ngOnInit(): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     await this.routeService.parseParams(async (params: Params, router: Router): Promise<void> => {
       this.code = params['code'];
     });

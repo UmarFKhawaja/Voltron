@@ -1,31 +1,10 @@
-<div class="container">
-  <div class="holder">
-    <p class="label">
+<app-container>
+  <app-holder>
+    <app-title>
       Login to your account
-    </p>
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-      <mat-form-field class="input">
-        <input matNativeControl type="text" formControlName="username" placeholder="Username"/>
-      </mat-form-field>
-      <mat-form-field class="input">
-        <input matNativeControl type="password" formControlName="password" placeholder="Password"/>
-      </mat-form-field>
-      <button mat-button class="button" type="submit" [disabled]="!formGroup.valid">
-        Login
-      </button>
-    </form>
-    <mat-divider class="divider"/>
-    <button mat-button class="button">
-      Continue with Apple
-    </button>
-    <button mat-button class="button">
-      Continue with Facebook
-    </button>
-    <button mat-button class="button">
-      Continue with GitHub
-    </button>
-    <button mat-button class="button">
-      Continue with Google
-    </button>
-  </div>
-</div>
+    </app-title>
+    <app-login-form/>
+    <app-divider/>
+    <app-social-buttons/>
+  </app-holder>
+</app-container>

@@ -4,29 +4,28 @@
   </a>
   <span class="spacer"></span>
   @if (isAuthenticated) {
-    <a mat-button [routerLink]="'/app/logout'">
+    <a mat-button class="button" [routerLink]="'/app/logout'">
       <span>Logout</span>
     </a>
-  }
-  @else {
-    <a mat-button [routerLink]="'/app/register'">
+  } @else {
+    <a mat-button class="button" [routerLink]="'/app/register'">
       <span>Register</span>
     </a>
-    <a mat-button [routerLink]="'/app/login'">
+    <a mat-button class="button" [routerLink]="'/app/login'">
       <span>Login</span>
     </a>
   }
-  <button mat-icon-button aria-label="Switch to light mode" (click)="onSwitchTheme()">
+  <button mat-icon-button class="button" aria-label="Switch to light mode" (click)="onSwitchTheme()">
     <mat-icon>
       light_mode
     </mat-icon>
   </button>
-  <button mat-icon-button aria-label="Manage settings">
+  <button mat-icon-button class="button" aria-label="Manage settings">
     <mat-icon>
       settings
     </mat-icon>
   </button>
-  <button mat-icon-button aria-label="Reveal menu">
+  <button mat-icon-button class="button" aria-label="Reveal menu">
     <mat-icon>
       more_vert
     </mat-icon>

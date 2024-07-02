@@ -1,24 +1,8 @@
-<div class="container">
-  <div class="holder">
-    <p class="label">
+<app-container>
+  <app-holder>
+    <app-title>
       Register for an account
-    </p>
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-      <mat-form-field class="input">
-        <input matNativeControl type="text" formControlName="displayName" placeholder="Display name"/>
-      </mat-form-field>
-      <mat-form-field class="input">
-        <input matNativeControl type="text" formControlName="userName" placeholder="User name"/>
-      </mat-form-field>
-      <mat-form-field class="input">
-        <input matNativeControl type="email" formControlName="emailAddress" placeholder="Email address"/>
-      </mat-form-field>
-      <mat-form-field class="input">
-        <input matNativeControl type="password" formControlName="password" placeholder="Password"/>
-      </mat-form-field>
-      <button mat-button class="button" type="submit" [disabled]="!formGroup.valid">
-        Register
-      </button>
-    </form>
-  </div>
-</div>
+    </app-title>
+    <app-register-form/>
+  </app-holder>
+</app-container>

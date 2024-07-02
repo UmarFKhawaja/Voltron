@@ -1,39 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators
-} from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Result, Token } from '@voltron/common-library';
-import { catchError, Observable, of, Subscription, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { RouteClient } from '../../clients/route/route.client';
-import { MESSAGES } from '../../constants';
+import { ContainerComponent } from '../../components/container/container.component';
+import { DividerComponent } from '../../components/divider/divider.component';
+import { HolderComponent } from '../../components/holder/holder.component';
+import { LoginFormComponent } from '../../components/login-form/login-form.component';
+import { SocialButtonsComponent } from '../../components/social-buttons/social-buttons.component';
+import { TitleComponent } from '../../components/title/title.component';
 import { RouteService } from '../../services/route/route.service';
 import { TokenService } from '../../services/token/token.service';
-import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatFormFieldModule,
-    MatInputModule,
-    RouterLink
+    RouterLink,
+    ContainerComponent,
+    HolderComponent,
+    TitleComponent,
+    DividerComponent,
+    LoginFormComponent,
+    SocialButtonsComponent
   ],
   providers: [
     RouteClient,
@@ -42,40 +32,13 @@ import { UserService } from '../../services/user/user.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
-  private readonly _formGroup: FormGroup;
-
+export class LoginComponent implements OnInit, OnDestroy {
   private _isAuthenticated$: Subscription = new Subscription();
 
   constructor(
     private readonly routeService: RouteService,
-    private readonly tokenService: TokenService,
-    private readonly userService: UserService
+    private readonly tokenService: TokenService
   ) {
-    this._formGroup = new FormGroup({
-      username: new FormControl('', [
-        (control: AbstractControl) => {
-          const errors: Record<string, ValidationErrors | null> = {
-            email: Validators.email(control),
-            username: Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_.]*$/)(control)
-          };
-
-          const isValid: boolean = errors['email'] == null || errors['username'] == null;
-
-          return isValid
-            ? null
-            : {
-              invalid: 'Email address or user name must be provided'
-            };
-        },
-        Validators.required
-      ]),
-      password: new FormControl('')
-    });
-  }
-
-  get formGroup(): FormGroup {
-    return this._formGroup;
   }
 
   async ngOnInit(): Promise<void> {
@@ -92,49 +55,5 @@ export class LoginComponent {
 
   ngOnDestroy(): void {
     this._isAuthenticated$.unsubscribe();
-  }
-
-  async onSubmit(): Promise<void> {
-    const {
-      username,
-      password
-    } = this._formGroup.value;
-
-    if (password) {
-      const result: Observable<Result<Token>> = await this.userService.loginWithPassword(username, password);
-
-      result
-        .pipe(
-          tap((result: Result<Token>): void => {
-            if (result.success) {
-              const { access_token: accessToken } = result.data;
-
-              this.tokenService.saveToken(accessToken);
-            }
-          }),
-          catchError((error: unknown) => of<Result<Token>>({
-            success: false,
-            error: error as Error
-          }))
-        )
-        .subscribe(async (result: Result<Token>): Promise<void> => {
-          if (result.success) {
-            await this.routeService.navigate([''], {});
-          } else {
-            await this.routeService.navigate(['app', 'show-message', MESSAGES.LOGIN.PASSWORD.CHECK_AUTHENTICATION], {});
-          }
-        });
-    } else {
-      const result: Observable<Result<void>> = await this.userService.loginWithMagicLogin(username);
-
-      result
-        .subscribe(async (result: Result<void>): Promise<void> => {
-          if (result.success) {
-            await this.routeService.navigate(['app', 'show-message', MESSAGES.LOGIN.MAGIC_LOGIN.CONFIRM_AUTHENTICATION], {});
-          } else {
-            await this.routeService.navigate(['app', 'show-message', MESSAGES.LOGIN.MAGIC_LOGIN.CHECK_AUTHENTICATION], {});
-          }
-        });
-    }
   }
 }

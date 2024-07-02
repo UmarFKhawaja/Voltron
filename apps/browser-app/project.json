@@ -19,6 +19,7 @@
           "zone.js"
         ],
         "tsConfig": "apps/browser-app/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
@@ -26,8 +27,26 @@
           }
         ],
         "styles": [
-          "@angular/material/prebuilt-themes/azure-blue.css",
-          "apps/browser-app/src/styles.css"
+          {
+            "input": "@angular/material/prebuilt-themes/azure-blue.css",
+            "bundleName": "light-theme",
+            "inject": false
+          },
+          {
+            "input": "@angular/material/prebuilt-themes/cyan-orange.css",
+            "bundleName": "dark-theme",
+            "inject": false
+          },
+          {
+            "input": "apps/browser-app/src/light-styles.css",
+            "bundleName": "light-styles",
+            "inject": false
+          },
+          {
+            "input": "apps/browser-app/src/dark-styles.css",
+            "bundleName": "dark-styles",
+            "inject": false
+          }
         ],
         "scripts": []
       },

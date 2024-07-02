@@ -1,0 +1,11 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <mat-form-field class="input">
+    <input matNativeControl type="text" formControlName="username" placeholder="Username"/>
+  </mat-form-field>
+  <mat-form-field class="input">
+    <input matNativeControl type="password" formControlName="password" placeholder="Password"/>
+  </mat-form-field>
+  <button mat-button class="button" type="submit" [disabled]="!formGroup.valid">
+    Login
+  </button>
+</form>
