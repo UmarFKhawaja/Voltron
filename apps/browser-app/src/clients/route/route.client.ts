@@ -22,6 +22,7 @@ export class RouteClient {
     return this;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async navigate(commands: any[], extras: NavigationExtras): Promise<RouteClient> {
     await this.router.navigate(commands, extras);
 
