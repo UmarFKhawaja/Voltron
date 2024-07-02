@@ -23,6 +23,12 @@
       We could not find a token when trying to sign you in with a magic link. Make sure the magic link is correct and
       not too old.
     </app-label>
+    <app-label *ngSwitchCase="MESSAGES.GENERAL.NOT_AUTHENTICATED">
+      We don't know who you are, so you are not allowed back here.
+    </app-label>
+    <app-label *ngSwitchCase="MESSAGES.GENERAL.NOT_AUTHORIZED">
+      We know who you are, but tou are not allowed back here.
+    </app-label>
     <app-label *ngSwitchDefault>
       You have made a wrong turn somewhere.
     </app-label>
