@@ -5,7 +5,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 
-export const appConfig: ApplicationConfig = {
+export const config: ApplicationConfig = {
   providers: [
     provideHttpClient(
       withFetch()
