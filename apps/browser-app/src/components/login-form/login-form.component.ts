@@ -14,10 +14,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Result, Token } from '@voltron/common-library';
 import { catchError, Observable, of, tap } from 'rxjs';
-import { MESSAGES } from '../../constants';
 import { RouteService } from '../../services/route/route.service';
 import { TokenService } from '../../services/token/token.service';
 import { UserService } from '../../services/user/user.service';
+import { constants } from '../../app/app.constants';
 
 @Component({
   selector: 'app-login-form',
@@ -87,7 +87,7 @@ export class LoginFormComponent {
           if (result.success) {
             await this.routeService.navigate([''], {});
           } else {
-            await this.routeService.navigate(['app', 'show-message', MESSAGES.LOGIN.PASSWORD.CHECK], {});
+            await this.routeService.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.PASSWORD.CHECK], {});
           }
         });
     } else {
@@ -96,9 +96,9 @@ export class LoginFormComponent {
       result
         .subscribe(async (result: Result<void>): Promise<void> => {
           if (result.success) {
-            await this.routeService.navigate(['app', 'show-message', MESSAGES.LOGIN.MAGIC_LOGIN.CONFIRM], {});
+            await this.routeService.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.CONFIRM], {});
           } else {
-            await this.routeService.navigate(['app', 'show-message', MESSAGES.LOGIN.MAGIC_LOGIN.CHECK], {});
+            await this.routeService.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.CHECK], {});
           }
         });
     }

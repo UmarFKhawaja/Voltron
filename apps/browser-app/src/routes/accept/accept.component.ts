@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Params, Router, RouterModule } from '@angular/router';
+import { constants } from '../../app/app.constants';
 import { RouteClient } from '../../clients/route/route.client';
 import { ContainerComponent } from '../../components/container/container.component';
 import { HolderComponent } from '../../components/holder/holder.component';
 import { LabelComponent } from '../../components/label/label.component';
 import { TitleComponent } from '../../components/title/title.component';
-import { MESSAGES } from '../../constants';
 import { RouteService } from '../../services/route/route.service';
 import { TokenService } from '../../services/token/token.service';
 
@@ -52,7 +52,7 @@ export class AcceptComponent implements OnInit {
 
         await router.navigate(['']);
       } else {
-        await router.navigate(['app', 'show-message', MESSAGES.LOGIN.MAGIC_LOGIN.RETRY]);
+        await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.RETRY]);
       }
     });
   }

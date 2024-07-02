@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Result } from '@voltron/common-library';
 import { Observable } from 'rxjs';
-import { MESSAGES } from '../../constants';
+import { constants } from '../../app/app.constants';
 import { RouteService } from '../../services/route/route.service';
 import { UserService } from '../../services/user/user.service';
 
@@ -55,9 +55,9 @@ export class RegisterFormComponent {
 
     response.subscribe(async (result: Result<void>): Promise<void> => {
       if (result.success) {
-        await this.routeService.navigate(['app', 'show-message', MESSAGES.REGISTER.VERIFY], {});
+        await this.routeService.navigate(['app', 'show-message', constants.MESSAGES.REGISTER.VERIFY], {});
       } else {
-        await this.routeService.navigate(['app', 'show-message', MESSAGES.REGISTER.CHECK], {});
+        await this.routeService.navigate(['app', 'show-message', constants.MESSAGES.REGISTER.CHECK], {});
       }
     });
   }

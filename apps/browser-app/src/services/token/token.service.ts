@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { filter, fromEvent, map, merge, Observable, Subject } from 'rxjs';
+import { constants } from '../../app/app.constants';
 import { StorageClient } from '../../clients/storage/storage.client';
-import { ACCESS_TOKEN } from '../../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class TokenService {
     private storage: StorageClient
   ) {
     this._isAuthenticated$ = new Subject<boolean>();
-    this._isAuthenticated$.next(this.storage.hasInLocal(ACCESS_TOKEN));
+    this._isAuthenticated$.next(this.storage.hasInLocal(constants.ACCESS_TOKEN));
   }
 
   get isAuthenticated$(): Observable<boolean> {
@@ -21,7 +21,7 @@ export class TokenService {
     const extrinsic: Observable<boolean> = fromEvent<StorageEvent>(window, 'storage')
       .pipe(
         filter((event: StorageEvent): boolean => event.storageArea === localStorage),
-        filter((event: StorageEvent): boolean => event.key === ACCESS_TOKEN),
+        filter((event: StorageEvent): boolean => event.key === constants.ACCESS_TOKEN),
         map((event: StorageEvent): boolean => (event.newValue || '') !== '')
       );
 
@@ -29,16 +29,16 @@ export class TokenService {
   }
 
   get isAuthenticated(): boolean {
-    return this.storage.hasInLocal(ACCESS_TOKEN);
+    return this.storage.hasInLocal(constants.ACCESS_TOKEN);
   }
 
   saveToken(token: string): void {
-    this.storage.saveToLocal(ACCESS_TOKEN, token);
+    this.storage.saveToLocal(constants.ACCESS_TOKEN, token);
     this._isAuthenticated$.next(true);
   }
 
   removeToken(): void {
-    this.storage.removeFromLocal(ACCESS_TOKEN);
+    this.storage.removeFromLocal(constants.ACCESS_TOKEN);
     this._isAuthenticated$.next(false);
   }
 }
