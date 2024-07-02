@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
-import { User } from '@voltron/common-library';
+import { Session } from '@voltron/common-library';
 import { Subscription } from 'rxjs';
 import { ThemeService } from '../../services/theme/theme.service';
 import { TokenService } from '../../services/token/token.service';
@@ -23,16 +23,16 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
   private _isAuthenticated$: Subscription = new Subscription();
 
-  private _user: User | null = null;
+  private _session: Session | null = null;
 
-  private _user$: Subscription = new Subscription();
+  private _session$: Subscription = new Subscription();
 
   constructor(
     private readonly themeService: ThemeService,
     private readonly tokenService: TokenService
   ) {
     this._isAuthenticated = this.tokenService.isAuthenticated;
-    this._user = this.tokenService.user;
+    this._session = this.tokenService.session;
   }
 
   get title(): string {
@@ -43,22 +43,22 @@ export class TopBarComponent implements OnInit, OnDestroy {
     return this._isAuthenticated;
   }
 
-  get user(): User | null {
-    return this._user;
+  get session(): Session | null {
+    return this._session;
   }
 
   ngOnInit(): void {
     this._isAuthenticated$ = this.tokenService.isAuthenticated$.subscribe((isAuthenticated: boolean): void => {
       this._isAuthenticated = isAuthenticated;
     });
-    this._user$ = this.tokenService.user$.subscribe((user: User | null): void => {
-      this._user = user;
+    this._session$ = this.tokenService.session$.subscribe((session: Session | null): void => {
+      this._session = session;
     });
   }
 
   ngOnDestroy(): void {
     this._isAuthenticated$.unsubscribe();
-    this._user$.unsubscribe();
+    this._session$.unsubscribe();
   }
 
   onSwitchTheme(): void {

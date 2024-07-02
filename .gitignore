@@ -43,4 +43,5 @@ Thumbs.db
 
 .angular
 
+/apps/server-app/.env
 /services/voltron/.env

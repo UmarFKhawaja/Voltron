@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Account, ProviderType, User } from '@voltron/common-library';
+import { Account, ProviderType, User } from '@voltron/data-library';
 import { compareSync, hashSync } from 'bcryptjs';
 import dayjs from 'dayjs';
 import { v4 as generateUUID } from 'uuid';

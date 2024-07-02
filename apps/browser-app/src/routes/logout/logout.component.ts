@@ -9,6 +9,7 @@ import { LabelComponent } from '../../components/label/label.component';
 import { TitleComponent } from '../../components/title/title.component';
 import { RouteService } from '../../services/route/route.service';
 import { TokenService } from '../../services/token/token.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-accept',
@@ -32,15 +33,27 @@ import { TokenService } from '../../services/token/token.service';
 export class LogoutComponent implements OnInit {
   constructor(
     private routeService: RouteService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private userService: UserService
   ) {
   }
 
   async ngOnInit(): Promise<void> {
     await this.routeService.parseParams(async (params: Params, router: Router): Promise<void> => {
-      this.tokenService.removeToken();
+      const token: string = this.tokenService.token;
 
-      await router.navigate(['']);
+      const logout = async (): Promise<void> => {
+        this.tokenService.removeToken();
+
+        await router.navigate(['']);
+      };
+
+      const result = await this.userService.logout(token);
+
+      result.subscribe({
+        next: logout,
+        error: logout
+      });
     });
   }
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Result, Token, User } from '@voltron/common-library';
+import { Result, Token, Session } from '@voltron/common-library';
 import { EMPTY } from 'rxjs';
 
 @Injectable({
@@ -42,12 +42,18 @@ export class UserService {
     });
   }
 
-  async logout() {
-    return EMPTY;
+  async logout(token: string) {
+    return this.http.post<Result<void>>('/api/auth/logout', {}, {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
   }
 
-  async getProfile(token: string) {
-    return this.http.get<User>('/api/profile', {
+  async getUser(token: string) {
+    return this.http.get<Session>('/api/auth/get/user', {
       headers: {
         Authorization: `Bearer ${token}`
       }

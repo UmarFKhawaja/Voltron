@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from '@voltron/common-library';
+import { Session } from '@voltron/common-library';
 import { jwtDecode as decode } from 'jwt-decode';
 import { filter, fromEvent, map, merge, Observable, Subject } from 'rxjs';
 import { constants } from '../../app/app.constants';
@@ -30,6 +30,10 @@ export class TokenService {
     return merge(intrinsic, extrinsic);
   }
 
+  get token(): string {
+    return this.storage.getFromLocal<string>(constants.TOKEN, '');
+  }
+
   get isAuthenticated(): boolean {
     const token: string = this.storage.getFromLocal<string>(constants.TOKEN, '');
 
@@ -45,22 +49,22 @@ export class TokenService {
       );
   }
 
-  get user(): User | null {
+  get session(): Session | null {
     const token: string = this.storage.getFromLocal<string>(constants.TOKEN, '');
 
     if (!token) {
       return null;
     }
 
-    return decode<User>(token);
+    return decode<Session>(token);
   }
 
-  get user$(): Observable<User | null> {
+  get session$(): Observable<Session | null> {
     return this.token$
       .pipe(
-        map((token: string): User | null => {
+        map((token: string): Session | null => {
           if (token) {
-            return decode<User>(token);
+            return decode<Session>(token);
           } else {
             return null;
           }

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { User } from '@voltron/common-library';
+import { User } from '@voltron/data-library';
 import Strategy from 'passport-magic-login';
 import { AuthUserService } from './auth-user.service';
 import { MAGIC_LOGIN_CONSTANTS } from './auth.constants';
