@@ -5,9 +5,11 @@ import { Params, Router, RouterLink } from '@angular/router';
 import { constants } from '../../app/app.constants';
 import { RouteClient } from '../../clients/route/route.client';
 import { ContainerComponent } from '../../components/container/container.component';
+import { ErrorMessageComponent } from '../../components/error-message/error-message.component';
 import { HolderComponent } from '../../components/holder/holder.component';
 import { LabelComponent } from '../../components/label/label.component';
 import { TitleComponent } from '../../components/title/title.component';
+import { WarningMessageComponent } from '../../components/warning-message/warning-message.component';
 import { RouteService } from '../../services/route/route.service';
 
 @Component({
@@ -20,7 +22,9 @@ import { RouteService } from '../../services/route/route.service';
     ContainerComponent,
     HolderComponent,
     TitleComponent,
-    LabelComponent
+    LabelComponent,
+    ErrorMessageComponent,
+    WarningMessageComponent
   ],
   providers: [
     RouteClient,
