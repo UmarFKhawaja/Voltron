@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Params, Router, RouterModule } from '@angular/router';
+import { Result, Token, User } from '@voltron/common-library';
 import { constants } from '../../app/app.constants';
 import { RouteClient } from '../../clients/route/route.client';
 import { ContainerComponent } from '../../components/container/container.component';
@@ -10,6 +11,7 @@ import { LabelComponent } from '../../components/label/label.component';
 import { TitleComponent } from '../../components/title/title.component';
 import { RouteService } from '../../services/route/route.service';
 import { TokenService } from '../../services/token/token.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-accept',
@@ -35,8 +37,9 @@ export class AcceptComponent implements OnInit {
   token: string;
 
   constructor(
-    private routeService: RouteService,
-    private tokenService: TokenService
+    private readonly routeService: RouteService,
+    private readonly tokenService: TokenService,
+    private readonly userService: UserService
   ) {
     this.method = '';
     this.token = '';
@@ -48,9 +51,22 @@ export class AcceptComponent implements OnInit {
       this.token = params['token'];
 
       if (this.token) {
-        this.tokenService.saveToken(this.token);
+        const result = await this.userService.acceptMagicLogin(this.token);
 
-        await router.navigate(['']);
+        result.subscribe({
+          next: async (result: Result<Token>): Promise<void> => {
+            if (result.success) {
+              this.tokenService.saveToken(result.data.access_token);
+
+              await router.navigate(['']);
+            } else {
+              await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.CHECK]);
+            }
+          },
+          error: async (error: unknown): Promise<void> => {
+            await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.CHECK]);
+          }
+        });
       } else {
         await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.RETRY]);
       }

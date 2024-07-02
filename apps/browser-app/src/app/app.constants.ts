@@ -1,5 +1,5 @@
 export const constants = {
-  ACCESS_TOKEN: 'access-token',
+  TOKEN: 'token',
   MESSAGES: {
     REGISTER: {
       CHECK: 'check-registration',

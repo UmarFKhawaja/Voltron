@@ -2,3 +2,8 @@
   width: 100%;
   margin: 4px;
 }
+
+.token {
+  text-wrap: pretty;
+  word-wrap: anywhere;
+}

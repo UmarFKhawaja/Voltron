@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Result, Token } from '@voltron/common-library';
+import { Result, Token, User } from '@voltron/common-library';
 import { EMPTY } from 'rxjs';
 
 @Injectable({
@@ -34,7 +34,23 @@ export class UserService {
     });
   }
 
+  async acceptMagicLogin(token: string) {
+    return this.http.get<Result<Token>>('/api/auth/accept/magic-login', {
+      params: {
+        token
+      }
+    });
+  }
+
   async logout() {
     return EMPTY;
+  }
+
+  async getProfile(token: string) {
+    return this.http.get<User>('/api/profile', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
   }
 }

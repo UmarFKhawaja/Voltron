@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { User } from '@voltron/common-library';
+import { jwtDecode as decode } from 'jwt-decode';
 import { filter, fromEvent, map, merge, Observable, Subject } from 'rxjs';
 import { constants } from '../../app/app.constants';
 import { StorageClient } from '../../clients/storage/storage.client';
@@ -7,38 +9,72 @@ import { StorageClient } from '../../clients/storage/storage.client';
   providedIn: 'root'
 })
 export class TokenService {
-  private readonly _isAuthenticated$: Subject<boolean>;
+  private readonly _token$: Subject<string>;
 
   constructor(
     private storage: StorageClient
   ) {
-    this._isAuthenticated$ = new Subject<boolean>();
-    this._isAuthenticated$.next(this.storage.hasInLocal(constants.ACCESS_TOKEN));
+    this._token$ = new Subject<string>();
+    this._token$.next(this.storage.getFromLocal(constants.TOKEN, ''));
   }
 
-  get isAuthenticated$(): Observable<boolean> {
-    const intrinsic: Observable<boolean> = this._isAuthenticated$.asObservable();
-    const extrinsic: Observable<boolean> = fromEvent<StorageEvent>(window, 'storage')
+  private get token$(): Observable<string> {
+    const intrinsic: Observable<string> = this._token$.asObservable();
+    const extrinsic: Observable<string> = fromEvent<StorageEvent>(window, 'storage')
       .pipe(
         filter((event: StorageEvent): boolean => event.storageArea === localStorage),
-        filter((event: StorageEvent): boolean => event.key === constants.ACCESS_TOKEN),
-        map((event: StorageEvent): boolean => (event.newValue || '') !== '')
+        filter((event: StorageEvent): boolean => event.key === constants.TOKEN),
+        map((event: StorageEvent): string => (event.newValue || ''))
       );
 
     return merge(intrinsic, extrinsic);
   }
 
   get isAuthenticated(): boolean {
-    return this.storage.hasInLocal(constants.ACCESS_TOKEN);
+    const token: string = this.storage.getFromLocal<string>(constants.TOKEN, '');
+
+    return !!token;
+  }
+
+  get isAuthenticated$(): Observable<boolean> {
+    return this.token$
+      .pipe(
+        map((token: string): boolean => {
+          return token !== '';
+        })
+      );
+  }
+
+  get user(): User | null {
+    const token: string = this.storage.getFromLocal<string>(constants.TOKEN, '');
+
+    if (!token) {
+      return null;
+    }
+
+    return decode<User>(token);
+  }
+
+  get user$(): Observable<User | null> {
+    return this.token$
+      .pipe(
+        map((token: string): User | null => {
+          if (token) {
+            return decode<User>(token);
+          } else {
+            return null;
+          }
+        })
+      );
   }
 
   saveToken(token: string): void {
-    this.storage.saveToLocal(constants.ACCESS_TOKEN, token);
-    this._isAuthenticated$.next(true);
+    this.storage.saveToLocal(constants.TOKEN, token);
+    this._token$.next(token);
   }
 
   removeToken(): void {
-    this.storage.removeFromLocal(constants.ACCESS_TOKEN);
-    this._isAuthenticated$.next(false);
+    this.storage.removeFromLocal(constants.TOKEN);
+    this._token$.next('');
   }
 }
