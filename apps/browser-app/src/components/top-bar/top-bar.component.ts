@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ThemeService } from '../../services/theme/theme.service';
 import { TokenService } from '../../services/token/token.service';
 
 @Component({
@@ -22,6 +23,7 @@ export class TopBarComponent {
   private _isAuthenticated$: Subscription = new Subscription();
 
   constructor(
+    private readonly themeService: ThemeService,
     private readonly tokenService: TokenService
   ) {
     this._isAuthenticated = this.tokenService.isAuthenticated;
@@ -43,5 +45,9 @@ export class TopBarComponent {
 
   ngOnDestroy(): void {
     this._isAuthenticated$.unsubscribe();
+  }
+
+  onSwitchTheme(): void {
+    this.themeService.switchTheme();
   }
 }

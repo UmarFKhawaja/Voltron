@@ -2,11 +2,16 @@
 
 html, body {
   height: 100%;
+  background-color: #1e1e1e;
 }
 
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+p {
+  color: #E0E3E2;
 }
 
 a:visited {
