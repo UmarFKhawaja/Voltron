@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Session } from '@voltron/common-library';
-import { User } from '@voltron/data-library';
+import { User } from '@voltron/core-library';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthTokenService } from './auth-token.service';
 import { AuthUserService } from './auth-user.service';

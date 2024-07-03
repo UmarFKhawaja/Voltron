@@ -1,4 +1,4 @@
-import { Account, ProviderType, User } from '@voltron/data-library';
+import { Account, ProviderType, User } from '@voltron/core-library';
 
 export interface DataService {
   createUser(displayName: string, userName: string, emailAddress: string, password: string): Promise<User>;

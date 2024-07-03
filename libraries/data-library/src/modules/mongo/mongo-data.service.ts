@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Account, AccountModel, ProviderType, User, UserModel } from '@voltron/data-library';
+import { Account, AccountModel, DataService, ProviderType, User, UserModel } from '@voltron/core-library';
 import { hashSync } from 'bcryptjs';
 import { Types } from 'mongoose';
-import { DataService } from '../../contracts/data.service';
 
 @Injectable()
 export class MongoDataService implements DataService {

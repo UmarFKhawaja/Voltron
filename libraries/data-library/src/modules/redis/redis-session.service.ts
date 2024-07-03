@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { SessionService } from '@voltron/core-library';
 import { Redis } from 'ioredis';
-import { SessionService } from '../../contracts/session.service';
 
 @Injectable()
 export class RedisSessionService implements SessionService {

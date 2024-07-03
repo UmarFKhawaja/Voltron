@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { User } from '@voltron/data-library';
+import { User } from '@voltron/core-library';
 import Strategy from 'passport-magic-login';
 import { AuthUserService } from './auth-user.service';
 import { MAGIC_LOGIN_CONSTANTS } from './auth.constants';
@@ -20,7 +20,9 @@ export class AuthMagicLoginStrategy extends PassportStrategy(Strategy, 'magic-lo
           Logger.log(emailAddress);
           Logger.log(url.toString());
         },
-        verify: async (payload: { destination: string }, callback: (error: Error | null | undefined, user: User | null | undefined) => void): Promise<void> => {
+        verify: async (payload: {
+          destination: string
+        }, callback: (error: Error | null | undefined, user: User | null | undefined) => void): Promise<void> => {
           try {
             const user: User | null = await this.userService.identifyUser(payload.destination);
 

@@ -21,6 +21,9 @@
       "@voltron/common-library": [
         "libraries/common-library/src/index.ts"
       ],
+      "@voltron/core-library": [
+        "libraries/core-library/src/index.ts"
+      ],
       "@voltron/data-library": [
         "libraries/data-library/src/index.ts"
       ]

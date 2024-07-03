@@ -6,7 +6,7 @@ import {
   UserDocument,
   UserModel,
   UserSchema
-} from '@voltron/data-library';
+} from '@voltron/core-library';
 import { Connection, createConnection } from 'mongoose';
 import { MongoDataService } from './mongo-data.service';
 import { MONGO_CONSTANTS } from './mongo.constants';

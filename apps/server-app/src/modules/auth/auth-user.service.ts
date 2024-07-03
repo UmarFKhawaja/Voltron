@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Account, ProviderType, User } from '@voltron/data-library';
+import { Account, DataService, ProviderType, User } from '@voltron/core-library';
+import { MONGO_CONSTANTS } from '@voltron/data-library';
 import { compareSync } from 'bcryptjs';
-import { DataService } from '../../contracts/data.service';
-import { MONGO_CONSTANTS } from '../mongo/mongo.constants';
 
 @Injectable()
 export class AuthUserService {

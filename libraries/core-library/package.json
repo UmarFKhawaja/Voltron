@@ -1,5 +1,5 @@
 {
-  "name": "@voltron/data-library",
+  "name": "@voltron/core-library",
   "version": "0.0.0",
   "dependencies": {
     "tslib": "*"

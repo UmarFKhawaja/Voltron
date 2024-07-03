@@ -1,13 +1,12 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Result, Session, Token } from '@voltron/common-library';
-import { User } from '@voltron/data-library';
+import { SessionService, User } from '@voltron/core-library';
+import { REDIS_CONSTANTS } from '@voltron/data-library';
 import dayjs from 'dayjs';
 import { decode } from 'jsonwebtoken';
 import { JwtPayload } from 'jwt-decode';
 import { v4 as generateUUID } from 'uuid';
-import { SessionService } from '../../contracts/session.service';
-import { REDIS_CONSTANTS } from '../redis/redis.constants';
 
 @Injectable()
 export class AuthTokenService {
@@ -50,7 +49,7 @@ export class AuthTokenService {
     const decodedToken: JwtPayload = decode(encodedToken) as JwtPayload;
     const timestamp: number = (decodedToken.exp || 0) * 1000;
 
-    await this.sessionService.setSessionExpiry(session.id, dayjs(timestamp).toDate())
+    await this.sessionService.setSessionExpiry(session.id, dayjs(timestamp).toDate());
 
     return {
       success: true,

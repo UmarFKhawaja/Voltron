@@ -1,7 +1,7 @@
 {
-  "name": "data-library",
+  "name": "core-library",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libraries/data-library/src",
+  "sourceRoot": "libraries/core-library/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -11,12 +11,12 @@
         "{options.outputPath}"
       ],
       "options": {
-        "outputPath": "dist/libraries/data-library",
-        "tsConfig": "libraries/data-library/tsconfig.lib.json",
-        "packageJson": "libraries/data-library/package.json",
-        "main": "libraries/data-library/src/index.ts",
+        "outputPath": "dist/libraries/core-library",
+        "tsConfig": "libraries/core-library/tsconfig.lib.json",
+        "packageJson": "libraries/core-library/package.json",
+        "main": "libraries/core-library/src/index.ts",
         "assets": [
-          "libraries/data-library/*.md"
+          "libraries/core-library/*.md"
         ]
       }
     },
@@ -26,7 +26,7 @@
         "{workspaceRoot}/coverage/{projectRoot}"
       ],
       "options": {
-        "jestConfig": "libraries/data-library/jest.config.ts"
+        "jestConfig": "libraries/core-library/jest.config.ts"
       }
     }
   }

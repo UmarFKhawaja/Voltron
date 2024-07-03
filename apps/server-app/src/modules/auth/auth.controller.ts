@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { Result, Session, Token } from '@voltron/common-library';
-import { User } from '@voltron/data-library';
+import { User } from '@voltron/core-library';
 import { Request, Response } from 'express';
 import { decode } from 'jsonwebtoken';
 import { AuthJwtAuthGuard } from './auth-jwt.guard';
