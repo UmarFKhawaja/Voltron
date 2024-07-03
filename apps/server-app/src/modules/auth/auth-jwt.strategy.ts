@@ -21,7 +21,9 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(session: Session): Promise<User | null> {
-    if (await this.tokenService.validateSession(session)) {
+    const isKnown: boolean = await this.tokenService.validateSession(session);
+
+    if (!isKnown) {
       throw new UnauthorizedException();
     }
 

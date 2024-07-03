@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Result, Token, Session } from '@voltron/common-library';
-import { EMPTY } from 'rxjs';
+import { Result, Token } from '@voltron/common-library';
 
 @Injectable({
   providedIn: 'root'
@@ -49,14 +48,6 @@ export class UserService {
           Authorization: `Bearer ${token}`
         }
       } : {})
-    });
-  }
-
-  async getUser(token: string) {
-    return this.http.get<Session>('/api/auth/get/user', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
     });
   }
 }

@@ -1,49 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Account, ProviderType, User } from '@voltron/data-library';
-import { compareSync, hashSync } from 'bcryptjs';
-import dayjs from 'dayjs';
-import { v4 as generateUUID } from 'uuid';
+import { compareSync } from 'bcryptjs';
+import { DataService } from '../../contracts/data.service';
+import { MONGO_CONSTANTS } from '../mongo/mongo.constants';
 
 @Injectable()
 export class AuthUserService {
-  private users: Record<string, User>;
-
-  constructor() {
-    this.users = {
-      umarfkhawaja: {
-        id: generateUUID(),
-        displayName: 'Umar F Khawaja',
-        userName: 'umarfkhawaja',
-        emailAddress: 'umar.farooq.khawaja@gmail.com',
-        createdAt: dayjs('2014-06-25').toDate(),
-        updatedAt: dayjs('2018-12-31').toDate(),
-        accounts: [
-          {
-            id: generateUUID(),
-            providerType: ProviderType.LOCAL,
-            providerInfo: hashSync('Password1234')
-          }
-        ]
-      },
-      beenishsarwar: {
-        id: generateUUID(),
-        displayName: 'Beenish Sarwar',
-        userName: 'beenishsawrwar',
-        emailAddress: 'beenish.sarwar@mailinator.com',
-        createdAt: dayjs('2019-08-04').toDate(),
-        updatedAt: dayjs('2021-11-27').toDate(),
-        accounts: []
-      }
-    };
+  constructor(
+    @Inject(MONGO_CONSTANTS.Symbols.Services.DataService)
+    private readonly dataService: DataService
+  ) {
   }
 
   async registerUser(displayName: string, userName: string, emailAddress: string, password: string): Promise<User> {
-    const executedAt: Date = dayjs().toDate();
-
     let user: User | null = null;
 
     if (!user) {
-      user = await this.findOne(emailAddress);
+      user = await this.dataService.findUser(emailAddress);
 
       if (user) {
         return user;
@@ -51,54 +24,38 @@ export class AuthUserService {
     }
 
     if (!user) {
-      user = await this.findOne(userName);
+      user = await this.dataService.findUser(userName);
 
       if (user) {
         return user;
       }
     }
 
-    this.users[userName] = {
-      id: generateUUID(),
-      displayName,
-      userName,
-      emailAddress,
-      createdAt: executedAt,
-      updatedAt: executedAt,
-      accounts: [
-        ...(!!password ? [
-          {
-            id: generateUUID(),
-            providerType: ProviderType.LOCAL,
-            providerInfo: hashSync(password)
-          }
-        ] : [])
-      ]
-    };
+    user = await this.dataService.createUser(displayName, userName, emailAddress, password);
 
-    return this.users[userName];
+    return user;
   }
 
   async getUser(id: string): Promise<User | null> {
-    const user: User | null = await this.getOne(id);
+    const user: User | null = await this.dataService.getUser(id);
 
     return user;
   }
 
   async identifyUser(username: string): Promise<User | null> {
-    const user: User | null = await this.findOne(username);
+    const user: User | null = await this.dataService.findUser(username);
 
     return user;
   }
 
   async validateUser(username: string, password: string): Promise<User | null> {
-    const user: User | null = await this.findOne(username);
+    const user: User | null = await this.dataService.findUser(username);
 
     if (!user) {
       return null;
     }
 
-    const account: Account | null = user.accounts.find((account: Account): boolean => account.providerType === ProviderType.LOCAL) ?? null;
+    const account: Account | null = await this.dataService.findAccount(ProviderType.LOCAL, user.id);
 
     if (!account) {
       return null;
@@ -108,16 +65,6 @@ export class AuthUserService {
       return null;
     }
 
-    const { accounts, ...result } = user;
-
-    return { ...result, accounts: [] };
-  }
-
-  private async getOne(id: string): Promise<User | null> {
-    return Object.values(this.users).find((user: User): boolean => user.id === id) ?? null;
-  }
-
-  private async findOne(username: string): Promise<User | null> {
-    return this.users[username] ?? Object.values(this.users).find((user: User): boolean => user.emailAddress === username) ?? null;
+    return user;
   }
 }

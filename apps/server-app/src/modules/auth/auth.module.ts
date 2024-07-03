@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { MongoModule } from '../mongo/mongo.module';
+import { RedisModule } from '../redis/redis.module';
 import { AuthJwtStrategy } from './auth-jwt.strategy';
 import { AuthLocalStrategy } from './auth-local.strategy';
 import { AuthMagicLoginStrategy } from './auth-magic-login.strategy';
@@ -18,7 +20,9 @@ import { AuthController } from './auth.controller';
       signOptions: {
         expiresIn: JWT_CONSTANTS.expiresIn
       }
-    })
+    }),
+    MongoModule,
+    RedisModule
   ],
   controllers: [
     AuthController

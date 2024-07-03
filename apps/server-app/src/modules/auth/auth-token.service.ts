@@ -1,35 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Result, Token, Session } from '@voltron/common-library';
+import { Result, Session, Token } from '@voltron/common-library';
 import { User } from '@voltron/data-library';
 import dayjs from 'dayjs';
 import { decode } from 'jsonwebtoken';
 import { JwtPayload } from 'jwt-decode';
 import { v4 as generateUUID } from 'uuid';
+import { SessionService } from '../../contracts/session.service';
+import { REDIS_CONSTANTS } from '../redis/redis.constants';
 
 @Injectable()
 export class AuthTokenService {
-  private readonly sessions: Map<string, Date>;
-
   constructor(
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    @Inject(REDIS_CONSTANTS.Symbols.Services.SessionService)
+    private sessionService: SessionService
   ) {
-    this.sessions = new Map<string, Date>();
   }
 
   async validateSession(session: Session): Promise<boolean> {
-    const isKnown: boolean = this.sessions.has(session.id);
+    const isKnown: boolean = await this.sessionService.hasSessionExpiry(session.id);
 
     if (!isKnown) {
       return false;
     }
 
-    const expiresAt: Date = this.sessions.get(session.id) as Date;
+    const expiresAt: Date = await this.sessionService.getSessionExpiry(session.id);
 
     return dayjs().isBefore(dayjs(expiresAt));
   }
 
-  async generateToken(user: User): Promise<Result<Token>> {
+  async generateToken(user: User | null): Promise<Result<Token>> {
+    if (!user) {
+      return {
+        success: false,
+        error: new UnauthorizedException()
+      };
+    }
+
     const session = {
       id: generateUUID(),
       sub: user.id,
@@ -41,7 +49,7 @@ export class AuthTokenService {
     const encodedToken: string = this.jwtService.sign(session);
     const decodedToken: JwtPayload = decode(encodedToken) as JwtPayload;
 
-    this.sessions.set(session.id, dayjs(decodedToken.exp).toDate())
+    await this.sessionService.setSessionExpiry(session.id, dayjs(decodedToken.exp).toDate())
 
     return {
       success: true,
@@ -52,6 +60,6 @@ export class AuthTokenService {
   }
 
   async invalidateToken(session: Session): Promise<void> {
-    this.sessions.delete(session.id);
+    await this.sessionService.unsetSessionExpiry(session.id);
   }
 }

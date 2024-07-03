@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { Result, Token } from '@voltron/common-library';
+import { Result, Session, Token } from '@voltron/common-library';
 import { User } from '@voltron/data-library';
 import { Request, Response } from 'express';
+import { decode } from 'jsonwebtoken';
 import { AuthJwtAuthGuard } from './auth-jwt.guard';
 import { AuthLocalAuthGuard } from './auth-local.guard';
 import { AuthMagicLoginAuthGuard } from './auth-magic-login.guard';
@@ -30,7 +31,7 @@ export class AuthController {
     emailAddress: string,
     password: string
   }): Promise<void> {
-    await this.userService.registerUser(displayName, userName, emailAddress, password);
+    const user: User = await this.userService.registerUser(displayName, userName, emailAddress, password);
 
     res.json({
       success: true
@@ -56,7 +57,9 @@ export class AuthController {
     const token: string = req.headers.authorization?.replace(/^Bearer /, '') ?? '';
 
     if (token) {
-      // TODO : revoke token
+      const session: Session = decode(token) as Session;
+
+      await this.tokenService.invalidateToken(session);
     }
 
     res.status(200).end();
@@ -69,8 +72,8 @@ export class AuthController {
   }
 
   @UseGuards(AuthJwtAuthGuard)
-  @Get('get/user')
-  getUser(@Req() req: Request): User {
-    return req.user as User;
+  @Get('verify/session')
+  async verifySession(): Promise<boolean> {
+    return true;
   }
 }
