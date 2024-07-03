@@ -1,7 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import dayjs from 'dayjs';
+import { Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
-import { timestamp } from 'rxjs';
 import { SessionService } from '../../contracts/session.service';
 
 @Injectable()
@@ -18,9 +16,7 @@ export class RedisSessionService implements SessionService {
   }
 
   async getSessionExpiry(id: string): Promise<Date> {
-    const timestamp: number = parseInt(await this.redis.get(`session:${id}`) || '0') || 0;
-
-    Logger.log(timestamp);
+    const timestamp: number = parseInt(await this.redis.get(`session:${id}`) || '0');
 
     if (timestamp) {
       return new Date(timestamp);

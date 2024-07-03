@@ -48,8 +48,9 @@ export class AuthTokenService {
 
     const encodedToken: string = this.jwtService.sign(session);
     const decodedToken: JwtPayload = decode(encodedToken) as JwtPayload;
+    const timestamp: number = (decodedToken.exp || 0) * 1000;
 
-    await this.sessionService.setSessionExpiry(session.id, dayjs(decodedToken.exp).toDate())
+    await this.sessionService.setSessionExpiry(session.id, dayjs(timestamp).toDate())
 
     return {
       success: true,
