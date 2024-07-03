@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SessionService } from '@voltron/core-library';
+import dayjs from 'dayjs';
 import { Redis } from 'ioredis';
 
 @Injectable()
@@ -27,8 +28,10 @@ export class RedisSessionService implements SessionService {
 
   async setSessionExpiry(id: string, expiresAt: Date): Promise<void> {
     const timestamp: number = expiresAt.valueOf();
+    const ttl: number = dayjs(expiresAt).diff(dayjs(), 'seconds');
 
     await this.redis.set(`session:${id}`, timestamp);
+    await this.redis.expire(`session:${id}`, ttl);
   }
 
   async unsetSessionExpiry(id: string): Promise<void> {
