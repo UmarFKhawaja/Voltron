@@ -20,7 +20,7 @@ export class AuthController {
   }
 
   @Post('register')
-  async post(@Req() req: Request, @Res() res: Response, @Body() {
+  async post(@Body() {
     displayName,
     userName,
     emailAddress,
@@ -30,12 +30,20 @@ export class AuthController {
     userName: string,
     emailAddress: string,
     password: string
-  }): Promise<void> {
-    const user: User = await this.userService.registerUser(displayName, userName, emailAddress, password);
+  }): Promise<Result<void>> {
+    try {
+      const user: User = await this.userService.registerUser(displayName, userName, emailAddress, password);
 
-    res.json({
-      success: true
-    });
+      return {
+        success: true,
+        data: void 0
+      };
+    } catch (error: unknown) {
+      return {
+        success: false,
+        error: error as Error
+      };
+    }
   }
 
   @UseGuards(AuthLocalAuthGuard)

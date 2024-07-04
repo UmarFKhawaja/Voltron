@@ -18,7 +18,7 @@ export class AuthUserService {
       user = await this.dataService.findUser(emailAddress);
 
       if (user) {
-        return user;
+        throw new Error('a user is already registered with that email address');
       }
     }
 
@@ -26,7 +26,7 @@ export class AuthUserService {
       user = await this.dataService.findUser(userName);
 
       if (user) {
-        return user;
+        throw new Error('a user is already registered with that user name');
       }
     }
 
