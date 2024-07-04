@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { ActivatedRoute, CanActivateFn, Route, Router } from '@angular/router';
+import { ActivatedRoute, CanActivateFn, Router } from '@angular/router';
 import { constants } from '../../app/app.constants';
 import { RouteClient } from '../../clients/route/route.client';
 import { RouteService } from '../../services/route/route.service';

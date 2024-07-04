@@ -14,10 +14,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Result, Token } from '@voltron/common-library';
 import { catchError, Observable, of, tap } from 'rxjs';
+import { constants } from '../../app/app.constants';
 import { RouteService } from '../../services/route/route.service';
 import { TokenService } from '../../services/token/token.service';
 import { UserService } from '../../services/user/user.service';
-import { constants } from '../../app/app.constants';
 
 @Component({
   selector: 'app-login-form',
