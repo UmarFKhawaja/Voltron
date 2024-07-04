@@ -1,5 +1,5 @@
-import { Document, Model, model, Types, Schema, Query } from 'mongoose';
-import { ProviderType } from '../types';
+import { Document, Model, Query, Schema, Types } from 'mongoose';
+import { ProviderType } from './ProviderType';
 
 export const AccountSchema = new Schema<AccountDocument, AccountModel>({
   providerType: {
@@ -18,7 +18,7 @@ export const AccountSchema = new Schema<AccountDocument, AccountModel>({
   }
 });
 
-AccountSchema.virtual('id').get(function() {
+AccountSchema.virtual('id').get(function () {
   return this._id;
 });
 
@@ -35,11 +35,9 @@ interface AccountBaseDocument extends Omit<Account, 'id'>, Document {
 }
 
 export interface AccountDocument extends AccountBaseDocument {
-  // user: User['_id'];
 }
 
 export interface AccountPopulatedDocument extends AccountBaseDocument {
-  // user: User;
 }
 
 export interface AccountModel extends Model<AccountDocument> {

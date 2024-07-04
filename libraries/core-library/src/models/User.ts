@@ -1,4 +1,4 @@
-import { Document, Model, Types, Schema, Query } from 'mongoose';
+import { Document, Model, Query, Schema, Types } from 'mongoose';
 
 export const UserSchema = new Schema<UserDocument, UserModel>({
   displayName: {
@@ -23,7 +23,7 @@ export const UserSchema = new Schema<UserDocument, UserModel>({
   ]
 });
 
-UserSchema.virtual('id').get(function() {
+UserSchema.virtual('id').get(function () {
   return this._id;
 });
 
@@ -41,11 +41,9 @@ interface UserBaseDocument extends Omit<User, 'id'>, Document {
 }
 
 export interface UserDocument extends UserBaseDocument {
-  // accounts: Account['_id'];
 }
 
 export interface UserPopulatedDocument extends UserBaseDocument {
-  // accounts: Account[];
 }
 
 export interface UserModel extends Model<UserDocument> {

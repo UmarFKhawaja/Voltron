@@ -26,6 +26,9 @@
       ],
       "@voltron/data-library": [
         "libraries/data-library/src/index.ts"
+      ],
+      "@voltron/services-library": [
+        "libraries/services-library/src/index.ts"
       ]
     }
   },

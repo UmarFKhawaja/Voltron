@@ -1,0 +1,33 @@
+{
+  "name": "services-library",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libraries/services-library/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libraries/services-library",
+        "tsConfig": "libraries/services-library/tsconfig.lib.json",
+        "packageJson": "libraries/services-library/package.json",
+        "main": "libraries/services-library/src/index.ts",
+        "assets": [
+          "libraries/services-library/*.md"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "libraries/services-library/jest.config.ts"
+      }
+    }
+  }
+}

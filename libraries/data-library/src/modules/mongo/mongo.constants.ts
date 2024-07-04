@@ -1,12 +1,11 @@
 export const MONGO_CONSTANTS = {
   Symbols: {
-    Connection: 'MONGO_CONNECTION',
+    Factories: {
+      ConnectionFactory: 'MONGO_CONNECTION_FACTORY',
+      ModelsFactory: 'MONGO_MODELS_FACTORY'
+    },
     Services: {
       DataService: 'MONGO_DATA_SERVICE'
-    },
-    Models: {
-      UserModel: 'MONGO_USER_MODEL',
-      AccountModel: 'MONGO_ACCOUNT_MODEL'
     }
   },
   Settings: {
