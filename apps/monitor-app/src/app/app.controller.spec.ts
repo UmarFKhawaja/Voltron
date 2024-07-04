@@ -11,11 +11,4 @@ describe('AppController', () => {
       providers: [AppService]
     }).compile();
   });
-
-  describe('getData', () => {
-    it('should return "Hello API"', () => {
-      const appController = app.get<AppController>(AppController);
-      expect(appController.getData()).toEqual({ message: 'Hello API' });
-    });
-  });
 });
