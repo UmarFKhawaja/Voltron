@@ -1,32 +1,32 @@
 <app-container>
   <app-holder [ngSwitch]="code">
     <app-error-message *ngSwitchCase="MESSAGES.REGISTER.CHECK">
-      We could not sign you up with those details. Make sure you are using a unique user name and email address.
+      <p>We could not sign you up with those details. Make sure you are using a unique user name and email address.</p>
     </app-error-message>
     <app-warning-message *ngSwitchCase="MESSAGES.REGISTER.VERIFY">
-      We have sent a verification link to you. Check your email. Click the link to complete your sign up.
+      <p>We have sent a verification link to you. Check your email. Click the link to complete your sign up.</p>
     </app-warning-message>
     <app-error-message *ngSwitchCase="MESSAGES.LOGIN.PASSWORD.CHECK">
-      We could not sign you in using that username and password combination. Make sure you are typing both of those
-      correctly.
+      <p>We could not sign you in using that username and password combination. Make sure you are typing both of those correctly.</p>
     </app-error-message>
     <app-error-message *ngSwitchCase="MESSAGES.LOGIN.MAGIC_LOGIN.CHECK">
-      We could not sign you in using that username. Make sure you are typing it correctly.
+      <p>We could not sign you in using that username. Make sure you are typing it correctly.</p>
+      <p>It could also be something at our end. If the problem persists, try using your password.</p>
     </app-error-message>
     <app-warning-message *ngSwitchCase="MESSAGES.LOGIN.MAGIC_LOGIN.CONFIRM">
-      We have sent a confirmation link to you. Check your email. Click the link to complete your sign in.
+      <p>We have sent a confirmation link to you. Check your email. Click the link to complete your sign in.</p>
     </app-warning-message>
     <app-warning-message *ngSwitchCase="MESSAGES.LOGIN.MAGIC_LOGIN.RETRY">
-      We could not find a token when trying to sign you in with a magic link. Make sure the magic link is correct and not too old.
+      <p>We could not find a token when trying to sign you in with a magic link. Make sure the magic link is correct and not too old.</p>
     </app-warning-message>
     <app-error-message *ngSwitchCase="MESSAGES.GENERAL.NOT_AUTHENTICATED">
-      We don't know who you are, so you are not allowed back here.
+      <p>We don't know who you are, so you are not allowed back here.</p>
     </app-error-message>
     <app-error-message *ngSwitchCase="MESSAGES.GENERAL.NOT_AUTHORIZED">
-      We know who you are, but tou are not allowed back here.
+      <p>We know who you are, but tou are not allowed back here.</p>
     </app-error-message>
     <app-error-message *ngSwitchDefault>
-      You have made a wrong turn somewhere.
+      <p>You have made a wrong turn somewhere.</p>
     </app-error-message>
     <a mat-button class="button" [routerLink]="'/'">
       Return home
