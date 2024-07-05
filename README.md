@@ -83,20 +83,27 @@ This is a work in progress.
 
 As such some features are not yet working as intended. A brief description of the missing features follows:
 
-#### Register and Login with OAuth
+#### Register with OAuth
+
+Once this capability is fully implemented, the user will be able to:
 
 * Sign up using OAuth account
-* Connect OAuth account
-* Disconnect OAuth account
 
-Once this capability is fully implemented:
+A new user will be able to come to the website, click on `Continue with ...` button on the `Login` page, and continue. If a user does not exist, one would be created for them.
 
-* a new user will be able to come to the website, click on `Continue with ...` button on the `Login` page, and continue. If a user does not exist, one would be created for them.
-* an existing user will be able to come to the website, click on `Continue with ...` button on the `Login` page, and continue. If their OAuth account has not previously been linked to their application account, it will be linked. Their email address will be used to automatically link their OAuth and application accounts.
+An existing user will be able to come to the website, click on `Continue with ...` button on the `Login` page, and continue. If their OAuth account has not previously been linked to their application account, it will be linked. Their email address will be used to automatically link their OAuth and application accounts.
 
 #### Manage profile
 
-Once this capability is implemeted, the user will be able to update their display name, user name, email address, and password.
+Once this capability is implemented, the user will be able to:
+
+* Update display name, and user name
+* Change email address
+* Set password
+* Unset password
+* Change password
+* Connect OAuth account
+* Disconnect OAuth account
 
 When changing their display name or user name, the change will be completed immediately.
 
