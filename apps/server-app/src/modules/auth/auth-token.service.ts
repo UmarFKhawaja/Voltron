@@ -1,7 +1,7 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Result, Session, Token } from '@voltron/common-library';
-import { SessionService, User } from '@voltron/core-library';
+import { Account, ProviderType, SessionService, User } from '@voltron/core-library';
 import { REDIS_CONSTANTS } from '@voltron/data-library';
 import dayjs from 'dayjs';
 import { decode } from 'jsonwebtoken';
@@ -37,12 +37,25 @@ export class AuthTokenService {
       };
     }
 
-    const session = {
+    const session: Session = {
       id: generateUUID(),
       sub: user.id,
       displayName: user.displayName,
       userName: user.userName,
-      emailAddress: user.emailAddress
+      emailAddress: user.emailAddress,
+      accounts: {
+        local: user.accounts
+          .map((account) => account as unknown as Account)
+          .some((account: Account): boolean => account.providerType === ProviderType.LOCAL),
+        social: {
+          github: user.accounts
+            .map((account) => account as unknown as Account)
+            .some((account: Account): boolean => account.providerType === ProviderType.GITHUB),
+          google: user.accounts
+            .map((account) => account as unknown as Account)
+            .some((account: Account): boolean => account.providerType === ProviderType.GOOGLE)
+        }
+      }
     };
 
     const encodedToken: string = this.jwtService.sign(session);

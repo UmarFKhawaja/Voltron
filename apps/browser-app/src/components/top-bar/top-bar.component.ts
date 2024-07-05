@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { Session } from '@voltron/common-library';
@@ -12,7 +13,7 @@ import { TokenService } from '../../services/token/token.service';
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatToolbarModule],
+  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatToolbarModule, MatMenuModule],
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.scss'
 })

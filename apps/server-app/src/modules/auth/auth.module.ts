@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { MongoModule, RedisModule } from '@voltron/data-library';
+import { AuthGitHubStrategy } from './auth-github.strategy';
+import { AuthGoogleStrategy } from './auth-google.strategy';
 import { AuthJwtStrategy } from './auth-jwt.strategy';
 import { AuthLocalStrategy } from './auth-local.strategy';
 import { AuthMagicLoginStrategy } from './auth-magic-login.strategy';
@@ -32,7 +34,9 @@ import { AuthController } from './auth.controller';
     AuthUserService,
     AuthJwtStrategy,
     AuthLocalStrategy,
-    AuthMagicLoginStrategy
+    AuthMagicLoginStrategy,
+    AuthGitHubStrategy,
+    AuthGoogleStrategy
   ]
 })
 export class AuthModule {

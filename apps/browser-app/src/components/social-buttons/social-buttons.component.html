@@ -1,12 +1,6 @@
-<button mat-button class="button">
-  Continue with Apple
+<button mat-button class="button" [routerLink]="githubLink">
+  {{ githubLabel }} with GitHub
 </button>
-<button mat-button class="button">
-  Continue with Facebook
-</button>
-<button mat-button class="button">
-  Continue with GitHub
-</button>
-<button mat-button class="button">
-  Continue with Google
+<button mat-button class="button" [routerLink]="googleLink">
+  {{ googleLabel }} with Google
 </button>

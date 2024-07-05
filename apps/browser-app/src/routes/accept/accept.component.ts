@@ -51,25 +51,47 @@ export class AcceptComponent implements OnInit {
       this.token = params['token'];
 
       if (this.token) {
-        const result = await this.userService.acceptMagicLogin(this.token);
+        switch (this.method) {
+          case 'magic-login':
+            await this.acceptMagicLogin(router);
+            break;
 
-        result.subscribe({
-          next: async (result: Result<Token>): Promise<void> => {
-            if (result.success) {
-              this.tokenService.saveToken(result.data.access_token);
+          case 'github':
+            await this.acceptOAuth(router, this.token);
+            break;
 
-              await router.navigate(['']);
-            } else {
-              await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.CHECK]);
-            }
-          },
-          error: async (error: unknown): Promise<void> => {
-            await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.CHECK]);
-          }
-        });
+          case 'google':
+            await this.acceptOAuth(router, this.token);
+            break;
+        }
       } else {
         await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.RETRY]);
       }
     });
+  }
+
+  private async acceptMagicLogin(router: Router): Promise<void> {
+    const result = await this.userService.acceptMagicLogin(this.token);
+
+    result.subscribe({
+      next: async (result: Result<Token>): Promise<void> => {
+        if (result.success) {
+          this.tokenService.saveToken(result.data.access_token);
+
+          await router.navigate(['']);
+        } else {
+          await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.CHECK]);
+        }
+      },
+      error: async (error: unknown): Promise<void> => {
+        await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.CHECK]);
+      }
+    });
+  }
+
+  private async acceptOAuth(router: Router, token: string): Promise<void> {
+    this.tokenService.saveToken(token);
+
+    await router.navigate(['']);
   }
 }

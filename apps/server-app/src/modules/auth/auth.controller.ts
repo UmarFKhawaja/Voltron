@@ -3,12 +3,15 @@ import { Result, Session, Token } from '@voltron/common-library';
 import { User } from '@voltron/core-library';
 import { Request, Response } from 'express';
 import { decode } from 'jsonwebtoken';
+import { AuthGitHubAuthGuard } from './auth-github.guard';
+import { AuthGoogleAuthGuard } from './auth-google.guard';
 import { AuthJwtAuthGuard } from './auth-jwt.guard';
 import { AuthLocalAuthGuard } from './auth-local.guard';
 import { AuthMagicLoginAuthGuard } from './auth-magic-login.guard';
 import { AuthStrategyService } from './auth-strategy.service';
 import { AuthTokenService } from './auth-token.service';
 import { AuthUserService } from './auth-user.service';
+import { GITHUB_CONSTANTS, GOOGLE_CONSTANTS } from './auth.constants';
 
 @Controller('auth')
 export class AuthController {
@@ -59,6 +62,16 @@ export class AuthController {
     await this.strategyService.sendNotification(req, res);
   }
 
+  @UseGuards(AuthGitHubAuthGuard)
+  @Get('login/github')
+  async loginWithGitHub(@Req() req: Request): Promise<void> {
+  }
+
+  @UseGuards(AuthGoogleAuthGuard)
+  @Get('login/google')
+  async loginWithGoogle(@Req() req: Request): Promise<void> {
+  }
+
   @UseGuards(AuthJwtAuthGuard)
   @Post('logout')
   async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
@@ -77,6 +90,42 @@ export class AuthController {
   @Get('accept/magic-login')
   async acceptMagicLogin(@Req() req: Request): Promise<Result<Token>> {
     return this.tokenService.generateToken(req.user as User);
+  }
+
+  @UseGuards(AuthGitHubAuthGuard)
+  @Get('accept/github')
+  async acceptGitHub(@Req() req: Request, @Res() res: Response): Promise<void> {
+    const result: Result<Token> = await this.tokenService.generateToken(req.user as User);
+
+    if (result.success) {
+      const redirectURL: URL = new URL('/app/accept/github', GITHUB_CONSTANTS.redirectURL);
+
+      redirectURL.searchParams.set('token', result.data.access_token);
+
+      res.redirect(redirectURL.toString());
+    } else {
+      const redirectURL: URL = new URL('/app/login', GITHUB_CONSTANTS.redirectURL);
+
+      res.redirect(redirectURL.toString());
+    }
+  }
+
+  @UseGuards(AuthGoogleAuthGuard)
+  @Get('accept/google')
+  async acceptGoogle(@Req() req: Request, @Res() res: Response): Promise<void> {
+    const result: Result<Token> = await this.tokenService.generateToken(req.user as User);
+
+    if (result.success) {
+      const redirectURL: URL = new URL('/app/accept/google', GOOGLE_CONSTANTS.redirectURL);
+
+      redirectURL.searchParams.set('token', result.data.access_token);
+
+      res.redirect(redirectURL.toString());
+    } else {
+      const redirectURL: URL = new URL('/app/login', GOOGLE_CONSTANTS.redirectURL);
+
+      res.redirect(redirectURL.toString());
+    }
   }
 
   @UseGuards(AuthJwtAuthGuard)

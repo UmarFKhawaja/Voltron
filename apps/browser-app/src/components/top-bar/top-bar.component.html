@@ -18,19 +18,36 @@
       <span>Login</span>
     </a>
   }
-  <button mat-icon-button class="button" aria-label="Switch to light mode" (click)="onSwitchTheme()">
-    <mat-icon>
-      light_mode
-    </mat-icon>
-  </button>
   <button mat-icon-button class="button" aria-label="Manage settings" [routerLink]="'/app/manage-profile'">
     <mat-icon>
       settings
     </mat-icon>
   </button>
-  <button mat-icon-button class="button" aria-label="Reveal menu">
+  <button mat-icon-button class="button" aria-label="Switch to light mode" (click)="onSwitchTheme()">
+    <mat-icon>
+      light_mode
+    </mat-icon>
+  </button>
+  <button mat-icon-button class="button" aria-label="Reveal menu" [matMenuTriggerFor]="accountMenu">
     <mat-icon>
       more_vert
     </mat-icon>
   </button>
+  <mat-menu #accountMenu="matMenu">
+    @if (session?.accounts?.local) {
+      <button mat-menu-item>
+        <mat-icon>password_2</mat-icon>
+        <span>Change password</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>password_2_off</mat-icon>
+        <span>Unset password</span>
+      </button>
+    } @else {
+      <button mat-menu-item>
+        <mat-icon>password_2</mat-icon>
+        <span>Set password</span>
+      </button>
+    }
+  </mat-menu>
 </mat-toolbar>

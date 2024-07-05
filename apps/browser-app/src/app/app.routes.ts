@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '../guards/auth/auth.guard';
 import { AcceptComponent } from '../routes/accept/accept.component';
+import { LoginGitHubComponent } from '../routes/login-github/login-github.component';
+import { LoginGoogleComponent } from '../routes/login-google/login-google.component';
 import { LoginComponent } from '../routes/login/login.component';
 import { LogoutComponent } from '../routes/logout/logout.component';
 import { ManageProfileComponent } from '../routes/manage-profile/manage-profile.component';
@@ -15,6 +17,14 @@ export const routes: Routes = [
   {
     path: 'app/login',
     component: LoginComponent
+  },
+  {
+    path: 'app/login/github',
+    component: LoginGitHubComponent
+  },
+  {
+    path: 'app/login/google',
+    component: LoginGoogleComponent
   },
   {
     path: 'app/logout',

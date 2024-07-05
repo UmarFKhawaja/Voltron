@@ -27,7 +27,7 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    const user: User | null = await this.userService.getUser(session.sub);
+    const user: User | null = await this.userService.getUserByID(session.sub);
 
     if (!user) {
       throw new UnauthorizedException();

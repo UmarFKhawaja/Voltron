@@ -4,4 +4,11 @@ export interface Session {
   displayName: string;
   userName: string;
   emailAddress: string;
+  accounts: {
+    local: boolean;
+    social: {
+      github: boolean;
+      google: boolean;
+    };
+  }
 }

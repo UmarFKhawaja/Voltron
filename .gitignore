@@ -43,6 +43,10 @@ Thumbs.db
 
 .angular
 
+/.env
 /apps/monitor-app/.env
 /apps/server-app/.env
-/services/voltron/.env
+/services/.env
+/services/cerbos/conf.yaml
+/services/mongo/data
+/services/redis/conf

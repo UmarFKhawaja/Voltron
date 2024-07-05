@@ -35,8 +35,20 @@ export class AuthUserService {
     return user;
   }
 
-  async getUser(id: string): Promise<User | null> {
-    const user: User | null = await this.dataService.getUser(id);
+  async getUserByID(id: string): Promise<User | null> {
+    const user: User | null = await this.dataService.getUserByID(id);
+
+    return user;
+  }
+
+  async getUserByGitHubID(githubID: string): Promise<User | null> {
+    const user: User | null = await this.dataService.getUserByProvider(ProviderType.GITHUB, githubID);
+
+    return user;
+  }
+
+  async getUserByGoogleID(googleID: string): Promise<User | null> {
+    const user: User | null = await this.dataService.getUserByProvider(ProviderType.GOOGLE, googleID);
 
     return user;
   }
@@ -54,7 +66,10 @@ export class AuthUserService {
       return null;
     }
 
-    const account: Account | null = await this.dataService.findAccount(ProviderType.LOCAL, user.id);
+    const account: Account | null = user.accounts
+      .map((account) => account as unknown as Account)
+      .filter((account: Account): boolean => account.providerType === ProviderType.LOCAL)
+      .shift() || null;
 
     if (!account) {
       return null;
