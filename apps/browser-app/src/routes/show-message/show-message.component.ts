@@ -49,5 +49,5 @@ export class ShowMessageComponent implements OnInit {
     });
   }
 
-  protected readonly MESSAGES = constants.MESSAGES;
+  protected readonly CODES = constants.CODES;
 }

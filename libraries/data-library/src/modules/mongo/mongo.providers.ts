@@ -1,9 +1,9 @@
 import {
-  AccountDocument,
+  Account,
   AccountModel,
   AccountSchema,
   setSchemaDefaults,
-  UserDocument,
+  User,
   UserModel,
   UserSchema
 } from '@voltron/core-library';
@@ -44,8 +44,8 @@ export const mongoProviders = [
       return async (): Promise<[UserModel, AccountModel]> => {
         const connection: Connection = await makeConnection();
 
-        const userModel: UserModel = connection.model<UserDocument, UserModel>('User', UserSchema);
-        const accountModel: AccountModel = connection.model<AccountDocument, AccountModel>('Account', AccountSchema);
+        const userModel: UserModel = connection.model<User, UserModel>('User', UserSchema);
+        const accountModel: AccountModel = connection.model<Account, AccountModel>('Account', AccountSchema);
 
         return [userModel, accountModel];
       };

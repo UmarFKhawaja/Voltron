@@ -32,9 +32,24 @@ export class MongoDataService implements DataService {
     }
 
     user = await user.save();
-    user = user.toJSON();
 
-    return user as User;
+    return user;
+  }
+
+  async updateUser(userID: string, displayName: string, userName: string): Promise<User | null> {
+    const user: User | null = await this.userModel.findOneAndUpdate({
+      _id: { $eq: new Types.ObjectId(userID) }
+    }, {
+      $set: {
+        displayName,
+        userName
+      }
+    }, {
+      new: true
+    })
+      .exec();
+
+    return user;
   }
 
   async getUserByID(id: string): Promise<User | null> {
@@ -64,7 +79,9 @@ export class MongoDataService implements DataService {
       throw new Error();
     }
 
-    return users[0];
+    const user: User | null = users[0] || null;
+
+    return user;
   }
 
   async getAccountByProvider(providerType: ProviderType, providerInfo: string): Promise<Account | null> {
@@ -80,6 +97,10 @@ export class MongoDataService implements DataService {
         ]
       })
       .exec();
+
+    if (!account) {
+      return null;
+    }
 
     return account;
   }
@@ -126,11 +147,13 @@ export class MongoDataService implements DataService {
       return null;
     }
 
-    return users[0];
+    const user: User | null = users[0] || null;
+
+    return user;
   }
 
   async findAccount(providerType: ProviderType, userID: string): Promise<Account | null> {
-    return await this.accountModel
+    const account: Account | null = await this.accountModel
       .findOne<Account>({
         $and: [
           {
@@ -142,5 +165,7 @@ export class MongoDataService implements DataService {
         ]
       })
       .exec();
+
+    return account;
   }
 }

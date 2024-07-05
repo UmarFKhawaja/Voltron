@@ -1,6 +1,6 @@
 export const constants = {
   TOKEN: 'token',
-  MESSAGES: {
+  CODES: {
     REGISTER: {
       CHECK: 'check-registration',
       VERIFY: 'verify-registration'
@@ -21,6 +21,11 @@ export const constants = {
     GENERAL: {
       NOT_AUTHENTICATED: 'not-authenticated',
       NOT_AUTHORIZED: 'not-authorized'
+    }
+  },
+  MESSAGES: {
+    UPDATE_PROFILE: {
+      CHECK: 'Check that the user name you are trying to use is available.'
     }
   }
 };

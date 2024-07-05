@@ -50,4 +50,17 @@ export class UserService {
       } : {})
     });
   }
+
+  async updateProfile(token: string, displayName: string, userName: string) {
+    return this.http.post<Result<Token>>('/api/auth/update/profile', {
+      displayName,
+      userName
+    }, {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
 }

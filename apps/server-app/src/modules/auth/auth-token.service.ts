@@ -39,7 +39,7 @@ export class AuthTokenService {
 
     const session: Session = {
       id: generateUUID(),
-      sub: user.id,
+      sub: user._id,
       displayName: user.displayName,
       userName: user.userName,
       emailAddress: user.emailAddress,

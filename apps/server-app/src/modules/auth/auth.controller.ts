@@ -52,24 +52,22 @@ export class AuthController {
   @UseGuards(AuthLocalAuthGuard)
   @Post('login/password')
   async loginWithPassword(@Req() req: Request): Promise<Result<Token>> {
-    return this.tokenService.generateToken(req.user as User);
+    return await this.tokenService.generateToken(req.user as User);
   }
 
   @Post('login/magic-login')
-  async loginWithMagicLogin(@Req() req: Request, @Res() res: Response, @Body() body: {
-    destination: string
-  }): Promise<void> {
+  async loginWithMagicLogin(@Req() req: Request, @Res() res: Response): Promise<void> {
     await this.strategyService.sendNotification(req, res);
   }
 
   @UseGuards(AuthGitHubAuthGuard)
   @Get('login/github')
-  async loginWithGitHub(@Req() req: Request): Promise<void> {
+  async loginWithGitHub(): Promise<void> {
   }
 
   @UseGuards(AuthGoogleAuthGuard)
   @Get('login/google')
-  async loginWithGoogle(@Req() req: Request): Promise<void> {
+  async loginWithGoogle(): Promise<void> {
   }
 
   @UseGuards(AuthJwtAuthGuard)
@@ -132,5 +130,21 @@ export class AuthController {
   @Get('verify/session')
   async verifySession(): Promise<boolean> {
     return true;
+  }
+
+  @UseGuards(AuthJwtAuthGuard)
+  @Post('update/profile')
+  async updateProfile(@Req() req: Request, @Body() {
+    displayName,
+    userName
+  }: {
+    displayName: string;
+    userName: string;
+  }): Promise<Result<Token>> {
+    let user: User | null = req.user as User;
+
+    user = await this.userService.updateUser(user, displayName, userName);
+
+    return await this.tokenService.generateToken(user);
   }
 }

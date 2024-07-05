@@ -65,7 +65,7 @@ export class AcceptComponent implements OnInit {
             break;
         }
       } else {
-        await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.RETRY]);
+        await router.navigate(['app', 'show-message', constants.CODES.LOGIN.MAGIC_LOGIN.RETRY]);
       }
     });
   }
@@ -80,11 +80,11 @@ export class AcceptComponent implements OnInit {
 
           await router.navigate(['']);
         } else {
-          await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.CHECK]);
+          await router.navigate(['app', 'show-message', constants.CODES.LOGIN.MAGIC_LOGIN.CHECK]);
         }
       },
       error: async (error: unknown): Promise<void> => {
-        await router.navigate(['app', 'show-message', constants.MESSAGES.LOGIN.MAGIC_LOGIN.CHECK]);
+        await router.navigate(['app', 'show-message', constants.CODES.LOGIN.MAGIC_LOGIN.CHECK]);
       }
     });
   }

@@ -1,7 +1,7 @@
 import { Document, Model, Query, Schema, Types } from 'mongoose';
 import { ProviderType } from './ProviderType';
 
-export const AccountSchema = new Schema<AccountDocument, AccountModel>({
+export const AccountSchema = new Schema<Account, AccountModel>({
   providerType: {
     type: String,
     required: true,
@@ -22,8 +22,7 @@ AccountSchema.virtual('id').get(function () {
   return this._id;
 });
 
-export interface Account {
-  id: string;
+export interface IAccount {
   providerType: string;
   providerInfo: string;
   createdAt: Date;
@@ -31,21 +30,16 @@ export interface Account {
   user: Types.ObjectId | Record<string, unknown>;
 }
 
-interface AccountBaseDocument extends Omit<Account, 'id'>, Document {
+export interface Account extends IAccount, Document {
+  _id: string;
 }
 
-export interface AccountDocument extends AccountBaseDocument {
+export interface AccountModel extends Model<Account> {
 }
 
-export interface AccountPopulatedDocument extends AccountBaseDocument {
-}
-
-export interface AccountModel extends Model<AccountDocument> {
-}
-
-AccountSchema.pre<AccountDocument>('save', function (next) {
+AccountSchema.pre<Account>('save', function (next) {
   next();
 });
 
-AccountSchema.post<Query<AccountDocument, AccountDocument>>('findOneAndUpdate', async function (document) {
+AccountSchema.post<Query<Account, Account>>('findOneAndUpdate', async function (document) {
 });

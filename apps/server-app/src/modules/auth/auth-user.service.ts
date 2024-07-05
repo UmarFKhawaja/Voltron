@@ -81,4 +81,20 @@ export class AuthUserService {
 
     return user;
   }
+
+  async updateUser(user: User | null, displayName: string, userName: string): Promise<User | null> {
+    if (!user) {
+      return null;
+    }
+
+    user = await this.dataService.updateUser(user._id, displayName, userName);
+
+    if (!user) {
+      return null;
+    }
+
+    user = await this.dataService.getUserByID(user._id);
+
+    return user;
+  }
 }

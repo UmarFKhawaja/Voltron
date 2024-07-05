@@ -16,7 +16,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const isAuthenticated: boolean = tokenService.isAuthenticated;
 
   if (!isAuthenticated) {
-    routeService.navigate(['app', 'show-message', constants.MESSAGES.GENERAL.NOT_AUTHENTICATED], {})
+    routeService.navigate(['app', 'show-message', constants.CODES.GENERAL.NOT_AUTHENTICATED], {})
       .then()
       .catch();
   }

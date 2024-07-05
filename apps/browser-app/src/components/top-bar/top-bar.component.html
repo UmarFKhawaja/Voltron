@@ -34,6 +34,11 @@
     </mat-icon>
   </button>
   <mat-menu #accountMenu="matMenu">
+    <button mat-menu-item>
+      <mat-icon>alternate_email</mat-icon>
+      <span>Change email address</span>
+    </button>
+    <mat-divider/>
     @if (session?.accounts?.local) {
       <button mat-menu-item>
         <mat-icon>password_2</mat-icon>

@@ -1,6 +1,6 @@
 import { Document, Model, Query, Schema, Types } from 'mongoose';
 
-export const UserSchema = new Schema<UserDocument, UserModel>({
+export const UserSchema = new Schema<User, UserModel>({
   displayName: {
     type: String,
     required: true
@@ -27,8 +27,7 @@ UserSchema.virtual('id').get(function () {
   return this._id;
 });
 
-export interface User {
-  id: string;
+export interface IUser {
   displayName: string;
   userName: string;
   emailAddress: string;
@@ -37,21 +36,16 @@ export interface User {
   accounts: Array<Types.ObjectId | Record<string, unknown>>;
 }
 
-interface UserBaseDocument extends Omit<User, 'id'>, Document {
+export interface User extends IUser, Document {
+  _id: string;
 }
 
-export interface UserDocument extends UserBaseDocument {
+export interface UserModel extends Model<User> {
 }
 
-export interface UserPopulatedDocument extends UserBaseDocument {
-}
-
-export interface UserModel extends Model<UserDocument> {
-}
-
-UserSchema.pre<UserDocument>('save', function (next) {
+UserSchema.pre<User>('save', function (next) {
   next();
 });
 
-UserSchema.post<Query<UserDocument, UserDocument>>('findOneAndUpdate', async function (document) {
+UserSchema.post<Query<User, User>>('findOneAndUpdate', async function (document) {
 });

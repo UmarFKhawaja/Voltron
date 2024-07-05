@@ -55,9 +55,9 @@ export class RegisterFormComponent {
 
     response.subscribe(async (result: Result<void>): Promise<void> => {
       if (result.success) {
-        await this.routeService.navigate(['app', 'show-message', constants.MESSAGES.REGISTER.VERIFY], {});
+        await this.routeService.navigate(['app', 'show-message', constants.CODES.REGISTER.VERIFY], {});
       } else {
-        await this.routeService.navigate(['app', 'show-message', constants.MESSAGES.REGISTER.CHECK], {});
+        await this.routeService.navigate(['app', 'show-message', constants.CODES.REGISTER.CHECK], {});
       }
     });
   }
