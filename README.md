@@ -77,6 +77,49 @@ Contains code for accessing data in the MongoDB and Redis instances.
 
 Contains code for integrating with external services.
 
+### Notes
+
+This is a work in progress.
+
+As such some features are not yet working as intended. A brief description of the missing features follows:
+
+#### Register and Login with OAuth
+
+* Sign up using OAuth account
+* Connect OAuth account
+* Disconnect OAuth account
+
+Once this capability is fully implemented:
+
+* a new user will be able to come to the website, click on `Continue with ...` button on the `Login` page, and continue. If a user does not exist, one would be created for them.
+* an existing user will be able to come to the website, click on `Continue with ...` button on the `Login` page, and continue. If their OAuth account has not previously been linked to their application account, it will be linked. Their email address will be used to automatically link their OAuth and application accounts.
+
+#### Manage profile
+
+Once this capability is implemeted, the user will be able to update their display name, user name, email address, and password.
+
+When changing their display name or user name, the change will be completed immediately.
+
+When changing their email address, the change will be completed in 2 steps. First, an email will be sent to their old email address to confirm that the change has been initiated by them. When they confirm the change, an email will be sent to their new email address to confirm it is correct and in their control.
+
+When changing their password, they will have 3 options. If they do not have a password set, they will be able to set a password. If they do have a password set, they can either change it or unset it.
+
+> A user who does not have a password set and does not have their account linked to an OAuth account can still login using magic login, where an email is sent to them with a link to complete the login process.
+> 
+> Not having a password is considered more secure because there is no password that can be guessed. Authentication is achieved by proving access to the registered email address.
+
+#### Send mail
+
+An email is not sent out to the user when registering or logging in with magic login.
+
+The email address where the link will be sent and the link itself are printed on the console by the `monitor-app`.
+
+Note that the mail is generated on the `server-app` and the mail event is published to Redis. This mail event is then picked up by the `monitor-app` and the details published on its console.
+
+#### Publish GraphQL endpoint
+
+This has not been done yet.
+
 ## Instructions
 
 > NB: all commands must be run in the root of the repository
