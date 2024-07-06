@@ -1,8 +1,8 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon';
 import { RouterOutlet } from '@angular/router';
 import { TopBarComponent } from '../components/top-bar/top-bar.component';
+import { IconService } from '../services/icon/icon.service';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +13,11 @@ import { TopBarComponent } from '../components/top-bar/top-bar.component';
 })
 export class RootComponent implements OnInit {
   constructor(
-    private matIconReg: MatIconRegistry
+    private readonly iconService: IconService
   ) {
   }
 
   ngOnInit(): void {
-    this.matIconReg.setDefaultFontSetClass('material-symbols-outlined');
+    this.iconService.setIconSet();
   }
 }
