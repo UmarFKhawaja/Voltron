@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Account, DataService, ProviderType, User } from '@voltron/core-library';
+import { DataService, ProviderType, User } from '@voltron/core-library';
 import { MONGO_CONSTANTS } from '@voltron/data-library';
-import { compareSync } from 'bcryptjs';
+import { compareSync, hashSync } from 'bcryptjs';
 
 @Injectable()
 export class AuthUserService {
@@ -41,6 +41,66 @@ export class AuthUserService {
     }
 
     user = await this.dataService.updateUser(user._id, displayName, userName, user.emailAddress);
+
+    if (!user) {
+      return null;
+    }
+
+    user = await this.dataService.getUserByID(user._id);
+
+    return user;
+  }
+
+  async changePassword(user: User | null, oldPassword: string, newPassword: string): Promise<User | null> {
+    if (!user) {
+      return null;
+    }
+
+    if (!compareSync(oldPassword, user.saltHash)) {
+      return null;
+    }
+
+    user = await this.dataService.setPassword(user._id, hashSync(newPassword));
+
+    if (!user) {
+      return null;
+    }
+
+    user = await this.dataService.getUserByID(user._id);
+
+    return user;
+  }
+
+  async setPassword(user: User | null, newPassword: string): Promise<User | null> {
+    if (!user) {
+      return null;
+    }
+
+    if (user.saltHash) {
+      return null;
+    }
+
+    user = await this.dataService.setPassword(user._id, hashSync(newPassword));
+
+    if (!user) {
+      return null;
+    }
+
+    user = await this.dataService.getUserByID(user._id);
+
+    return user;
+  }
+
+  async unsetPassword(user: User | null, oldPassword: string): Promise<User | null> {
+    if (!user) {
+      return null;
+    }
+
+    if (!compareSync(oldPassword, user.saltHash)) {
+      return null;
+    }
+
+    user = await this.dataService.unsetPassword(user._id);
 
     if (!user) {
       return null;

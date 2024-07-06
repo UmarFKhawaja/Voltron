@@ -71,4 +71,41 @@ export class UserService {
       } : {})
     });
   }
+
+  async changePassword(token: string, oldPassword: string, newPassword: string) {
+    return this.http.post<Result<Token>>('/api/auth/change/password', {
+      oldPassword,
+      newPassword
+    }, {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
+
+  async setPassword(token: string, newPassword: string) {
+    return this.http.post<Result<Token>>('/api/auth/set/password', {
+      newPassword
+    }, {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
+
+  async unsetPassword(token: string, oldPassword: string) {
+    return this.http.post<Result<Token>>('/api/auth/unset/password', {
+      oldPassword
+    }, {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
 }

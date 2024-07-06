@@ -41,16 +41,16 @@
       </button>
       <mat-divider/>
       @if (session?.accounts?.local) {
-        <button mat-menu-item>
+        <button mat-menu-item [routerLink]="'/app/change-password'">
           <mat-icon>password_2</mat-icon>
           <span>Change password</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item [routerLink]="'/app/unset-password'">
           <mat-icon>password_2_off</mat-icon>
           <span>Unset password</span>
         </button>
       } @else {
-        <button mat-menu-item>
+        <button mat-menu-item [routerLink]="'/app/set-password'">
           <mat-icon>password_2</mat-icon>
           <span>Set password</span>
         </button>

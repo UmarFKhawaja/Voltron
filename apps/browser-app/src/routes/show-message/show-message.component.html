@@ -19,6 +19,15 @@
     <app-warning-message *ngSwitchCase="CODES.LOGIN.MAGIC_LOGIN.RETRY">
       <p>We could not find a token when trying to sign you in with a magic link. Make sure the magic link is correct and not too old.</p>
     </app-warning-message>
+    <app-warning-message *ngSwitchCase="CODES.CHANGE_PASSWORD.CONFIRM">
+      <p>We have changed your password.</p>
+    </app-warning-message>
+    <app-warning-message *ngSwitchCase="CODES.SET_PASSWORD.CONFIRM">
+      <p>We have set your password.</p>
+    </app-warning-message>
+    <app-warning-message *ngSwitchCase="CODES.UNSET_PASSWORD.CONFIRM">
+      <p>We have unset your password.</p>
+    </app-warning-message>
     <app-error-message *ngSwitchCase="CODES.GENERAL.NOT_AUTHENTICATED">
       <p>We don't know who you are, so you are not allowed back here.</p>
     </app-error-message>

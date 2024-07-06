@@ -147,4 +147,48 @@ export class AuthController {
 
     return await this.tokenService.generateToken(user);
   }
+
+  @UseGuards(AuthJwtAuthGuard)
+  @Post('change/password')
+  async changePassword(@Req() req: Request, @Body() {
+    oldPassword,
+    newPassword
+  }: {
+    oldPassword: string;
+    newPassword: string;
+  }): Promise<Result<Token>> {
+    let user: User | null = req.user as User;
+
+    user = await this.userService.changePassword(user, oldPassword, newPassword);
+
+    return await this.tokenService.generateToken(user);
+  }
+
+  @UseGuards(AuthJwtAuthGuard)
+  @Post('set/password')
+  async setPassword(@Req() req: Request, @Body() {
+    newPassword
+  }: {
+    newPassword: string;
+  }): Promise<Result<Token>> {
+    let user: User | null = req.user as User;
+
+    user = await this.userService.setPassword(user, newPassword);
+
+    return await this.tokenService.generateToken(user);
+  }
+
+  @UseGuards(AuthJwtAuthGuard)
+  @Post('unset/password')
+  async unsetPassword(@Req() req: Request, @Body() {
+    oldPassword
+  }: {
+    oldPassword: string;
+  }): Promise<Result<Token>> {
+    let user: User | null = req.user as User;
+
+    user = await this.userService.unsetPassword(user, oldPassword);
+
+    return await this.tokenService.generateToken(user);
+  }
 }

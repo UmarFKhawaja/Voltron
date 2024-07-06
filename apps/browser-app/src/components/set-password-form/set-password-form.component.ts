@@ -7,12 +7,13 @@ import { MatInputModule } from '@angular/material/input';
 import { Result, Token } from '@voltron/common-library';
 import { Observable } from 'rxjs';
 import { constants } from '../../app/app.constants';
+import { RouteService } from '../../services/route/route.service';
 import { SnackService } from '../../services/snack/snack.service';
 import { TokenService } from '../../services/token/token.service';
 import { UserService } from '../../services/user/user.service';
 
 @Component({
-  selector: 'app-update-profile-form',
+  selector: 'app-set-password-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -22,23 +23,20 @@ import { UserService } from '../../services/user/user.service';
     MatFormFieldModule,
     MatInputModule
   ],
-  templateUrl: './update-profile-form.component.html',
-  styleUrl: './update-profile-form.component.scss'
+  templateUrl: './set-password-form.component.html',
+  styleUrl: './set-password-form.component.scss'
 })
-export class UpdateProfileFormComponent {
+export class SetPasswordFormComponent {
   private readonly _formGroup: FormGroup;
 
   constructor(
+    private readonly routeService: RouteService,
     private readonly snackService: SnackService,
     private readonly tokenService: TokenService,
     private readonly userService: UserService
   ) {
-    const displayName: string = this.tokenService.session?.displayName || '';
-    const userName: string = this.tokenService.session?.userName || '';
-
     this._formGroup = new FormGroup({
-      displayName: new FormControl(displayName, Validators.required),
-      userName: new FormControl(userName, Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_.]+$/))
+      newPassword: new FormControl('', Validators.required)
     });
   }
 
@@ -50,22 +48,23 @@ export class UpdateProfileFormComponent {
     const token: string = this.tokenService.token;
 
     const {
-      displayName,
-      userName
+      newPassword
     } = this._formGroup.value;
 
-    const response: Observable<Result<Token>> = await this.userService.updateProfile(token, displayName, userName);
+    const response: Observable<Result<Token>> = await this.userService.setPassword(token, newPassword);
 
     response.subscribe({
       next: async (result: Result<Token>): Promise<void> => {
         if (result.success) {
           this.tokenService.saveToken(result.data.access_token);
+
+          await this.routeService.navigate(['app', 'show-message', constants.CODES.SET_PASSWORD.CONFIRM], {});
         } else {
-          await this.snackService.showSnack(constants.MESSAGES.UPDATE_PROFILE.CHECK, 'OK');
+          await this.snackService.showSnack(constants.MESSAGES.SET_PASSWORD.CHECK, 'OK');
         }
       },
       error: async (error: unknown): Promise<void> => {
-        await this.snackService.showSnack(constants.MESSAGES.UPDATE_PROFILE.CHECK, 'OK');
+        await this.snackService.showSnack(constants.MESSAGES.SET_PASSWORD.CHECK, 'OK');
       }
     });
   }

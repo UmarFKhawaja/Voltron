@@ -48,6 +48,44 @@ export class MongoDataService implements DataService {
     return user;
   }
 
+  async setPassword(userID: string, saltHash: string): Promise<User> {
+    const user: User | null = await this.userModel.findOneAndUpdate({
+      _id: { $eq: new Types.ObjectId(userID) }
+    }, {
+      $set: {
+        saltHash
+      }
+    }, {
+      new: true
+    })
+      .exec();
+
+    if (!user) {
+      throw new Error('a user with the specified ID could not be found');
+    }
+
+    return user;
+  }
+
+  async unsetPassword(userID: string): Promise<User> {
+    const user: User | null = await this.userModel.findOneAndUpdate({
+      _id: { $eq: new Types.ObjectId(userID) }
+    }, {
+      $set: {
+        saltHash: null
+      }
+    }, {
+      new: true
+    })
+      .exec();
+
+    if (!user) {
+      throw new Error('a user with the specified ID could not be found');
+    }
+
+    return user;
+  }
+
   async getUserByID(id: string): Promise<User> {
     const users: User[] = await this.userModel
       .aggregate<User>([

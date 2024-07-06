@@ -5,6 +5,10 @@ export interface DataService {
 
   updateUser(userID: string, displayName: string, userName: string, emailAddress: string): Promise<User>;
 
+  setPassword(userID: string, saltHash: string): Promise<User>;
+
+  unsetPassword(userID: string): Promise<User>;
+
   getUserByID(id: string): Promise<User>;
 
   findUserByUsername(username: string): Promise<User | null>;
