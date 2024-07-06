@@ -22,7 +22,7 @@ export class AuthGoogleStrategy extends PassportStrategy(Strategy, 'google') {
   }
 
   async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback): Promise<void> {
-    const user: User | null = await this.userService.getUserByGoogleID(profile.id);
+    const user: User | null = await this.userService.findUserByGoogleID(profile.id);
 
     if (!user) {
       done(new Error('a user linked to the Google ID could not be found'));

@@ -15,69 +15,22 @@ export class AuthUserService {
     let user: User | null = null;
 
     if (!user) {
-      user = await this.dataService.findUser(emailAddress);
+      user = await this.dataService.findUserByUsername(emailAddress);
 
       if (user) {
-        throw new Error('a user is already registered with that email address');
+        throw new Error('a user with that email address is already registered');
       }
     }
 
     if (!user) {
-      user = await this.dataService.findUser(userName);
+      user = await this.dataService.findUserByUsername(userName);
 
       if (user) {
-        throw new Error('a user is already registered with that user name');
+        throw new Error('a user with that user name is already registered');
       }
     }
 
     user = await this.dataService.createUser(displayName, userName, emailAddress, password);
-
-    return user;
-  }
-
-  async getUserByID(id: string): Promise<User | null> {
-    const user: User | null = await this.dataService.getUserByID(id);
-
-    return user;
-  }
-
-  async getUserByGitHubID(githubID: string): Promise<User | null> {
-    const user: User | null = await this.dataService.getUserByProvider(ProviderType.GITHUB, githubID);
-
-    return user;
-  }
-
-  async getUserByGoogleID(googleID: string): Promise<User | null> {
-    const user: User | null = await this.dataService.getUserByProvider(ProviderType.GOOGLE, googleID);
-
-    return user;
-  }
-
-  async identifyUser(username: string): Promise<User | null> {
-    const user: User | null = await this.dataService.findUser(username);
-
-    return user;
-  }
-
-  async validateUser(username: string, password: string): Promise<User | null> {
-    const user: User | null = await this.dataService.findUser(username);
-
-    if (!user) {
-      return null;
-    }
-
-    const account: Account | null = user.accounts
-      .map((account) => account as unknown as Account)
-      .filter((account: Account): boolean => account.providerType === ProviderType.LOCAL)
-      .shift() || null;
-
-    if (!account) {
-      return null;
-    }
-
-    if (!compareSync(password, account.providerInfo)) {
-      return null;
-    }
 
     return user;
   }
@@ -87,7 +40,7 @@ export class AuthUserService {
       return null;
     }
 
-    user = await this.dataService.updateUser(user._id, displayName, userName);
+    user = await this.dataService.updateUser(user._id, displayName, userName, user.emailAddress);
 
     if (!user) {
       return null;
@@ -96,5 +49,41 @@ export class AuthUserService {
     user = await this.dataService.getUserByID(user._id);
 
     return user;
+  }
+
+  async getUserByID(id: string): Promise<User> {
+    const user: User = await this.dataService.getUserByID(id);
+
+    return user;
+  }
+
+  async findUserByGitHubID(githubID: string): Promise<User | null> {
+    const user: User | null = await this.dataService.findUserByProvider(ProviderType.GITHUB, githubID);
+
+    return user;
+  }
+
+  async findUserByGoogleID(googleID: string): Promise<User | null> {
+    const user: User | null = await this.dataService.findUserByProvider(ProviderType.GOOGLE, googleID);
+
+    return user;
+  }
+
+  async findUserByUsername(username: string): Promise<User | null> {
+    const user: User | null = await this.dataService.findUserByUsername(username);
+
+    return user;
+  }
+
+  async validateUser(user: User, password: string): Promise<boolean> {
+    if (!user.saltHash) {
+      return false;
+    }
+
+    if (!compareSync(password, user.saltHash)) {
+      return false;
+    }
+
+    return true;
   }
 }

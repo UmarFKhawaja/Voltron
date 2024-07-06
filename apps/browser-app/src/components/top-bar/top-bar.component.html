@@ -28,31 +28,39 @@
       light_mode
     </mat-icon>
   </button>
-  <button mat-icon-button class="button" aria-label="Reveal menu" [matMenuTriggerFor]="accountMenu">
-    <mat-icon>
-      more_vert
-    </mat-icon>
-  </button>
-  <mat-menu #accountMenu="matMenu">
-    <button mat-menu-item>
-      <mat-icon>alternate_email</mat-icon>
-      <span>Change email address</span>
+  @if (isAuthenticated) {
+    <button mat-icon-button class="button" aria-label="Reveal menu" [matMenuTriggerFor]="accountMenu">
+      <mat-icon>
+        more_vert
+      </mat-icon>
     </button>
-    <mat-divider/>
-    @if (session?.accounts?.local) {
+    <mat-menu #accountMenu="matMenu">
       <button mat-menu-item>
-        <mat-icon>password_2</mat-icon>
-        <span>Change password</span>
+        <mat-icon>alternate_email</mat-icon>
+        <span>Change email address</span>
       </button>
-      <button mat-menu-item>
-        <mat-icon>password_2_off</mat-icon>
-        <span>Unset password</span>
-      </button>
-    } @else {
-      <button mat-menu-item>
-        <mat-icon>password_2</mat-icon>
-        <span>Set password</span>
-      </button>
-    }
-  </mat-menu>
+      <mat-divider/>
+      @if (session?.accounts?.local) {
+        <button mat-menu-item>
+          <mat-icon>password_2</mat-icon>
+          <span>Change password</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>password_2_off</mat-icon>
+          <span>Unset password</span>
+        </button>
+      } @else {
+        <button mat-menu-item>
+          <mat-icon>password_2</mat-icon>
+          <span>Set password</span>
+        </button>
+      }
+    </mat-menu>
+  } @else {
+    <button mat-icon-button class="button" aria-label="Reveal menu">
+      <mat-icon>
+        more_vert
+      </mat-icon>
+    </button>
+  }
 </mat-toolbar>

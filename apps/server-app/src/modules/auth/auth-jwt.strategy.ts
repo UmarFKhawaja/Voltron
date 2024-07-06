@@ -21,18 +21,18 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(session: Session): Promise<User | null> {
-    const isKnown: boolean = await this.tokenService.validateSession(session);
+    const hasValidated: boolean = await this.tokenService.validateSession(session);
 
-    if (!isKnown) {
+    if (!hasValidated) {
       throw new UnauthorizedException();
     }
 
-    const user: User | null = await this.userService.getUserByID(session.sub);
+    try {
+      const user: User = await this.userService.getUserByID(session.sub);
 
-    if (!user) {
-      throw new UnauthorizedException();
+      return user;
+    } catch (error: unknown) {
+      throw new UnauthorizedException(error);
     }
-
-    return user;
   }
 }

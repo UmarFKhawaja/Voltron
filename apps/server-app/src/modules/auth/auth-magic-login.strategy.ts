@@ -18,7 +18,7 @@ export class AuthMagicLoginStrategy extends PassportStrategy(Strategy, 'magic-lo
         secret: MAGIC_LOGIN_CONSTANTS.secret,
         callbackUrl: MAGIC_LOGIN_CONSTANTS.acceptPath,
         sendMagicLink: async (username: string, confirmationURL: string): Promise<void> => {
-          const user: User | null = await this.userService.identifyUser(username);
+          const user: User | null = await this.userService.findUserByUsername(username);
 
           if (!user) {
             throw new Error('a user with that username could not be found');
@@ -36,10 +36,10 @@ export class AuthMagicLoginStrategy extends PassportStrategy(Strategy, 'magic-lo
           destination: string
         }, callback: (error: Error | null | undefined, user: User | null | undefined) => void): Promise<void> => {
           try {
-            const user: User | null = await this.userService.identifyUser(payload.destination);
+            const user: User | null = await this.userService.findUserByUsername(payload.destination);
 
             if (!user) {
-              callback(new Error('user not found'), null);
+              callback(new Error('a user with that username could not be found'), null);
             } else {
               callback(null, user);
             }
@@ -55,7 +55,7 @@ export class AuthMagicLoginStrategy extends PassportStrategy(Strategy, 'magic-lo
   }
 
   async validate(payload: { destination: string }): Promise<User | null> {
-    const user: User | null = await this.userService.identifyUser(payload.destination);
+    const user: User | null = await this.userService.findUserByUsername(payload.destination);
 
     return user;
   }

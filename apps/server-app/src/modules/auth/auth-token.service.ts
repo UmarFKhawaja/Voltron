@@ -44,9 +44,7 @@ export class AuthTokenService {
       userName: user.userName,
       emailAddress: user.emailAddress,
       accounts: {
-        local: user.accounts
-          .map((account) => account as unknown as Account)
-          .some((account: Account): boolean => account.providerType === ProviderType.LOCAL),
+        local: !!user.saltHash,
         social: {
           github: user.accounts
             .map((account) => account as unknown as Account)

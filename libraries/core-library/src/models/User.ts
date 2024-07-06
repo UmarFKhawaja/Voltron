@@ -15,6 +15,9 @@ export const UserSchema = new Schema<User, UserModel>({
     required: true,
     unique: true
   },
+  saltHash: {
+    type: String
+  },
   accounts: [
     {
       type: Schema.Types.ObjectId,
@@ -31,6 +34,7 @@ export interface IUser {
   displayName: string;
   userName: string;
   emailAddress: string;
+  saltHash: string;
   createdAt: Date;
   updatedAt: Date;
   accounts: Array<Types.ObjectId | Record<string, unknown>>;

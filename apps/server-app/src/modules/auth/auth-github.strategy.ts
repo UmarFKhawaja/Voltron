@@ -14,12 +14,12 @@ export class AuthGitHubStrategy extends PassportStrategy(Strategy, 'github') {
     super({
       clientID: GITHUB_CONSTANTS.clientID,
       clientSecret: GITHUB_CONSTANTS.clientSecret,
-      callbackURL: new URL(GITHUB_CONSTANTS.acceptPath, GITHUB_CONSTANTS.acceptURL).toString(),
+      callbackURL: new URL(GITHUB_CONSTANTS.acceptPath, GITHUB_CONSTANTS.acceptURL).toString()
     });
   }
 
   async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback): Promise<void> {
-    const user: User | null = await this.userService.getUserByGitHubID(profile.id);
+    const user: User | null = await this.userService.findUserByGitHubID(profile.id);
 
     if (!user) {
       done(new Error('a user linked to the GitHub ID could not be found'));
