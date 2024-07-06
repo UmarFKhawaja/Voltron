@@ -27,7 +27,7 @@ import { TokenService } from '../../services/token/token.service';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-  private _isAuthenticated$: Subscription = new Subscription();
+  private _hasToken$: Subscription = new Subscription();
 
   constructor(
     private readonly routeService: RouteService,
@@ -36,11 +36,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    if (this.tokenService.isAuthenticated) {
+    if (this.tokenService.hasToken) {
       await this.routeService.navigate([''], {});
     }
 
-    this._isAuthenticated$ = this.tokenService.isAuthenticated$.subscribe(async (isAuthenticated: boolean): Promise<void> => {
+    this._hasToken$ = this.tokenService.hasToken$.subscribe(async (isAuthenticated: boolean): Promise<void> => {
       if (isAuthenticated) {
         await this.routeService.navigate([''], {});
       }
@@ -48,6 +48,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._isAuthenticated$.unsubscribe();
+    this._hasToken$.unsubscribe();
   }
 }

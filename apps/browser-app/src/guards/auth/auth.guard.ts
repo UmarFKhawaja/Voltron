@@ -13,13 +13,17 @@ export const authGuard: CanActivateFn = (route, state) => {
   const routeService: RouteService = new RouteService(routeClient);
   const tokenService: TokenService = inject(TokenService);
 
-  const isAuthenticated: boolean = tokenService.isAuthenticated;
+  return checkAuthentication(routeService, tokenService);
+};
+
+async function checkAuthentication(routeService: RouteService, tokenService: TokenService): Promise<boolean> {
+  let isAuthenticated: boolean = tokenService.hasToken && (await tokenService.validateToken());
 
   if (!isAuthenticated) {
-    routeService.navigate(['app', 'show-message', constants.CODES.GENERAL.NOT_AUTHENTICATED], {})
-      .then()
-      .catch();
+    tokenService.removeToken();
+
+    await routeService.navigate(['app', 'show-message', constants.CODES.GENERAL.NOT_AUTHENTICATED], {});
   }
 
   return isAuthenticated;
-};
+}

@@ -34,13 +34,13 @@ export class TokenService {
     return this.storage.getFromLocal<string>(constants.TOKEN, '');
   }
 
-  get isAuthenticated(): boolean {
+  get hasToken(): boolean {
     const token: string = this.storage.getFromLocal<string>(constants.TOKEN, '');
 
     return !!token;
   }
 
-  get isAuthenticated$(): Observable<boolean> {
+  get hasToken$(): Observable<boolean> {
     return this.token$
       .pipe(
         map((token: string): boolean => {
@@ -82,7 +82,7 @@ export class TokenService {
     this._token$.next('');
   }
 
-  private async validateToken(): Promise<boolean> {
+  async validateToken(): Promise<boolean> {
     try {
       if (!this.token) {
         return false;

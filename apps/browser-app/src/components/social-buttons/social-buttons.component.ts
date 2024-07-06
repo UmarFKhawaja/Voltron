@@ -28,7 +28,7 @@ export class SocialButtonsComponent implements OnInit, OnDestroy {
   constructor(
     private readonly tokenService: TokenService
   ) {
-    this._isAuthenticated = this.tokenService.isAuthenticated;
+    this._isAuthenticated = this.tokenService.hasToken;
     this._session = this.tokenService.session;
   }
 
@@ -77,7 +77,7 @@ export class SocialButtonsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._isAuthenticated$ = this.tokenService.isAuthenticated$.subscribe((isAuthenticated: boolean): void => {
+    this._isAuthenticated$ = this.tokenService.hasToken$.subscribe((isAuthenticated: boolean): void => {
       this._isAuthenticated = isAuthenticated;
     });
     this._session$ = this.tokenService.session$.subscribe((session: Session | null): void => {

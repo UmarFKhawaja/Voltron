@@ -42,11 +42,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    if (this.tokenService.isAuthenticated) {
+    if (this.tokenService.hasToken) {
       await this.routeService.navigate([''], {});
     }
 
-    this._isAuthenticated$ = this.tokenService.isAuthenticated$.subscribe(async (isAuthenticated: boolean): Promise<void> => {
+    this._isAuthenticated$ = this.tokenService.hasToken$.subscribe(async (isAuthenticated: boolean): Promise<void> => {
       if (isAuthenticated) {
         await this.routeService.navigate([''], {});
       }

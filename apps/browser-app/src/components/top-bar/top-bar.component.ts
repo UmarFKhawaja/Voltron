@@ -21,9 +21,9 @@ import { TokenService } from '../../services/token/token.service';
 export class TopBarComponent implements OnInit, OnDestroy {
   private readonly _title: string = 'Voltron';
 
-  private _isAuthenticated: boolean = false;
+  private _hasToken: boolean = false;
 
-  private _isAuthenticated$: Subscription = new Subscription();
+  private _hasToken$: Subscription = new Subscription();
 
   private _session: Session | null = null;
 
@@ -33,7 +33,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
     private readonly themeService: ThemeService,
     private readonly tokenService: TokenService
   ) {
-    this._isAuthenticated = this.tokenService.isAuthenticated;
+    this._hasToken = this.tokenService.hasToken;
     this._session = this.tokenService.session;
   }
 
@@ -41,8 +41,8 @@ export class TopBarComponent implements OnInit, OnDestroy {
     return this._title;
   }
 
-  get isAuthenticated(): boolean {
-    return this._isAuthenticated;
+  get hasToken(): boolean {
+    return this._hasToken;
   }
 
   get session(): Session | null {
@@ -50,8 +50,8 @@ export class TopBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._isAuthenticated$ = this.tokenService.isAuthenticated$.subscribe((isAuthenticated: boolean): void => {
-      this._isAuthenticated = isAuthenticated;
+    this._hasToken$ = this.tokenService.hasToken$.subscribe((isAuthenticated: boolean): void => {
+      this._hasToken = isAuthenticated;
     });
     this._session$ = this.tokenService.session$.subscribe((session: Session | null): void => {
       this._session = session;
@@ -59,7 +59,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._isAuthenticated$.unsubscribe();
+    this._hasToken$.unsubscribe();
     this._session$.unsubscribe();
   }
 

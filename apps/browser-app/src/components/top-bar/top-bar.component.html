@@ -3,7 +3,7 @@
     <span>{{ title }}</span>
   </a>
   <span class="spacer"></span>
-  @if (isAuthenticated) {
+  @if (hasToken) {
     <a class="mat-title-medium user-name" [routerLink]="'/app/manage-profile'">
       {{ session?.displayName }}
     </a>
@@ -28,7 +28,7 @@
       light_mode
     </mat-icon>
   </button>
-  @if (isAuthenticated) {
+  @if (hasToken) {
     <button mat-icon-button class="button" aria-label="Reveal menu" [matMenuTriggerFor]="accountMenu">
       <mat-icon>
         more_vert
