@@ -81,4 +81,23 @@ export class TokenService {
     this.storage.removeFromLocal(constants.TOKEN);
     this._token$.next('');
   }
+
+  private async validateToken(): Promise<boolean> {
+    try {
+      if (!this.token) {
+        return false;
+      }
+
+      const response = await fetch('/api/auth/verify/session', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      });
+
+      return response.ok;
+    } catch (error: unknown) {
+      return false;
+    }
+  }
 }

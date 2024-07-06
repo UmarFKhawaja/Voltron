@@ -51,6 +51,14 @@ export class UserService {
     });
   }
 
+  async verifySession(token: string) {
+    return this.http.get<Result<void>>('/api/auth/verify/session', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+
   async updateProfile(token: string, displayName: string, userName: string) {
     return this.http.post<Result<Token>>('/api/auth/update/profile', {
       displayName,
