@@ -1,0 +1,8 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <mat-form-field class="input">
+    <input matNativeControl type="text" formControlName="activationCode" placeholder="Activation code"/>
+  </mat-form-field>
+  <button mat-button class="button" type="submit" [disabled]="!formGroup.valid">
+    Activate
+  </button>
+</form>

@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { inject } from '@angular/core';
 import { ActivatedRoute, CanActivateFn, Router } from '@angular/router';
 import { constants } from '../../app/app.constants';
@@ -6,9 +7,10 @@ import { RouteService } from '../../services/route/route.service';
 import { TokenService } from '../../services/token/token.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
+  const location: Location = inject(Location);
   const activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   const router: Router = inject(Router);
-  const routeClient: RouteClient = new RouteClient(activatedRoute, router);
+  const routeClient: RouteClient = new RouteClient(location, activatedRoute, router);
 
   const routeService: RouteService = new RouteService(routeClient);
   const tokenService: TokenService = inject(TokenService);
@@ -17,7 +19,7 @@ export const authGuard: CanActivateFn = (route, state) => {
 };
 
 async function checkAuthentication(routeService: RouteService, tokenService: TokenService): Promise<boolean> {
-  let isAuthenticated: boolean = tokenService.hasToken && (await tokenService.validateToken());
+  const isAuthenticated: boolean = tokenService.hasToken && (await tokenService.validateToken());
 
   if (!isAuthenticated) {
     tokenService.removeToken();

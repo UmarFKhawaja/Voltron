@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DataService, ProviderType, User } from '@voltron/core-library';
+import { ProviderType, User, UserService } from '@voltron/core-library';
 import { MONGO_CONSTANTS } from '@voltron/data-library';
 import { compareSync, hashSync } from 'bcryptjs';
 
 @Injectable()
 export class AuthUserService {
   constructor(
-    @Inject(MONGO_CONSTANTS.Symbols.Services.DataService)
-    private readonly dataService: DataService
+    @Inject(MONGO_CONSTANTS.Symbols.Services.UserService)
+    private readonly userService: UserService
   ) {
   }
 
@@ -15,7 +15,7 @@ export class AuthUserService {
     let user: User | null = null;
 
     if (!user) {
-      user = await this.dataService.findUserByUsername(emailAddress);
+      user = await this.userService.findUserByUsername(emailAddress);
 
       if (user) {
         throw new Error('a user with that email address is already registered');
@@ -23,14 +23,14 @@ export class AuthUserService {
     }
 
     if (!user) {
-      user = await this.dataService.findUserByUsername(userName);
+      user = await this.userService.findUserByUsername(userName);
 
       if (user) {
         throw new Error('a user with that user name is already registered');
       }
     }
 
-    user = await this.dataService.createUser(displayName, userName, emailAddress, password);
+    user = await this.userService.createUser(displayName, userName, emailAddress, password);
 
     return user;
   }
@@ -40,13 +40,45 @@ export class AuthUserService {
       return null;
     }
 
-    user = await this.dataService.updateUser(user._id, displayName, userName, user.emailAddress);
+    user = await this.userService.updateUser(user._id, displayName, userName, user.emailAddress);
 
     if (!user) {
       return null;
     }
 
-    user = await this.dataService.getUserByID(user._id);
+    user = await this.userService.getUserByID(user._id);
+
+    return user;
+  }
+
+  async verifyUser(user: User | null): Promise<User | null> {
+    if (!user) {
+      return null;
+    }
+
+    user = await this.userService.verifyUser(user._id);
+
+    if (!user) {
+      return null;
+    }
+
+    user = await this.userService.getUserByID(user._id);
+
+    return user;
+  }
+
+  async resetPassword(user: User | null): Promise<User | null> {
+    if (!user) {
+      return null;
+    }
+
+    user = await this.userService.unsetPassword(user._id);
+
+    if (!user) {
+      return null;
+    }
+
+    user = await this.userService.getUserByID(user._id);
 
     return user;
   }
@@ -60,13 +92,13 @@ export class AuthUserService {
       return null;
     }
 
-    user = await this.dataService.setPassword(user._id, hashSync(newPassword));
+    user = await this.userService.setPassword(user._id, hashSync(newPassword));
 
     if (!user) {
       return null;
     }
 
-    user = await this.dataService.getUserByID(user._id);
+    user = await this.userService.getUserByID(user._id);
 
     return user;
   }
@@ -80,13 +112,13 @@ export class AuthUserService {
       return null;
     }
 
-    user = await this.dataService.setPassword(user._id, hashSync(newPassword));
+    user = await this.userService.setPassword(user._id, hashSync(newPassword));
 
     if (!user) {
       return null;
     }
 
-    user = await this.dataService.getUserByID(user._id);
+    user = await this.userService.getUserByID(user._id);
 
     return user;
   }
@@ -100,37 +132,37 @@ export class AuthUserService {
       return null;
     }
 
-    user = await this.dataService.unsetPassword(user._id);
+    user = await this.userService.unsetPassword(user._id);
 
     if (!user) {
       return null;
     }
 
-    user = await this.dataService.getUserByID(user._id);
+    user = await this.userService.getUserByID(user._id);
 
     return user;
   }
 
   async getUserByID(id: string): Promise<User> {
-    const user: User = await this.dataService.getUserByID(id);
+    const user: User = await this.userService.getUserByID(id);
 
     return user;
   }
 
   async findUserByGitHubID(githubID: string): Promise<User | null> {
-    const user: User | null = await this.dataService.findUserByProvider(ProviderType.GITHUB, githubID);
+    const user: User | null = await this.userService.findUserByProvider(ProviderType.GITHUB, githubID);
 
     return user;
   }
 
   async findUserByGoogleID(googleID: string): Promise<User | null> {
-    const user: User | null = await this.dataService.findUserByProvider(ProviderType.GOOGLE, googleID);
+    const user: User | null = await this.userService.findUserByProvider(ProviderType.GOOGLE, googleID);
 
     return user;
   }
 
   async findUserByUsername(username: string): Promise<User | null> {
-    const user: User | null = await this.dataService.findUserByUsername(username);
+    const user: User | null = await this.userService.findUserByUsername(username);
 
     return user;
   }

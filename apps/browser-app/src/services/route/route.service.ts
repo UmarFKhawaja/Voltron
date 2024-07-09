@@ -16,4 +16,8 @@ export class RouteService {
   async navigate(commands: string[], extras: NavigationExtras) {
     return this.route.navigate(commands, extras);
   }
+
+  async navigateBack() {
+    return this.route.navigateBack();
+  }
 }

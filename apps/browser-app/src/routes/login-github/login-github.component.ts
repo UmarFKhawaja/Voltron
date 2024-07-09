@@ -15,7 +15,7 @@ import { TitleComponent } from '../../components/title/title.component';
   ],
   providers: [],
   templateUrl: './login-github.component.html',
-  styleUrl: './login-github.component.css'
+  styleUrl: './login-github.component.scss'
 })
 export class LoginGitHubComponent implements OnInit {
   ngOnInit(): void {

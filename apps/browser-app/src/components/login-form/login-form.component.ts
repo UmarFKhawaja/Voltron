@@ -22,7 +22,14 @@ import { UserService } from '../../services/user/user.service';
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule
+  ],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss'
 })
@@ -73,9 +80,9 @@ export class LoginFormComponent {
         .pipe(
           tap((result: Result<Token>): void => {
             if (result.success) {
-              const { access_token: accessToken } = result.data;
+              const { token } = result.data;
 
-              this.tokenService.saveToken(accessToken);
+              this.tokenService.saveToken(token);
             }
           }),
           catchError((error: unknown) => of<Result<Token>>({

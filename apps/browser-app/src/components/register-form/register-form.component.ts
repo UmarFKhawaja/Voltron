@@ -4,6 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { RouterModule } from '@angular/router';
 import { Result } from '@voltron/common-library';
 import { Observable } from 'rxjs';
 import { constants } from '../../app/app.constants';
@@ -15,6 +16,7 @@ import { UserService } from '../../services/user/user.service';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,

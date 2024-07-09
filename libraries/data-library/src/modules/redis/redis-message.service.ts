@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { deserializeJSON, MessageService, Task } from '@voltron/core-library';
-import { REDIS_CONSTANTS } from '@voltron/data-library';
 import dayjs from 'dayjs';
 import { Redis } from 'ioredis';
+import { REDIS_CONSTANTS } from './redis.constants';
 
 @Injectable()
 export class RedisMessageService implements MessageService {

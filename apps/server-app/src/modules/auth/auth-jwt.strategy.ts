@@ -5,7 +5,7 @@ import { User } from '@voltron/core-library';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthTokenService } from './auth-token.service';
 import { AuthUserService } from './auth-user.service';
-import { JWT_CONSTANTS } from './auth.constants';
+import { AUTH_CONSTANTS } from './auth.constants';
 
 @Injectable()
 export class AuthJwtStrategy extends PassportStrategy(Strategy) {
@@ -16,7 +16,7 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: JWT_CONSTANTS.secret
+      secretOrKey: AUTH_CONSTANTS.Strategies.JWT.secret
     });
   }
 
@@ -29,6 +29,10 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy) {
 
     try {
       const user: User = await this.userService.getUserByID(session.sub);
+
+      if (!user.verifiedAt) {
+        throw new Error('the user with the specified user ID is not verified');
+      }
 
       return user;
     } catch (error: unknown) {

@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { User } from '@voltron/core-library';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { AuthUserService } from './auth-user.service';
-import { GOOGLE_CONSTANTS } from './auth.constants';
+import { AUTH_CONSTANTS } from './auth.constants';
 
 @Injectable()
 export class AuthGoogleStrategy extends PassportStrategy(Strategy, 'google') {
@@ -11,9 +11,9 @@ export class AuthGoogleStrategy extends PassportStrategy(Strategy, 'google') {
     private userService: AuthUserService
   ) {
     super({
-      clientID: GOOGLE_CONSTANTS.clientID,
-      clientSecret: GOOGLE_CONSTANTS.clientSecret,
-      callbackURL: new URL(GOOGLE_CONSTANTS.acceptPath, GOOGLE_CONSTANTS.acceptURL).toString(),
+      clientID: AUTH_CONSTANTS.Strategies.Google.clientID,
+      clientSecret: AUTH_CONSTANTS.Strategies.Google.clientSecret,
+      callbackURL: new URL(AUTH_CONSTANTS.Strategies.Google.acceptPath, AUTH_CONSTANTS.Strategies.Google.acceptURL).toString(),
       scope: [
         'email',
         'profile'
@@ -27,7 +27,11 @@ export class AuthGoogleStrategy extends PassportStrategy(Strategy, 'google') {
     if (!user) {
       done(new Error('a user linked to the Google ID could not be found'));
     } else {
-      done(null, user);
+      if (!user.verifiedAt) {
+        done(new Error('the user linked to the Google ID was not verified'));
+      } else {
+        done(null, user);
+      }
     }
   }
 }

@@ -18,7 +18,7 @@ export class TokenService {
     this._token$.next(this.storage.getFromLocal(constants.TOKEN, ''));
   }
 
-  private get token$(): Observable<string> {
+  get token$(): Observable<string> {
     const intrinsic: Observable<string> = this._token$.asObservable();
     const extrinsic: Observable<string> = fromEvent<StorageEvent>(window, 'storage')
       .pipe(
@@ -88,7 +88,7 @@ export class TokenService {
         return false;
       }
 
-      const response = await fetch('/api/auth/verify/session', {
+      const response = await fetch('/api/auth/verify-session', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${this.token}`

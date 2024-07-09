@@ -30,7 +30,7 @@ import { UserService } from '../../services/user/user.service';
     RouteService
   ],
   templateUrl: './accept.component.html',
-  styleUrl: './accept.component.css'
+  styleUrl: './accept.component.scss'
 })
 export class AcceptComponent implements OnInit {
   method: string;
@@ -76,7 +76,7 @@ export class AcceptComponent implements OnInit {
     result.subscribe({
       next: async (result: Result<Token>): Promise<void> => {
         if (result.success) {
-          this.tokenService.saveToken(result.data.access_token);
+          this.tokenService.saveToken(result.data.token);
 
           await router.navigate(['']);
         } else {

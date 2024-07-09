@@ -59,13 +59,13 @@ export class UpdateProfileFormComponent {
     response.subscribe({
       next: async (result: Result<Token>): Promise<void> => {
         if (result.success) {
-          this.tokenService.saveToken(result.data.access_token);
+          this.tokenService.saveToken(result.data.token);
         } else {
           await this.snackService.showSnack(constants.MESSAGES.UPDATE_PROFILE.CHECK, 'OK');
         }
       },
       error: async (error: unknown): Promise<void> => {
-        await this.snackService.showSnack(constants.MESSAGES.UPDATE_PROFILE.CHECK, 'OK');
+        await this.snackService.showSnack(constants.MESSAGES.GENERAL.TRY_LATER, 'OK');
       }
     });
   }

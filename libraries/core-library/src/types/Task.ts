@@ -1,6 +1,7 @@
 export type Task =
   | SendRegisterMailTask
-  | SendLoginWithMagicLoginMailTask;
+  | SendLoginWithMagicLoginMailTask
+  | SendResetAccountMailTask;
 
 export interface BaseTask {
   type: string;
@@ -16,6 +17,12 @@ export interface SendRegisterMailTask extends BaseTask {
 
 export interface SendLoginWithMagicLoginMailTask extends BaseTask {
   type: 'SEND_LOGIN_WITH_MAGIC_LOGIN_MAIL';
+  emailAddress: string;
+  confirmationURL: string;
+}
+
+export interface SendResetAccountMailTask extends BaseTask {
+  type: 'SEND_RESET_PASSWORD_MAIL';
   emailAddress: string;
   confirmationURL: string;
 }

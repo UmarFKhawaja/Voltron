@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouteClient } from '../../clients/route/route.client';
 import { ContainerComponent } from '../../components/container/container.component';
 import { DividerComponent } from '../../components/divider/divider.component';
@@ -21,7 +22,8 @@ import { RouteService } from '../../services/route/route.service';
     LabelComponent,
     DividerComponent,
     SocialButtonsComponent,
-    UpdateProfileFormComponent
+    UpdateProfileFormComponent,
+    FormsModule
   ],
   providers: [
     RouteClient,

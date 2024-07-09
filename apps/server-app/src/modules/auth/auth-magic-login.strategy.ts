@@ -4,7 +4,7 @@ import { MailService, User } from '@voltron/core-library';
 import { REDIS_CONSTANTS } from '@voltron/data-library';
 import Strategy from 'passport-magic-login';
 import { AuthUserService } from './auth-user.service';
-import { MAGIC_LOGIN_CONSTANTS } from './auth.constants';
+import { AUTH_CONSTANTS } from './auth.constants';
 
 @Injectable()
 export class AuthMagicLoginStrategy extends PassportStrategy(Strategy, 'magic-login') {
@@ -15,8 +15,8 @@ export class AuthMagicLoginStrategy extends PassportStrategy(Strategy, 'magic-lo
   ) {
     super(
       {
-        secret: MAGIC_LOGIN_CONSTANTS.secret,
-        callbackUrl: MAGIC_LOGIN_CONSTANTS.acceptPath,
+        secret: AUTH_CONSTANTS.Strategies.MagicLogin.secret,
+        callbackUrl: AUTH_CONSTANTS.Strategies.MagicLogin.acceptPath,
         sendMagicLink: async (username: string, confirmationURL: string): Promise<void> => {
           const user: User | null = await this.userService.findUserByUsername(username);
 
@@ -24,7 +24,7 @@ export class AuthMagicLoginStrategy extends PassportStrategy(Strategy, 'magic-lo
             throw new Error('a user with that username could not be found');
           }
 
-          const magicLoginConfirmationURL: string = new URL(confirmationURL, MAGIC_LOGIN_CONSTANTS.baseURL).toString();
+          const magicLoginConfirmationURL: string = new URL(confirmationURL, AUTH_CONSTANTS.Strategies.MagicLogin.baseURL).toString();
 
           const isSuccess: boolean = await this.mailService.sendLoginWithMagicLoginMail(user.emailAddress, magicLoginConfirmationURL);
 
@@ -41,14 +41,18 @@ export class AuthMagicLoginStrategy extends PassportStrategy(Strategy, 'magic-lo
             if (!user) {
               callback(new Error('a user with that username could not be found'), null);
             } else {
-              callback(null, user);
+              if (!user.verifiedAt) {
+                callback(new Error('the user with that username was not verified'), null);
+              } else {
+                callback(null, user);
+              }
             }
           } catch (error: unknown) {
             callback(error as Error, null);
           }
         },
         jwtOptions: {
-          expiresIn: MAGIC_LOGIN_CONSTANTS.expiresIn
+          expiresIn: AUTH_CONSTANTS.Strategies.MagicLogin.expiresIn
         }
       }
     );

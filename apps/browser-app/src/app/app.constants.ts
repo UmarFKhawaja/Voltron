@@ -18,6 +18,15 @@ export const constants = {
       GITHUB: {}
     },
     LOGOUT: {},
+    REQUEST_ACTIVATION_CODE: {
+      CONFIRM: 'activation-code-requested'
+    },
+    RECOVER_ACCOUNT: {
+      CONFIRM: 'account-recovered'
+    },
+    RESET_PASSWORD: {
+      CHECK: 'password-not-reset'
+    },
     CHANGE_PASSWORD: {
       CONFIRM: 'password-changed'
     },
@@ -33,8 +42,17 @@ export const constants = {
     }
   },
   MESSAGES: {
+    REQUEST_ACTIVATION_CODE: {
+      CHECK: (message: string): string => `Check the username because ${message}.`
+    },
+    ACTIVATE_ACCOUNT: {
+      CHECK: 'Make sure the activation code has not expired. Try requesting a new one.'
+    },
     UPDATE_PROFILE: {
       CHECK: 'Check that the user name you are trying to use is available.'
+    },
+    RECOVER_ACCOUNT: {
+      CHECK: 'Try again because there was a problem recovering your account.'
     },
     CHANGE_PASSWORD: {
       CHECK: 'Make sure that you are providing the old password and a new password.'
@@ -44,6 +62,9 @@ export const constants = {
     },
     UNSET_PASSWORD: {
       CHECK: 'Make sure that you are providing the old password.'
+    },
+    GENERAL: {
+      TRY_LATER: 'Try again later because the response from the server was unexpected.'
     }
   }
 };

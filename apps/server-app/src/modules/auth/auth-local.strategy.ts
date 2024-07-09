@@ -19,7 +19,11 @@ export class AuthLocalStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    const hasValidated = await this.userService.validateUser(user, password);
+    if (!user.verifiedAt) {
+      throw new UnauthorizedException();
+    }
+
+    const hasValidated: boolean = await this.userService.validateUser(user, password);
 
     if (!hasValidated) {
       throw new UnauthorizedException();

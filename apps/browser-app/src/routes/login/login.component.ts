@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { RouteClient } from '../../clients/route/route.client';
 import { ContainerComponent } from '../../components/container/container.component';
@@ -17,20 +19,22 @@ import { TokenService } from '../../services/token/token.service';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
+    RouterModule,
     ContainerComponent,
     HolderComponent,
     TitleComponent,
     DividerComponent,
     LoginFormComponent,
-    SocialButtonsComponent
+    SocialButtonsComponent,
+    MatButton,
+    FormsModule
   ],
   providers: [
     RouteClient,
     RouteService
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit, OnDestroy {
   private _isAuthenticated$: Subscription = new Subscription();

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Account, AccountModel, DataService, ProviderType, User, UserModel } from '@voltron/core-library';
+import { Account, AccountModel, ProviderType, User, UserModel, UserService } from '@voltron/core-library';
 import { hashSync } from 'bcryptjs';
+import dayjs from 'dayjs';
 import { Types } from 'mongoose';
 
 @Injectable()
-export class MongoDataService implements DataService {
+export class MongoUserService implements UserService {
   constructor(
     private readonly userModel: UserModel,
     private readonly accountModel: AccountModel
@@ -35,6 +36,25 @@ export class MongoDataService implements DataService {
         displayName,
         userName,
         emailAddress
+      }
+    }, {
+      new: true
+    })
+      .exec();
+
+    if (!user) {
+      throw new Error('a user with the specified ID could not be found');
+    }
+
+    return user;
+  }
+
+  async verifyUser(userID: string): Promise<User> {
+    const user: User | null = await this.userModel.findOneAndUpdate({
+      _id: { $eq: new Types.ObjectId(userID) }
+    }, {
+      $set: {
+        verifiedAt: dayjs().toDate()
       }
     }, {
       new: true
@@ -182,23 +202,6 @@ export class MongoDataService implements DataService {
     if (!account) {
       return null;
     }
-
-    return account;
-  }
-
-  async findAccount(providerType: ProviderType, userID: string): Promise<Account | null> {
-    const account: Account | null = await this.accountModel
-      .findOne<Account>({
-        $and: [
-          {
-            providerType: { $eq: providerType }
-          },
-          {
-            user: { $eq: new Types.ObjectId(userID) }
-          }
-        ]
-      })
-      .exec();
 
     return account;
   }

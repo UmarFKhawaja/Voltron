@@ -1,4 +1,4 @@
-import { Task } from '@voltron/core-library';
+import { Task } from '../types';
 
 export interface MessageService {
   watchForMessages(handleTask: (task: Task) => Promise<void>): Promise<void>;

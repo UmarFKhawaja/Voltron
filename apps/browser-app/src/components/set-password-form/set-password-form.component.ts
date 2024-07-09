@@ -56,7 +56,7 @@ export class SetPasswordFormComponent {
     response.subscribe({
       next: async (result: Result<Token>): Promise<void> => {
         if (result.success) {
-          this.tokenService.saveToken(result.data.access_token);
+          this.tokenService.saveToken(result.data.token);
 
           await this.routeService.navigate(['app', 'show-message', constants.CODES.SET_PASSWORD.CONFIRM], {});
         } else {
@@ -64,7 +64,7 @@ export class SetPasswordFormComponent {
         }
       },
       error: async (error: unknown): Promise<void> => {
-        await this.snackService.showSnack(constants.MESSAGES.SET_PASSWORD.CHECK, 'OK');
+        await this.snackService.showSnack(constants.MESSAGES.GENERAL.TRY_LATER, 'OK');
       }
     });
   }

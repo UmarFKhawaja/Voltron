@@ -4,7 +4,9 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-container',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule
+  ],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss'
 })

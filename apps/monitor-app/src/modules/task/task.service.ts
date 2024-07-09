@@ -20,6 +20,10 @@ export class TaskService {
         await this.mailService.sendLoginWithMagicLoginMail(task.emailAddress, task.confirmationURL);
         break;
 
+      case 'SEND_RESET_PASSWORD_MAIL':
+        await this.mailService.sendResetPasswordMail(task.emailAddress, task.confirmationURL);
+        break;
+
       default:
         Logger.warn(task);
         break;

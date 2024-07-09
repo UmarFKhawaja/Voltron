@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { Params, Router, RouterLink } from '@angular/router';
+import { Params, Router, RouterModule } from '@angular/router';
 import { constants } from '../../app/app.constants';
 import { RouteClient } from '../../clients/route/route.client';
 import { ContainerComponent } from '../../components/container/container.component';
@@ -17,8 +17,8 @@ import { RouteService } from '../../services/route/route.service';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     MatButtonModule,
-    RouterLink,
     ContainerComponent,
     HolderComponent,
     TitleComponent,
@@ -31,13 +31,13 @@ import { RouteService } from '../../services/route/route.service';
     RouteService
   ],
   templateUrl: './show-message.component.html',
-  styleUrl: './show-message.component.css'
+  styleUrl: './show-message.component.scss'
 })
 export class ShowMessageComponent implements OnInit {
   code: string;
 
   constructor(
-    private routeService: RouteService
+    private readonly routeService: RouteService
   ) {
     this.code = '';
   }

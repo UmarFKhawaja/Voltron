@@ -4,7 +4,9 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-label',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule
+  ],
   templateUrl: './label.component.html',
   styleUrl: './label.component.scss'
 })

@@ -33,7 +33,9 @@ export class AuthTokenService {
     if (!user) {
       return {
         success: false,
-        error: new UnauthorizedException()
+        error: {
+          message: 'a user must be provided to generate a token'
+        }
       };
     }
 
@@ -65,7 +67,7 @@ export class AuthTokenService {
     return {
       success: true,
       data: {
-        access_token: encodedToken
+        token: encodedToken
       }
     };
   }

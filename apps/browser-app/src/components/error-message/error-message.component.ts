@@ -6,7 +6,11 @@ import { TitleComponent } from '../title/title.component';
 @Component({
   selector: 'app-error-message',
   standalone: true,
-  imports: [CommonModule, LabelComponent, TitleComponent],
+  imports: [
+    CommonModule,
+    LabelComponent,
+    TitleComponent
+  ],
   templateUrl: './error-message.component.html',
   styleUrl: './error-message.component.scss'
 })

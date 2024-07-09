@@ -58,7 +58,7 @@ export class ChangePasswordFormComponent {
     response.subscribe({
       next: async (result: Result<Token>): Promise<void> => {
         if (result.success) {
-          this.tokenService.saveToken(result.data.access_token);
+          this.tokenService.saveToken(result.data.token);
 
           await this.routeService.navigate(['app', 'show-message', constants.CODES.CHANGE_PASSWORD.CONFIRM], {});
         } else {
@@ -66,7 +66,7 @@ export class ChangePasswordFormComponent {
         }
       },
       error: async (error: unknown): Promise<void> => {
-        await this.snackService.showSnack(constants.MESSAGES.CHANGE_PASSWORD.CHECK, 'OK');
+        await this.snackService.showSnack(constants.MESSAGES.GENERAL.TRY_LATER, 'OK');
       }
     });
   }

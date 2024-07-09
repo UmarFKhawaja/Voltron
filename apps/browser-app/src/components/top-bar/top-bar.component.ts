@@ -14,7 +14,15 @@ import { TokenService } from '../../services/token/token.service';
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule, MatDividerModule, MatIconModule, MatToolbarModule, MatMenuModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatButtonModule,
+    MatDividerModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatMenuModule
+  ],
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.scss'
 })

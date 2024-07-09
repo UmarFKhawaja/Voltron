@@ -3,6 +3,14 @@
     <app-title>
       Register for an account
     </app-title>
+    <p>You can skip entering a password.</p>
+    <p>If you don't set a password, you can still sign in with just your user name or email address.</p>
+    <p>When signing in, if you don't enter a password, we send an email to your email address with a link to sign in.</p>
     <app-register-form/>
+    <app-divider/>
+    <p>Activate your account if you have already registered it but have not yet verified it.</p>
+    <button mat-button class="button" [routerLink]="'/app/activate-account'">
+      Activate account
+    </button>
   </app-holder>
 </app-container>

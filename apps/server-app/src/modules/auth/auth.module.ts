@@ -10,33 +10,35 @@ import { AuthMagicLoginStrategy } from './auth-magic-login.strategy';
 import { AuthStrategyService } from './auth-strategy.service';
 import { AuthTokenService } from './auth-token.service';
 import { AuthUserService } from './auth-user.service';
-import { JWT_CONSTANTS } from './auth.constants';
+import { AuthVerificationRequestService } from './auth-verification-request.service';
+import { AUTH_CONSTANTS } from './auth.constants';
 import { AuthController } from './auth.controller';
+import { AuthURLService } from './auth-url.service';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: JWT_CONSTANTS.secret,
+      secret: AUTH_CONSTANTS.Strategies.JWT.secret,
       signOptions: {
-        expiresIn: JWT_CONSTANTS.expiresIn
+        expiresIn: AUTH_CONSTANTS.Strategies.JWT.expiresIn
       }
     }),
     MongoModule,
     RedisModule
   ],
-  controllers: [
-    AuthController
-  ],
+  controllers: [AuthController],
   providers: [
     AuthStrategyService,
     AuthTokenService,
     AuthUserService,
+    AuthVerificationRequestService,
     AuthJwtStrategy,
     AuthLocalStrategy,
     AuthMagicLoginStrategy,
     AuthGitHubStrategy,
-    AuthGoogleStrategy
+    AuthGoogleStrategy,
+    AuthURLService
   ]
 })
 export class AuthModule {

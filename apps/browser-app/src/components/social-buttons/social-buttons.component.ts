@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Session } from '@voltron/common-library';
 import { Subscription } from 'rxjs';
 import { TokenService } from '../../services/token/token.service';
@@ -9,7 +9,11 @@ import { TokenService } from '../../services/token/token.service';
 @Component({
   selector: 'app-social-buttons',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, RouterLink],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatButtonModule
+  ],
   templateUrl: './social-buttons.component.html',
   styleUrl: './social-buttons.component.scss'
 })

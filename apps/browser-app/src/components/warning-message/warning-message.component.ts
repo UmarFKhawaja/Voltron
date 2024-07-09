@@ -6,7 +6,11 @@ import { TitleComponent } from '../title/title.component';
 @Component({
   selector: 'app-warning-message',
   standalone: true,
-  imports: [CommonModule, LabelComponent, TitleComponent],
+  imports: [
+    CommonModule,
+    LabelComponent,
+    TitleComponent
+  ],
   templateUrl: './warning-message.component.html',
   styleUrl: './warning-message.component.scss'
 })

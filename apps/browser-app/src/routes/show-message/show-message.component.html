@@ -10,7 +10,7 @@
       <p>We could not sign you in using that username and password combination. Make sure you are typing both of those correctly.</p>
     </app-error-message>
     <app-error-message *ngSwitchCase="CODES.LOGIN.MAGIC_LOGIN.CHECK">
-      <p>We could not sign you in using that username. Make sure you are typing it correctly.</p>
+      <p>We could not sign you in using that username. Make sure you are typing it correctly, and that your account has been activated.</p>
       <p>It could also be something at our end. If the problem persists, try using your password.</p>
     </app-error-message>
     <app-warning-message *ngSwitchCase="CODES.LOGIN.MAGIC_LOGIN.CONFIRM">
@@ -18,6 +18,15 @@
     </app-warning-message>
     <app-warning-message *ngSwitchCase="CODES.LOGIN.MAGIC_LOGIN.RETRY">
       <p>We could not find a token when trying to sign you in with a magic link. Make sure the magic link is correct and not too old.</p>
+    </app-warning-message>
+    <app-warning-message *ngSwitchCase="CODES.REQUEST_ACTIVATION_CODE.CONFIRM">
+      <p>We have sent you an email to let you activate your account.</p>
+      <p>The email contains a link which will activate your account and log you in.</p>
+    </app-warning-message>
+    <app-warning-message *ngSwitchCase="CODES.RECOVER_ACCOUNT.CONFIRM">
+      <p>We have sent you an email to let you recover your account.</p>
+      <p>The email contains a link which will reset your password and log you in.</p>
+      <p>You can then set your password as normal.</p>
     </app-warning-message>
     <app-warning-message *ngSwitchCase="CODES.CHANGE_PASSWORD.CONFIRM">
       <p>We have changed your password.</p>

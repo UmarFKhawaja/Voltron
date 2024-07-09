@@ -1,8 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { RouteClient } from '../../clients/route/route.client';
 import { ContainerComponent } from '../../components/container/container.component';
+import { DividerComponent } from '../../components/divider/divider.component';
 import { HolderComponent } from '../../components/holder/holder.component';
 import { RegisterFormComponent } from '../../components/register-form/register-form.component';
 import { TitleComponent } from '../../components/title/title.component';
@@ -14,17 +18,21 @@ import { TokenService } from '../../services/token/token.service';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
+    MatButtonModule,
     ContainerComponent,
     HolderComponent,
     TitleComponent,
-    RegisterFormComponent
+    DividerComponent,
+    RegisterFormComponent,
+    FormsModule
   ],
   providers: [
     RouteClient,
     RouteService
   ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.scss'
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   private _hasToken$: Subscription = new Subscription();

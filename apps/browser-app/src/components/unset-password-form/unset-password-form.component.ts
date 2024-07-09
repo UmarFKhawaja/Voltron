@@ -56,15 +56,15 @@ export class UnsetPasswordFormComponent {
     response.subscribe({
       next: async (result: Result<Token>): Promise<void> => {
         if (result.success) {
-          this.tokenService.saveToken(result.data.access_token);
+          this.tokenService.saveToken(result.data.token);
 
-          await this.routeService.navigate(['app', 'show-message', constants.CODES.SET_PASSWORD.CONFIRM], {});
+          await this.routeService.navigate(['app', 'show-message', constants.CODES.UNSET_PASSWORD.CONFIRM], {});
         } else {
           await this.snackService.showSnack(constants.MESSAGES.UNSET_PASSWORD.CHECK, 'OK');
         }
       },
       error: async (error: unknown): Promise<void> => {
-        await this.snackService.showSnack(constants.MESSAGES.UNSET_PASSWORD.CHECK, 'OK');
+        await this.snackService.showSnack(constants.MESSAGES.GENERAL.TRY_LATER, 'OK');
       }
     });
   }

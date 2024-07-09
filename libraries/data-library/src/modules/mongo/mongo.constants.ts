@@ -5,7 +5,9 @@ export const MONGO_CONSTANTS = {
       ModelsFactory: 'MONGO_MODELS_FACTORY'
     },
     Services: {
-      DataService: 'MONGO_DATA_SERVICE'
+      UserService: 'MONGO_USER_SERVICE',
+      AccountService: 'MONGO_ACCOUNT_SERVICE',
+      VerificationRequestService: 'MONGO_VERIFICATION_REQUEST_SERVICE',
     }
   },
   Settings: {

@@ -28,13 +28,13 @@ import { UserService } from '../../services/user/user.service';
     RouteService
   ],
   templateUrl: './logout.component.html',
-  styleUrl: './logout.component.css'
+  styleUrl: './logout.component.scss'
 })
 export class LogoutComponent implements OnInit {
   constructor(
-    private routeService: RouteService,
-    private tokenService: TokenService,
-    private userService: UserService
+    private readonly routeService: RouteService,
+    private readonly tokenService: TokenService,
+    private readonly userService: UserService
   ) {
   }
 

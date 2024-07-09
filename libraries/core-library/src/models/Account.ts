@@ -34,6 +34,7 @@ export interface Account extends IAccount, Document {
   _id: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AccountModel extends Model<Account> {
 }
 
@@ -41,5 +42,6 @@ AccountSchema.pre<Account>('save', function (next) {
   next();
 });
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 AccountSchema.post<Query<Account, Account>>('findOneAndUpdate', async function (document) {
 });

@@ -9,5 +9,7 @@ export interface SuccessResult<T> {
 
 export interface FailureResult {
   success: false;
-  error: Error;
+  error: {
+    message: string;
+  };
 }

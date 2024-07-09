@@ -15,7 +15,7 @@ import { TitleComponent } from '../../components/title/title.component';
   ],
   providers: [],
   templateUrl: './login-google.component.html',
-  styleUrl: './login-google.component.css'
+  styleUrl: './login-google.component.scss'
 })
 export class LoginGoogleComponent implements OnInit {
   ngOnInit(): void {

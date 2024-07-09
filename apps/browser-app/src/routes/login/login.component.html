@@ -3,7 +3,14 @@
     <app-title>
       Login to your account
     </app-title>
+    <p>You can skip entering your password.</p>
+    <p>If you don't enter a password, we will send you an email to your email address with a link to sign in.</p>
     <app-login-form/>
+    <app-divider/>
+    <p>Recover your account if you have forgotten your password and would rather use one to sign in.</p>
+    <button mat-button class="button" [routerLink]="'/app/recover-account'">
+      Recover account
+    </button>
     <app-divider/>
     <app-social-buttons [mode]="'login'"/>
   </app-holder>

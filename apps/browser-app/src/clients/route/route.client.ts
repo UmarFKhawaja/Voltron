@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Params, Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
@@ -5,6 +6,7 @@ import { combineLatest } from 'rxjs';
 @Injectable()
 export class RouteClient {
   constructor(
+    private readonly location: Location,
     private readonly route: ActivatedRoute,
     private readonly router: Router
   ) {
@@ -25,6 +27,12 @@ export class RouteClient {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async navigate(commands: any[], extras: NavigationExtras): Promise<RouteClient> {
     await this.router.navigate(commands, extras);
+
+    return this;
+  }
+
+  async navigateBack(): Promise<RouteClient> {
+    this.location.back();
 
     return this;
   }

@@ -77,13 +77,13 @@ Contains code for accessing data in the MongoDB and Redis instances.
 
 Contains code for integrating with external services.
 
-### Notes
+### Known issues
 
 This is a work in progress.
 
 As such some features are not yet working as intended. A brief description of the missing features follows:
 
-#### Register with OAuth
+#### Missing feature: Register with OAuth
 
 Once this capability is fully implemented, the user will be able to:
 
@@ -93,7 +93,7 @@ A new user will be able to come to the website, click on `Continue with ...` but
 
 An existing user will be able to come to the website, click on `Continue with ...` button on the `Login` page, and continue. If their OAuth account has not previously been linked to their application account, it will be linked. Their email address will be used to automatically link their OAuth and application accounts.
 
-#### Manage profile
+#### Missing feature: Manage profile
 
 Once this capability is implemented, the user will be able to:
 
@@ -107,7 +107,7 @@ When changing their email address, the change will be completed in 2 steps. Firs
 > 
 > Not having a password is considered more secure because there is no password that can be guessed. Authentication is achieved by proving access to the registered email address.
 
-#### Send mail
+#### Incomplete feature: Send mail
 
 An email is not sent out to the user when registering or logging in with magic login.
 
@@ -115,7 +115,7 @@ The email address where the link will be sent and the link itself are printed on
 
 Note that the mail is generated on the `server-app` and the mail event is published to Redis. This mail event is then picked up by the `monitor-app` and the details published on its console.
 
-#### Publish GraphQL endpoint
+#### Missing feature: Publish GraphQL endpoint
 
 This has not been done yet.
 

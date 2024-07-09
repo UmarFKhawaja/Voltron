@@ -26,4 +26,11 @@ export class NodemailerMailService implements MailService {
 
     return true;
   }
+
+  async sendResetPasswordMail(emailAddress: string, confirmationURL: string): Promise<boolean> {
+    Logger.log(emailAddress);
+    Logger.log(confirmationURL);
+
+    return true;
+  }
 }

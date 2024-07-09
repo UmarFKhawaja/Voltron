@@ -20,6 +20,24 @@ export class UserService {
     });
   }
 
+  async activateAccount(activationCode: string) {
+    return this.http.post<Result<Token>>('/api/auth/activate-account', {
+      activationCode
+    });
+  }
+
+  async requestActivationCode(username: string) {
+    return this.http.post<Result<void>>('/api/auth/request-activation-code', {
+      username
+    });
+  }
+
+  async recoverAccount(username: string) {
+    return this.http.post<Result<void>>('/api/auth/recover-account', {
+      username
+    });
+  }
+
   async loginWithPassword(username: string, password: string) {
     return this.http.post<Result<Token>>('/api/auth/login/password', {
       username,
@@ -52,7 +70,7 @@ export class UserService {
   }
 
   async verifySession(token: string) {
-    return this.http.get<Result<void>>('/api/auth/verify/session', {
+    return this.http.get<Result<void>>('/api/auth/verify-session', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -60,7 +78,7 @@ export class UserService {
   }
 
   async updateProfile(token: string, displayName: string, userName: string) {
-    return this.http.post<Result<Token>>('/api/auth/update/profile', {
+    return this.http.post<Result<Token>>('/api/auth/update-profile', {
       displayName,
       userName
     }, {
@@ -72,8 +90,18 @@ export class UserService {
     });
   }
 
+  async resetPassword(token: string) {
+    return this.http.get<Result<Token>>('/api/auth/reset-password', {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
+
   async changePassword(token: string, oldPassword: string, newPassword: string) {
-    return this.http.post<Result<Token>>('/api/auth/change/password', {
+    return this.http.post<Result<Token>>('/api/auth/change-password', {
       oldPassword,
       newPassword
     }, {
@@ -86,7 +114,7 @@ export class UserService {
   }
 
   async setPassword(token: string, newPassword: string) {
-    return this.http.post<Result<Token>>('/api/auth/set/password', {
+    return this.http.post<Result<Token>>('/api/auth/set-password', {
       newPassword
     }, {
       ...(token ? {
@@ -98,7 +126,7 @@ export class UserService {
   }
 
   async unsetPassword(token: string, oldPassword: string) {
-    return this.http.post<Result<Token>>('/api/auth/unset/password', {
+    return this.http.post<Result<Token>>('/api/auth/unset-password', {
       oldPassword
     }, {
       ...(token ? {
