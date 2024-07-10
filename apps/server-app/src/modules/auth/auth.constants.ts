@@ -1,11 +1,11 @@
 export const AUTH_CONSTANTS = {
   Strategies: {
-    GitHub: {
-      clientID: process.env.AUTH_STRATEGY_GITHUB_CLIENT_ID || '',
-      clientSecret: process.env.AUTH_STRATEGY_GITHUB_CLIENT_SECRET || '',
-      acceptURL: process.env.AUTH_STRATEGY_GITHUB_ACCEPT_URL || 'http://localhost:2180',
-      acceptPath: '/api/auth/accept/github',
-      redirectURL: process.env.AUTH_STRATEGY_GITHUB_REDIRECT_URL || 'http://localhost:2080'
+    Facebook: {
+      clientID: process.env.AUTH_STRATEGY_FACEBOOK_CLIENT_ID || '',
+      clientSecret: process.env.AUTH_STRATEGY_FACEBOOK_CLIENT_SECRET || '',
+      acceptURL: process.env.AUTH_STRATEGY_FACEBOOK_ACCEPT_URL || 'http://localhost:2180',
+      acceptPath: '/api/auth/accept/facebook',
+      redirectURL: process.env.AUTH_STRATEGY_FACEBOOK_REDIRECT_URL || 'http://localhost:2080'
     },
     Google: {
       clientID: process.env.AUTH_STRATEGY_GOOGLE_CLIENT_ID || '',
@@ -27,6 +27,17 @@ export const AUTH_CONSTANTS = {
   },
   Actions: {
     baseURL: process.env.AUTH_ACTIONS_BASE_URL || 'http://localhost:2080',
+    ManageProfile: {
+      path: (baseURL: string, token: string): string => {
+        const url: URL = new URL(`/app/manage-profile`, baseURL);
+
+        if (token) {
+          url.searchParams.set('token', token);
+        }
+
+        return url.toString();
+      }
+    },
     ActivateAccount: {
       path: '/app/activate-account'
     },

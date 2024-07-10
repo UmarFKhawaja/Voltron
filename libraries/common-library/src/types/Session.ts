@@ -7,7 +7,7 @@ export interface Session {
   accounts: {
     local: boolean;
     social: {
-      github: boolean;
+      facebook: boolean;
       google: boolean;
     };
   }

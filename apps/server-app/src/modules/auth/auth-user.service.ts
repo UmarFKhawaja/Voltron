@@ -35,6 +35,36 @@ export class AuthUserService {
     return user;
   }
 
+  async ensureUserWithProvider(displayName: string, userName: string, emailAddress: string, providerType: ProviderType, providerID: string): Promise<User> {
+    let user: User | null = await this.userService.findUserByProvider(providerType, providerID);
+
+    if (user) {
+      return user;
+    }
+
+    if (!emailAddress) {
+      throw new Error('an OAuth user must have an email address');
+    }
+
+    user = await this.userService.findUserByUsername(emailAddress);
+
+    if (!user) {
+      user = await this.userService.createUser(displayName, userName, emailAddress, '');
+
+      user = await this.userService.verifyUser(user._id);
+    }
+
+    user = await this.userService.linkUserToProvider(user._id, providerType, providerID);
+
+    return user;
+  }
+
+  async ensureUserNotWithProvider(user: User, providerType: ProviderType): Promise<User> {
+    user = await this.userService.unlinkUserFromProvider(user._id, providerType);
+
+    return user;
+  }
+
   async updateUser(user: User | null, displayName: string, userName: string): Promise<User | null> {
     if (!user) {
       return null;
@@ -145,18 +175,6 @@ export class AuthUserService {
 
   async getUserByID(id: string): Promise<User> {
     const user: User = await this.userService.getUserByID(id);
-
-    return user;
-  }
-
-  async findUserByGitHubID(githubID: string): Promise<User | null> {
-    const user: User | null = await this.userService.findUserByProvider(ProviderType.GITHUB, githubID);
-
-    return user;
-  }
-
-  async findUserByGoogleID(googleID: string): Promise<User | null> {
-    const user: User | null = await this.userService.findUserByProvider(ProviderType.GOOGLE, googleID);
 
     return user;
   }

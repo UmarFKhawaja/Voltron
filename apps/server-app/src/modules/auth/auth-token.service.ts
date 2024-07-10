@@ -48,9 +48,9 @@ export class AuthTokenService {
       accounts: {
         local: !!user.saltHash,
         social: {
-          github: user.accounts
+          facebook: user.accounts
             .map((account) => account as unknown as Account)
-            .some((account: Account): boolean => account.providerType === ProviderType.GITHUB),
+            .some((account: Account): boolean => account.providerType === ProviderType.FACEBOOK),
           google: user.accounts
             .map((account) => account as unknown as Account)
             .some((account: Account): boolean => account.providerType === ProviderType.GOOGLE)
@@ -72,7 +72,11 @@ export class AuthTokenService {
     };
   }
 
-  async invalidateToken(session: Session): Promise<void> {
+  async invalidateToken(session: Session | null): Promise<void> {
+    if (!session) {
+      return;
+    }
+
     await this.sessionService.unsetSessionExpiry(session.id);
   }
 }

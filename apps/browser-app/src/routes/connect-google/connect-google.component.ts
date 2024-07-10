@@ -5,7 +5,7 @@ import { HolderComponent } from '../../components/holder/holder.component';
 import { TitleComponent } from '../../components/title/title.component';
 
 @Component({
-  selector: 'app-login-github',
+  selector: 'app-connect-google',
   standalone: true,
   imports: [
     CommonModule,
@@ -14,11 +14,11 @@ import { TitleComponent } from '../../components/title/title.component';
     TitleComponent
   ],
   providers: [],
-  templateUrl: './login-github.component.html',
-  styleUrl: './login-github.component.scss'
+  templateUrl: './connect-google.component.html',
+  styleUrl: './connect-google.component.scss'
 })
-export class LoginGitHubComponent implements OnInit {
+export class ConnectGoogleComponent implements OnInit {
   ngOnInit(): void {
-    window.location.href = '/api/auth/login/github';
+    window.location.href = '/api/auth/connect/google';
   }
 }

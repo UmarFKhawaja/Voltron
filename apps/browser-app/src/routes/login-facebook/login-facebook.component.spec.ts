@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LoginGitHubComponent } from './login-github.component';
+import { LoginFacebookComponent } from './login-facebook.component';
 
-describe('LoginGitHubComponent', () => {
-  let component: LoginGitHubComponent;
-  let fixture: ComponentFixture<LoginGitHubComponent>;
+describe('LoginFacebookComponent', () => {
+  let component: LoginFacebookComponent;
+  let fixture: ComponentFixture<LoginFacebookComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LoginGitHubComponent]
+      imports: [LoginFacebookComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(LoginGitHubComponent);
+    fixture = TestBed.createComponent(LoginFacebookComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

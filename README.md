@@ -30,10 +30,10 @@ The solution has the following applications:
 * `/api/auth/register` -- register a user
 * `/api/auth/login/password` -- login a user with a password
 * `/api/auth/login/magic-login` -- start logging in a user with a magic link
-* `/api/auth/login/github` -- start logging in a user with a GitHub account
+* `/api/auth/login/facebook` -- start logging in a user with a Facebook account
 * `/api/auth/login/google` -- start logging in a user with a Google account
 * `/api/auth/accept/magic-login` -- finish logging in a user with a magic link
-* `/api/auth/accept/github` -- finish logging in a user with a GitHub account
+* `/api/auth/accept/facebook` -- finish logging in a user with a Facebook account
 * `/api/auth/accept/google` -- finish logging in a user with a Google account
 * `/api/auth/logout` -- logout the user
 * `/api/auth/verify/session` -- verify if the user is logged in
@@ -50,7 +50,7 @@ The solution has the following applications:
 * Login to the account using:
   * a password
   * a magic link
-  * a GitHub account
+  * a Facebook account
   * a Google account
 * Set the password if one is not set
 * Unset the password if one isset
@@ -83,29 +83,21 @@ This is a work in progress.
 
 As such some features are not yet working as intended. A brief description of the missing features follows:
 
-#### Missing feature: Register with OAuth
-
-Once this capability is fully implemented, the user will be able to:
-
-* Sign up using OAuth account
-
-A new user will be able to come to the website, click on `Continue with ...` button on the `Login` page, and continue. If a user does not exist, one would be created for them.
-
-An existing user will be able to come to the website, click on `Continue with ...` button on the `Login` page, and continue. If their OAuth account has not previously been linked to their application account, it will be linked. Their email address will be used to automatically link their OAuth and application accounts.
-
 #### Missing feature: Manage profile
 
 Once this capability is implemented, the user will be able to:
 
 * Change email address
-* Connect OAuth account
-* Disconnect OAuth account
 
 When changing their email address, the change will be completed in 2 steps. First, an email will be sent to their old email address to confirm that the change has been initiated by them. When they confirm the change, an email will be sent to their new email address to confirm it is correct and in their control.
 
 > A user who does not have a password set and does not have their account linked to an OAuth account can still login using magic login, where an email is sent to them with a link to complete the login process.
 > 
 > Not having a password is considered more secure because there is no password that can be guessed. Authentication is achieved by proving access to the registered email address.
+
+#### Incomplete feature: Connect with OAuth
+
+Once this capability is fully implemented, when the user connects their account to an OAuth provider, the user will be return to the `/app/manage-profile` page rather than the `/` page.
 
 #### Incomplete feature: Send mail
 
@@ -132,13 +124,12 @@ npx nx run-many -t lint -t build
 
 ### Configure Solution
 
-#### Create GitHub OAuth credentials
+#### Create Facebook OAuth credentials
 
-1. Go to [GitHub's OAuth Apps](https://github.com/settings/developers) page.
+1. Go to [Facebook's Apps](https://developers.facebook.com/apps) page.
 2. Register a new application with the following details.
-   1. `Authorization callback URL` set to `http://localhost:2180/api/auth/accept/github`
-3. Generate a client secret.
-4. Note the **Client ID** and **Client Secret**.
+   1. `Authorization callback URL` set to `http://localhost:2180/api/auth/accept/facebook`
+3. Note the **Client ID** and **Client Secret**.
 
 #### Create Google OAuth credentials
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Account, AccountModel, ProviderType, User, UserModel, UserService } from '@voltron/core-library';
 import { hashSync } from 'bcryptjs';
 import dayjs from 'dayjs';
@@ -13,7 +13,7 @@ export class MongoUserService implements UserService {
   }
 
   async createUser(displayName: string, userName: string, emailAddress: string, password: string): Promise<User> {
-    let user = new this.userModel({
+    let user: User = new this.userModel({
       displayName,
       userName,
       emailAddress,
@@ -29,17 +29,18 @@ export class MongoUserService implements UserService {
   }
 
   async updateUser(userID: string, displayName: string, userName: string, emailAddress: string): Promise<User> {
-    const user: User | null = await this.userModel.findOneAndUpdate({
-      _id: { $eq: new Types.ObjectId(userID) }
-    }, {
-      $set: {
-        displayName,
-        userName,
-        emailAddress
-      }
-    }, {
-      new: true
-    })
+    const user: User | null = await this.userModel
+      .findOneAndUpdate({
+        _id: { $eq: new Types.ObjectId(userID) }
+      }, {
+        $set: {
+          displayName,
+          userName,
+          emailAddress
+        }
+      }, {
+        new: true
+      })
       .exec();
 
     if (!user) {
@@ -50,15 +51,16 @@ export class MongoUserService implements UserService {
   }
 
   async verifyUser(userID: string): Promise<User> {
-    const user: User | null = await this.userModel.findOneAndUpdate({
-      _id: { $eq: new Types.ObjectId(userID) }
-    }, {
-      $set: {
-        verifiedAt: dayjs().toDate()
-      }
-    }, {
-      new: true
-    })
+    const user: User | null = await this.userModel
+      .findOneAndUpdate({
+        _id: { $eq: new Types.ObjectId(userID) }
+      }, {
+        $set: {
+          verifiedAt: dayjs().toDate()
+        }
+      }, {
+        new: true
+      })
       .exec();
 
     if (!user) {
@@ -68,16 +70,86 @@ export class MongoUserService implements UserService {
     return user;
   }
 
+  async linkUserToProvider(userID: string, providerType: ProviderType, providerID: string): Promise<User> {
+    let account: Account = new this.accountModel({
+      providerType,
+      providerID,
+      user: new Types.ObjectId(userID)
+    });
+
+    let user: User | null = await this.userModel
+      .findOne({
+        _id: { $eq: new Types.ObjectId(userID) }
+      })
+      .exec();
+
+    if (!user) {
+      throw new Error('a user with the specified ID could not be found');
+    }
+
+    user.accounts.push(new Types.ObjectId(account._id));
+
+    account = await account.save();
+
+    user = await user.save();
+
+    user = await this.getUserByID(user._id);
+
+    return user;
+  }
+
+  async unlinkUserFromProvider(userID: string, providerType: ProviderType): Promise<User> {
+    let user: User | null = await this.userModel
+      .findOne({
+        _id: { $eq: new Types.ObjectId(userID) }
+      })
+      .exec();
+
+    if (!user) {
+      throw new Error('a user with the specified ID could not be found');
+    }
+
+    const account: Account | null = await this.accountModel
+      .findOneAndDelete({
+        $and: [
+          {
+            providerType: { $eq: providerType }
+          },
+          {
+            user: { $eq: new Types.ObjectId(userID) }
+          }
+        ]
+      })
+      .exec();
+
+    if (!account) {
+      return user;
+    }
+
+    const index: number = user.accounts.indexOf(new Types.ObjectId(account._id));
+
+    if (index !== -1) {
+      user.accounts.splice(index, 1);
+    }
+
+    user = await user.save();
+
+    user = await this.getUserByID(user._id);
+
+    return user;
+  }
+
   async setPassword(userID: string, saltHash: string): Promise<User> {
-    const user: User | null = await this.userModel.findOneAndUpdate({
-      _id: { $eq: new Types.ObjectId(userID) }
-    }, {
-      $set: {
-        saltHash
-      }
-    }, {
-      new: true
-    })
+    const user: User | null = await this.userModel
+      .findOneAndUpdate({
+        _id: { $eq: new Types.ObjectId(userID) }
+      }, {
+        $set: {
+          saltHash
+        }
+      }, {
+        new: true
+      })
       .exec();
 
     if (!user) {
@@ -88,15 +160,16 @@ export class MongoUserService implements UserService {
   }
 
   async unsetPassword(userID: string): Promise<User> {
-    const user: User | null = await this.userModel.findOneAndUpdate({
-      _id: { $eq: new Types.ObjectId(userID) }
-    }, {
-      $set: {
-        saltHash: null
-      }
-    }, {
-      new: true
-    })
+    const user: User | null = await this.userModel
+      .findOneAndUpdate({
+        _id: { $eq: new Types.ObjectId(userID) }
+      }, {
+        $set: {
+          saltHash: null
+        }
+      }, {
+        new: true
+      })
       .exec();
 
     if (!user) {
@@ -173,8 +246,8 @@ export class MongoUserService implements UserService {
     return user;
   }
 
-  async findUserByProvider(providerType: ProviderType, providerInfo: string): Promise<User | null> {
-    const account: Account | null = await this.getAccountByProvider(providerType, providerInfo);
+  async findUserByProvider(providerType: ProviderType, providerID: string): Promise<User | null> {
+    const account: Account | null = await this.getAccountByProvider(providerType, providerID);
 
     if (!account) {
       return null;
@@ -185,7 +258,7 @@ export class MongoUserService implements UserService {
     return user;
   }
 
-  async getAccountByProvider(providerType: ProviderType, providerInfo: string): Promise<Account | null> {
+  async getAccountByProvider(providerType: ProviderType, providerID: string): Promise<Account | null> {
     const account: Account | null = await this.accountModel
       .findOne<Account>({
         $and: [
@@ -193,7 +266,7 @@ export class MongoUserService implements UserService {
             'providerType': { $eq: providerType }
           },
           {
-            'providerInfo': { $eq: providerInfo }
+            'providerID': { $eq: providerID }
           }
         ]
       })

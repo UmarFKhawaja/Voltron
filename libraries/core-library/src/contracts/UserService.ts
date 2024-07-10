@@ -7,6 +7,10 @@ export interface UserService {
 
   verifyUser(userID: string): Promise<User>;
 
+  linkUserToProvider(userID: string, providerType: ProviderType, providerID: string): Promise<User>;
+
+  unlinkUserFromProvider(userID: string, providerType: ProviderType): Promise<User>;
+
   setPassword(userID: string, saltHash: string): Promise<User>;
 
   unsetPassword(userID: string): Promise<User>;

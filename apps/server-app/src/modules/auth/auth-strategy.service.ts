@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AuthGitHubStrategy } from './auth-github.strategy';
+import { AuthFacebookStrategy } from './auth-facebook.strategy';
 import { AuthGoogleStrategy } from './auth-google.strategy';
 import { AuthJwtStrategy } from './auth-jwt.strategy';
 import { AuthLocalStrategy } from './auth-local.strategy';
@@ -12,7 +12,7 @@ export class AuthStrategyService {
     private jwtStrategy: AuthJwtStrategy,
     private localStrategy: AuthLocalStrategy,
     private magicLoginStrategy: AuthMagicLoginStrategy,
-    private githubStrategy: AuthGitHubStrategy,
+    private facebookStrategy: AuthFacebookStrategy,
     private googleStrategy: AuthGoogleStrategy
   ) {
   }

@@ -1,65 +1,25 @@
-import { Body, Controller, Get, Inject, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
-import { Result, Session, Token } from '@voltron/common-library';
+import { Body, Controller, Get, Inject, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Result, Token } from '@voltron/common-library';
 import { MailService, User, VerificationRequest } from '@voltron/core-library';
 import { REDIS_CONSTANTS } from '@voltron/data-library';
-import { Request, Response } from 'express';
-import { decode } from 'jsonwebtoken';
-import { AuthGitHubAuthGuard } from './auth-github.guard';
-import { AuthGoogleAuthGuard } from './auth-google.guard';
+import { Request } from 'express';
 import { AuthJwtAuthGuard } from './auth-jwt.guard';
-import { AuthLocalAuthGuard } from './auth-local.guard';
-import { AuthMagicLoginAuthGuard } from './auth-magic-login.guard';
-import { AuthStrategyService } from './auth-strategy.service';
 import { AuthTokenService } from './auth-token.service';
 import { AuthURLService } from './auth-url.service';
 import { AuthUserService } from './auth-user.service';
 import { AuthVerificationRequestService } from './auth-verification-request.service';
-import { AUTH_CONSTANTS } from './auth.constants';
+import { extractSession } from './auth.methods';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     @Inject(REDIS_CONSTANTS.Symbols.Services.MailService)
     private readonly mailService: MailService,
-    private readonly strategyService: AuthStrategyService,
     private readonly tokenService: AuthTokenService,
     private readonly urlService: AuthURLService,
     private readonly userService: AuthUserService,
     private readonly verificationRequestService: AuthVerificationRequestService
   ) {
-  }
-
-  @Post('register')
-  async post(@Body() {
-    displayName,
-    userName,
-    emailAddress,
-    password
-  }: {
-    displayName: string,
-    userName: string,
-    emailAddress: string,
-    password: string
-  }): Promise<Result<void>> {
-    try {
-      const user: User = await this.userService.registerUser(displayName, userName, emailAddress, password);
-
-      const verificationRequest: VerificationRequest = await this.verificationRequestService.createRegisterVerificationRequest(user);
-
-      const verificationURL: string = this.urlService.formatRegisterVerificationURL(verificationRequest);
-
-      await this.mailService.sendRegisterMail(user.emailAddress, verificationURL);
-
-      return {
-        success: true,
-        data: void 0
-      };
-    } catch (error: unknown) {
-      return {
-        success: false,
-        error: error as Error
-      };
-    }
   }
 
   @Post('request-activation-code')
@@ -100,85 +60,6 @@ export class AuthController {
     };
   }
 
-  @UseGuards(AuthLocalAuthGuard)
-  @Post('login/password')
-  async loginWithPassword(@Req() req: Request): Promise<Result<Token>> {
-    return await this.tokenService.generateToken(req.user as User);
-  }
-
-  @Post('login/magic-login')
-  async loginWithMagicLogin(@Req() req: Request, @Res() res: Response): Promise<void> {
-    await this.strategyService.sendNotification(req, res);
-  }
-
-  @UseGuards(AuthGitHubAuthGuard)
-  @Get('login/github')
-  async loginWithGitHub(): Promise<void> {
-    // TODO : handle login with GitHub
-  }
-
-  @UseGuards(AuthGoogleAuthGuard)
-  @Get('login/google')
-  async loginWithGoogle(): Promise<void> {
-    // TODO : handle login with Google
-  }
-
-  @UseGuards(AuthJwtAuthGuard)
-  @Post('logout')
-  async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const token: string = req.headers.authorization?.replace(/^Bearer /, '') ?? '';
-
-    if (token) {
-      const session: Session = decode(token) as Session;
-
-      await this.tokenService.invalidateToken(session);
-    }
-
-    res.status(200).end();
-  }
-
-  @UseGuards(AuthMagicLoginAuthGuard)
-  @Get('accept/magic-login')
-  async acceptMagicLogin(@Req() req: Request): Promise<Result<Token>> {
-    return this.tokenService.generateToken(req.user as User);
-  }
-
-  @UseGuards(AuthGitHubAuthGuard)
-  @Get('accept/github')
-  async acceptGitHub(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const result: Result<Token> = await this.tokenService.generateToken(req.user as User);
-
-    if (result.success) {
-      const redirectURL: URL = new URL('/app/accept/github', AUTH_CONSTANTS.Strategies.GitHub.redirectURL);
-
-      redirectURL.searchParams.set('token', result.data.token);
-
-      res.redirect(redirectURL.toString());
-    } else {
-      const redirectURL: URL = new URL('/app/login', AUTH_CONSTANTS.Strategies.GitHub.redirectURL);
-
-      res.redirect(redirectURL.toString());
-    }
-  }
-
-  @UseGuards(AuthGoogleAuthGuard)
-  @Get('accept/google')
-  async acceptGoogle(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const result: Result<Token> = await this.tokenService.generateToken(req.user as User);
-
-    if (result.success) {
-      const redirectURL: URL = new URL('/app/accept/google', AUTH_CONSTANTS.Strategies.Google.redirectURL);
-
-      redirectURL.searchParams.set('token', result.data.token);
-
-      res.redirect(redirectURL.toString());
-    } else {
-      const redirectURL: URL = new URL('/app/login', AUTH_CONSTANTS.Strategies.Google.redirectURL);
-
-      res.redirect(redirectURL.toString());
-    }
-  }
-
   @UseGuards(AuthJwtAuthGuard)
   @Get('verify-session')
   async verifySession(): Promise<boolean> {
@@ -198,11 +79,13 @@ export class AuthController {
 
     user = await this.userService.updateUser(user, displayName, userName);
 
+    await this.tokenService.invalidateToken(extractSession(req));
+
     return await this.tokenService.generateToken(user);
   }
 
   @Post('activate-account')
-  async activateAccount(@Body() {
+  async activateAccount(@Req() req: Request, @Body() {
     activationCode
   }: {
     activationCode: string;
@@ -232,6 +115,8 @@ export class AuthController {
         };
       }
 
+      await this.tokenService.invalidateToken(extractSession(req));
+
       return await this.tokenService.generateToken(user);
     } catch (error: unknown) {
       return {
@@ -242,7 +127,7 @@ export class AuthController {
   }
 
   @Post('recover-account')
-  async recoverAccount(@Body() {
+  async recoverAccount(@Req() req: Request, @Body() {
     username
   }: {
     username: string;
@@ -255,6 +140,8 @@ export class AuthController {
         data: void 0
       };
     }
+
+    await this.tokenService.invalidateToken(extractSession(req));
 
     const result: Result<Token> = await this.tokenService.generateToken(user);
 
@@ -279,6 +166,8 @@ export class AuthController {
 
     user = await this.userService.resetPassword(user);
 
+    await this.tokenService.invalidateToken(extractSession(req));
+
     return await this.tokenService.generateToken(user);
   }
 
@@ -295,6 +184,8 @@ export class AuthController {
 
     user = await this.userService.changePassword(user, oldPassword, newPassword);
 
+    await this.tokenService.invalidateToken(extractSession(req));
+
     return await this.tokenService.generateToken(user);
   }
 
@@ -309,6 +200,8 @@ export class AuthController {
 
     user = await this.userService.setPassword(user, newPassword);
 
+    await this.tokenService.invalidateToken(extractSession(req));
+
     return await this.tokenService.generateToken(user);
   }
 
@@ -322,6 +215,8 @@ export class AuthController {
     let user: User | null = req.user as User;
 
     user = await this.userService.unsetPassword(user, oldPassword);
+
+    await this.tokenService.invalidateToken(extractSession(req));
 
     return await this.tokenService.generateToken(user);
   }

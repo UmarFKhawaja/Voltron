@@ -1,4 +1,4 @@
 export enum ProviderType {
-  GOOGLE = 'GOOGLE',
-  GITHUB = 'GITHUB'
+  FACEBOOK = 'FACEBOOK',
+  GOOGLE = 'GOOGLE'
 }

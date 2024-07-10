@@ -7,7 +7,7 @@ export const AccountSchema = new Schema<Account, AccountModel>({
     required: true,
     values: Object.values(ProviderType)
   },
-  providerInfo: {
+  providerID: {
     type: String,
     required: true,
     unique: true
@@ -24,7 +24,7 @@ AccountSchema.virtual('id').get(function () {
 
 export interface IAccount {
   providerType: string;
-  providerInfo: string;
+  providerID: string;
   createdAt: Date;
   updatedAt: Date;
   user: Types.ObjectId | Record<string, unknown>;

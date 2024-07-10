@@ -56,7 +56,7 @@ export class AcceptComponent implements OnInit {
             await this.acceptMagicLogin(router);
             break;
 
-          case 'github':
+          case 'facebook':
             await this.acceptOAuth(router, this.token);
             break;
 

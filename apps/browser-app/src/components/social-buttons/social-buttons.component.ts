@@ -44,22 +44,22 @@ export class SocialButtonsComponent implements OnInit, OnDestroy {
     return this._session;
   }
 
-  get githubLink(): string {
+  get facebookLink(): string {
     const action: string = this.mode === 'login'
       ? 'login'
-      : this.session?.accounts?.social.github
+      : this.session?.accounts?.social.facebook
         ? 'disconnect'
         : 'connect';
 
-    return `/app/${action}/github`;
+    return `/app/${action}/facebook`;
   }
 
-  get githubLabel(): string {
+  get facebookLabel(): string {
     return this.mode === 'login'
-      ? 'Continue'
-      : this.session?.accounts?.social.github
-        ? 'Disconnect'
-        : 'Connect';
+      ? 'Continue with Facebook'
+      : this.session?.accounts?.social.facebook
+        ? 'Disconnect from Facebook'
+        : 'Connect with Facebook';
   }
 
   get googleLink(): string {
@@ -74,10 +74,10 @@ export class SocialButtonsComponent implements OnInit, OnDestroy {
 
   get googleLabel(): string {
     return this.mode === 'login'
-      ? 'Continue'
+      ? 'Continue with Google'
       : this.session?.accounts?.social.google
-        ? 'Disconnect'
-        : 'Connect';
+        ? 'Disconnect from Google'
+        : 'Connect with Google';
   }
 
   ngOnInit(): void {

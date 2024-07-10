@@ -59,6 +59,26 @@ export class UserService {
     });
   }
 
+  async disconnectFacebook(token: string) {
+    return this.http.get<Result<Token>>('/api/auth/disconnect/facebook', {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
+
+  async disconnectGoogle(token: string) {
+    return this.http.get<Result<Token>>('/api/auth/disconnect/google', {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
+
   async logout(token: string) {
     return this.http.post<Result<void>>('/api/auth/logout', {}, {
       ...(token ? {

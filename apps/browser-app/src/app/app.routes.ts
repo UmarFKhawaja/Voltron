@@ -4,7 +4,11 @@ import { AcceptComponent } from '../routes/accept/accept.component';
 import { ActivateAccountComponent } from '../routes/activate-account/activate-account.component';
 import { ChangeEmailAddressComponent } from '../routes/change-email-address/change-email-address.component';
 import { ChangePasswordComponent } from '../routes/change-password/change-password.component';
-import { LoginGitHubComponent } from '../routes/login-github/login-github.component';
+import { ConnectFacebookComponent } from '../routes/connect-facebook/connect-facebook.component';
+import { ConnectGoogleComponent } from '../routes/connect-google/connect-google.component';
+import { DisconnectFacebookComponent } from '../routes/disconnect-facebook/disconnect-facebook.component';
+import { DisconnectGoogleComponent } from '../routes/disconnect-google/disconnect-google.component';
+import { LoginFacebookComponent } from '../routes/login-facebook/login-facebook.component';
 import { LoginGoogleComponent } from '../routes/login-google/login-google.component';
 import { LoginComponent } from '../routes/login/login.component';
 import { LogoutComponent } from '../routes/logout/logout.component';
@@ -27,8 +31,8 @@ export const routes: Routes = [
     component: LoginComponent
   },
   {
-    path: 'app/login/github',
-    component: LoginGitHubComponent
+    path: 'app/login/facebook',
+    component: LoginFacebookComponent
   },
   {
     path: 'app/login/google',
@@ -41,6 +45,22 @@ export const routes: Routes = [
   {
     path: 'app/accept/:method',
     component: AcceptComponent
+  },
+  {
+    path: 'app/connect/facebook',
+    component: ConnectFacebookComponent
+  },
+  {
+    path: 'app/connect/google',
+    component: ConnectGoogleComponent
+  },
+  {
+    path: 'app/disconnect/facebook',
+    component: DisconnectFacebookComponent
+  },
+  {
+    path: 'app/disconnect/google',
+    component: DisconnectGoogleComponent
   },
   {
     path: 'app/activate-account',

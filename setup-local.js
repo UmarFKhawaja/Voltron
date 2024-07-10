@@ -12,8 +12,8 @@ const {
   NODEMAILER_HOST = 'localhost',
   NODEMAILER_USERNAME = 'voltron',
   NODEMAILER_PASSWORD = '',
-  GITHUB_CLIENT_ID = '',
-  GITHUB_CLIENT_SECRET = '',
+  FACEBOOK_CLIENT_ID = '',
+  FACEBOOK_CLIENT_SECRET = '',
   GOOGLE_CLIENT_ID = '',
   GOOGLE_CLIENT_SECRET = ''
 } = process.env;
@@ -67,10 +67,10 @@ const files = [
       'AUTH_STRATEGY_MAGIC_LOGIN_EXPIRES_IN=10m',
       'AUTH_STRATEGY_MAGIC_LOGIN_BASE_URL=http://localhost:2080',
       '',
-      'AUTH_STRATEGY_GITHUB_CLIENT_ID={{GITHUB_CLIENT_ID}}',
-      'AUTH_STRATEGY_GITHUB_CLIENT_SECRET={{GITHUB_CLIENT_SECRET}}',
-      'AUTH_STRATEGY_GITHUB_ACCEPT_URL=http://localhost:2180',
-      'AUTH_STRATEGY_GITHUB_REDIRECT_URL=http://localhost:2080',
+      'AUTH_STRATEGY_FACEBOOK_CLIENT_ID={{FACEBOOK_CLIENT_ID}}',
+      'AUTH_STRATEGY_FACEBOOK_CLIENT_SECRET={{FACEBOOK_CLIENT_SECRET}}',
+      'AUTH_STRATEGY_FACEBOOK_ACCEPT_URL=http://localhost:2180',
+      'AUTH_STRATEGY_FACEBOOK_REDIRECT_URL=http://localhost:2080',
       '',
       'AUTH_STRATEGY_GOOGLE_CLIENT_ID={{GOOGLE_CLIENT_ID}}',
       'AUTH_STRATEGY_GOOGLE_CLIENT_SECRET={{GOOGLE_CLIENT_SECRET}}',
@@ -181,15 +181,15 @@ const questions = [
   },
   {
     type: 'input',
-    name: 'GITHUB_CLIENT_ID',
-    message: 'What\'s the client ID for GitHub?',
-    default: GITHUB_CLIENT_ID
+    name: 'FACEBOOK_CLIENT_ID',
+    message: 'What\'s the client ID for Facebook?',
+    default: FACEBOOK_CLIENT_ID
   },
   {
     type: 'input',
-    name: 'GITHUB_CLIENT_SECRET',
-    message: 'What\'s the client secret for GitHub?',
-    default: GITHUB_CLIENT_SECRET
+    name: 'FACEBOOK_CLIENT_SECRET',
+    message: 'What\'s the client secret for Facebook?',
+    default: FACEBOOK_CLIENT_SECRET
   },
   {
     type: 'input',

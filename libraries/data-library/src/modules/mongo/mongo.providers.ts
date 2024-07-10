@@ -81,10 +81,11 @@ export const mongoProviders = [
     useFactory: async (makeConnection: ConnectionFactory, makeModels: ModelsFactory) => {
       const connection: Connection = await makeConnection();
       const {
+        userModel,
         accountModel
       } = await makeModels(connection);
 
-      return new MongoAccountService(accountModel);
+      return new MongoAccountService(userModel, accountModel);
     },
     inject: [MONGO_CONSTANTS.Symbols.Factories.ConnectionFactory, MONGO_CONSTANTS.Symbols.Factories.ModelsFactory]
   },
