@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Params, Router } from '@angular/router';
 import { Result, Token } from '@voltron/common-library';
-import { delay } from 'rxjs';
+import { Observable } from 'rxjs';
 import { constants } from '../../app/app.constants';
 import { RouteClient } from '../../clients/route/route.client';
 import { RouteService } from '../../services/route/route.service';
@@ -38,7 +38,7 @@ export class ResetPasswordComponent implements OnInit {
     await this.routeService.parseParams(async (params: Params, router: Router): Promise<void> => {
       this.token = params['token'];
 
-      const response = await this.userService.resetPassword(this.token);
+      const response: Observable<Result<Token>> = await this.userService.resetPassword(this.token);
 
       response.subscribe({
         next: async (result: Result<Token>) => {

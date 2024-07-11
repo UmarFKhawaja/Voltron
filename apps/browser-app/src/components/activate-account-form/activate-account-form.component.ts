@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Params, Router } from '@angular/router';
 import { Result, Token } from '@voltron/common-library';
+import { Observable } from 'rxjs';
 import { constants } from '../../app/app.constants';
 import { RouteService } from '../../services/route/route.service';
 import { SnackService } from '../../services/snack/snack.service';
@@ -74,7 +75,7 @@ export class ActivateAccountFormComponent implements OnInit {
   }
 
   private async activateAccount(code: string): Promise<void> {
-    const response = await this.userService.activateAccount(code);
+    const response: Observable<Result<Token>> = await this.userService.activateAccount(code);
 
     response.subscribe({
       next: async (result: Result<Token>): Promise<void> => {

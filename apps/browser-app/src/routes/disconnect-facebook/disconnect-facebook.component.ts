@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Result, Token } from '@voltron/common-library';
+import { Observable } from 'rxjs';
 import { constants } from '../../app/app.constants';
 import { RouteClient } from '../../clients/route/route.client';
 import { ContainerComponent } from '../../components/container/container.component';
@@ -39,7 +40,7 @@ export class DisconnectFacebookComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     const token: string = this.tokenService.token;
 
-    const response = await this.userService.disconnectFacebook(token);
+    const response: Observable<Result<Token>> = await this.userService.disconnectFacebook(token);
 
     response.subscribe({
       next: async (result: Result<Token>): Promise<void> => {
@@ -54,6 +55,6 @@ export class DisconnectFacebookComponent implements OnInit {
       error: async () => {
         await this.snackService.showSnack(constants.MESSAGES.GENERAL.TRY_LATER, 'OK');
       }
-    })
+    });
   }
 }

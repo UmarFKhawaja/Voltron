@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Result } from '@voltron/common-library';
+import { Observable } from 'rxjs';
 import { constants } from '../../app/app.constants';
 import { RouteService } from '../../services/route/route.service';
 import { SnackService } from '../../services/snack/snack.service';
@@ -72,7 +73,7 @@ export class RequestActivationCodeFormComponent {
       username
     } = this._formGroup.value;
 
-    const response = await this.userService.requestActivationCode(username);
+    const response: Observable<Result<void>> = await this.userService.requestActivationCode(username);
 
     response.subscribe({
       next: async (result: Result<void>): Promise<void> => {

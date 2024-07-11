@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Params, Router, RouterModule } from '@angular/router';
+import { Result } from '@voltron/common-library';
+import { Observable } from 'rxjs';
 import { RouteClient } from '../../clients/route/route.client';
 import { ContainerComponent } from '../../components/container/container.component';
 import { HolderComponent } from '../../components/holder/holder.component';
@@ -48,9 +50,9 @@ export class LogoutComponent implements OnInit {
         await router.navigate(['']);
       };
 
-      const result = await this.userService.logout(token);
+      const response: Observable<Result<void>> = await this.userService.logout(token);
 
-      result.subscribe({
+      response.subscribe({
         next: logout,
         error: logout
       });

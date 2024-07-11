@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Params, Router, RouterModule } from '@angular/router';
 import { Result, Token } from '@voltron/common-library';
+import { Observable } from 'rxjs';
 import { constants } from '../../app/app.constants';
 import { RouteClient } from '../../clients/route/route.client';
 import { ContainerComponent } from '../../components/container/container.component';
@@ -71,9 +72,9 @@ export class AcceptComponent implements OnInit {
   }
 
   private async acceptMagicLogin(router: Router): Promise<void> {
-    const result = await this.userService.acceptMagicLogin(this.token);
+    const response: Observable<Result<Token>> = await this.userService.acceptMagicLogin(this.token);
 
-    result.subscribe({
+    response.subscribe({
       next: async (result: Result<Token>): Promise<void> => {
         if (result.success) {
           this.tokenService.saveToken(result.data.token);

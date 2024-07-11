@@ -74,9 +74,9 @@ export class LoginFormComponent {
     } = this._formGroup.value;
 
     if (password) {
-      const result: Observable<Result<Token>> = await this.userService.loginWithPassword(username, password);
+      const response: Observable<Result<Token>> = await this.userService.loginWithPassword(username, password);
 
-      result
+      response
         .pipe(
           tap((result: Result<Token>): void => {
             if (result.success) {
@@ -98,9 +98,9 @@ export class LoginFormComponent {
           }
         });
     } else {
-      const result: Observable<Result<void>> = await this.userService.loginWithMagicLogin(username);
+      const response: Observable<Result<void>> = await this.userService.loginWithMagicLogin(username);
 
-      result
+      response
         .subscribe(async (result: Result<void>): Promise<void> => {
           if (result.success) {
             await this.routeService.navigate(['app', 'show-message', constants.CODES.LOGIN.MAGIC_LOGIN.CONFIRM], {});
