@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Logger, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { EmailAddressChanged, Information, Result, Token } from '@voltron/common-library';
 import { MailService, User, VerificationRequest, VerificationRequestPurpose } from '@voltron/core-library';
 import { REDIS_CONSTANTS } from '@voltron/data-library';
