@@ -1,7 +1,9 @@
 export type Task =
   | SendRegisterMailTask
   | SendLoginWithMagicLoginMailTask
-  | SendResetAccountMailTask;
+  | SendResetAccountMailTask
+  | SendConfirmEmailAddressChangeMailTask
+  | SendCompleteEmailAddressChangeMailTask;
 
 export interface BaseTask {
   type: string;
@@ -23,6 +25,18 @@ export interface SendLoginWithMagicLoginMailTask extends BaseTask {
 
 export interface SendResetAccountMailTask extends BaseTask {
   type: 'SEND_RESET_PASSWORD_MAIL';
+  emailAddress: string;
+  confirmationURL: string;
+}
+
+export interface SendConfirmEmailAddressChangeMailTask extends BaseTask {
+  type: 'SEND_CONFIRM_EMAIL_ADDRESS_CHANGE_MAIL';
+  emailAddress: string;
+  confirmationURL: string;
+}
+
+export interface SendCompleteEmailAddressChangeMailTask extends BaseTask {
+  type: 'SEND_COMPLETE_EMAIL_ADDRESS_CHANGE_MAIL';
   emailAddress: string;
   confirmationURL: string;
 }

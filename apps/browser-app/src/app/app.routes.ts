@@ -4,6 +4,12 @@ import { AcceptComponent } from '../routes/accept/accept.component';
 import { ActivateAccountComponent } from '../routes/activate-account/activate-account.component';
 import { ChangeEmailAddressComponent } from '../routes/change-email-address/change-email-address.component';
 import { ChangePasswordComponent } from '../routes/change-password/change-password.component';
+import {
+  CompleteEmailAddressChangeComponent
+} from '../routes/complete-email-address-change/complete-email-address-change.component';
+import {
+  ConfirmEmailAddressChangeComponent
+} from '../routes/confirm-email-address-change/confirm-email-address-change.component';
 import { ConnectFacebookComponent } from '../routes/connect-facebook/connect-facebook.component';
 import { ConnectGoogleComponent } from '../routes/connect-google/connect-google.component';
 import { DisconnectFacebookComponent } from '../routes/disconnect-facebook/disconnect-facebook.component';
@@ -82,6 +88,16 @@ export const routes: Routes = [
   {
     path: 'app/change-email-address',
     component: ChangeEmailAddressComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'app/confirm-email-address-change',
+    component: ConfirmEmailAddressChangeComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'app/complete-email-address-change',
+    component: CompleteEmailAddressChangeComponent,
     canActivate: [authGuard]
   },
   {

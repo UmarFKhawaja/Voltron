@@ -28,6 +28,12 @@
       <p>The email contains a link which will reset your password and log you in.</p>
       <p>You can then set your password as normal.</p>
     </app-warning-message>
+    <app-warning-message *ngSwitchCase="CODES.CONFIRM_EMAIL_ADDRESS_CHANGE.CONFIRM">
+      <p>We have confirmed your change of email address.</p>
+    </app-warning-message>
+    <app-warning-message *ngSwitchCase="CODES.COMPLETE_EMAIL_ADDRESS_CHANGE.CONFIRM">
+      <p>We have complete your change of email address.</p>
+    </app-warning-message>
     <app-warning-message *ngSwitchCase="CODES.CHANGE_PASSWORD.CONFIRM">
       <p>We have changed your password.</p>
     </app-warning-message>

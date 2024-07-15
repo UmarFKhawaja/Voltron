@@ -1,1 +1,32 @@
-<p>change-email-address-form works!</p>
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <mat-form-field class="input">
+    <input matNativeControl type="text" formControlName="oldEmailAddress" placeholder="Old email address" readonly/>
+  </mat-form-field>
+  <mat-form-field class="input">
+    <input matNativeControl type="text" formControlName="newEmailAddress" placeholder="New email address" readonly="{{ status !== 'NOT_STARTED' }}"/>
+  </mat-form-field>
+  <button mat-button class="button" type="submit" [disabled]="!formGroup.valid || !!this.code">
+    Change
+  </button>
+</form>
+@if (status !== 'NOT_STARTED') {
+  <app-divider/>
+  @if (status === 'OLD_EMAIL_ADDRESS_NOT_CONFIRMED') {
+    <p>Check your inbox at your old email address for an email from us, asking you to confirm the change of email address.</p>
+  }
+  @if (status === 'NEW_EMAIL_ADDRESS_NOT_CONFIRMED') {
+    <p>Check your inbox at your new email address for an email from us, asking you to confirm the change of email address.</p>
+  }
+  <button mat-button class="button" (click)="onResendRequestLink()">
+    <mat-icon>
+      replay
+    </mat-icon>
+    <span>Resend request</span>
+  </button>
+  <button mat-button class="button" (click)="onCancelRequestLink()">
+    <mat-icon>
+      delete
+    </mat-icon>
+    <span>Cancel request</span>
+  </button>
+}

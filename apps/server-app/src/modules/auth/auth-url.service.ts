@@ -19,4 +19,22 @@ export class AuthURLService {
 
     return url.toString();
   }
+
+  formatConfirmEmailAddressChangeConfirmationURL(token: string, code: string): string {
+    const url: URL = new URL(AUTH_CONSTANTS.Actions.ConfirmEmailAddressChange.path, AUTH_CONSTANTS.Actions.baseURL);
+
+    url.searchParams.set('token', token);
+    url.searchParams.set('code', code);
+
+    return url.toString();
+  }
+
+  formatCompleteEmailAddressChangeConfirmationURL(token: string, code: string): string {
+    const url: URL = new URL(AUTH_CONSTANTS.Actions.CompleteEmailAddressChange.path, AUTH_CONSTANTS.Actions.baseURL);
+
+    url.searchParams.set('token', token);
+    url.searchParams.set('code', code);
+
+    return url.toString();
+  }
 }

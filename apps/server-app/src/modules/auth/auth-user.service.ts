@@ -65,108 +65,66 @@ export class AuthUserService {
     return user;
   }
 
-  async updateUser(user: User | null, displayName: string, userName: string): Promise<User | null> {
-    if (!user) {
-      return null;
-    }
-
+  async updateUser(user: User, displayName: string, userName: string): Promise<User> {
     user = await this.userService.updateUser(user._id, displayName, userName, user.emailAddress);
 
-    if (!user) {
-      return null;
-    }
-
     user = await this.userService.getUserByID(user._id);
 
     return user;
   }
 
-  async verifyUser(user: User | null): Promise<User | null> {
-    if (!user) {
-      return null;
-    }
-
+  async verifyUser(user: User): Promise<User> {
     user = await this.userService.verifyUser(user._id);
 
-    if (!user) {
-      return null;
-    }
-
     user = await this.userService.getUserByID(user._id);
 
     return user;
   }
 
-  async resetPassword(user: User | null): Promise<User | null> {
-    if (!user) {
-      return null;
-    }
-
+  async resetPassword(user: User): Promise<User> {
     user = await this.userService.unsetPassword(user._id);
 
-    if (!user) {
-      return null;
-    }
-
     user = await this.userService.getUserByID(user._id);
 
     return user;
   }
 
-  async changePassword(user: User | null, oldPassword: string, newPassword: string): Promise<User | null> {
-    if (!user) {
-      return null;
-    }
+  async changeEmailAddress(user: User, emailAddress: string): Promise<User> {
+    user = await this.userService.updateUser(user._id, user.displayName, user.userName, emailAddress);
 
+    return user;
+  }
+
+  async changePassword(user: User, oldPassword: string, newPassword: string): Promise<User> {
     if (!compareSync(oldPassword, user.saltHash)) {
-      return null;
+      throw new Error('the old password is incorrect');
     }
 
     user = await this.userService.setPassword(user._id, hashSync(newPassword));
 
-    if (!user) {
-      return null;
-    }
-
     user = await this.userService.getUserByID(user._id);
 
     return user;
   }
 
-  async setPassword(user: User | null, newPassword: string): Promise<User | null> {
-    if (!user) {
-      return null;
-    }
-
+  async setPassword(user: User, newPassword: string): Promise<User> {
     if (user.saltHash) {
-      return null;
+      throw new Error('the old password hasn\'t been provided');
     }
 
     user = await this.userService.setPassword(user._id, hashSync(newPassword));
-
-    if (!user) {
-      return null;
-    }
 
     user = await this.userService.getUserByID(user._id);
 
     return user;
   }
 
-  async unsetPassword(user: User | null, oldPassword: string): Promise<User | null> {
-    if (!user) {
-      return null;
-    }
-
+  async unsetPassword(user: User, oldPassword: string): Promise<User> {
     if (!compareSync(oldPassword, user.saltHash)) {
-      return null;
+      throw new Error('the old password is incorrect');
     }
 
     user = await this.userService.unsetPassword(user._id);
-
-    if (!user) {
-      return null;
-    }
 
     user = await this.userService.getUserByID(user._id);
 

@@ -43,6 +43,12 @@ export const AUTH_CONSTANTS = {
     },
     RecoverAccount: {
       path: '/app/reset-password'
+    },
+    ConfirmEmailAddressChange: {
+      path: '/app/confirm-email-address-change'
+    },
+    CompleteEmailAddressChange: {
+      path: '/app/complete-email-address-change'
     }
   }
 };

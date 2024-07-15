@@ -4,4 +4,8 @@ export interface MailService {
   sendLoginWithMagicLoginMail(emailAddress: string, confirmationURL: string): Promise<boolean>;
 
   sendResetPasswordMail(emailAddress: string, confirmationURL: string): Promise<boolean>;
+
+  sendConfirmEmailAddressChange(emailAddress: string, confirmationURL: string): Promise<boolean>;
+
+  sendCompleteEmailAddressChange(emailAddress: string, confirmationURL: string): Promise<boolean>;
 }

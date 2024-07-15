@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Result, Session, Token } from '@voltron/common-library';
 import { Account, ProviderType, SessionService, User } from '@voltron/core-library';

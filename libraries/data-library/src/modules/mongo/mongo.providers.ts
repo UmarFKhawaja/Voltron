@@ -94,10 +94,11 @@ export const mongoProviders = [
     useFactory: async (makeConnection: ConnectionFactory, makeModels: ModelsFactory) => {
       const connection: Connection = await makeConnection();
       const {
+        userModel,
         verificationRequestModel
       } = await makeModels(connection);
 
-      return new MongoVerificationRequestService(verificationRequestModel);
+      return new MongoVerificationRequestService(userModel, verificationRequestModel);
     },
     inject: [MONGO_CONSTANTS.Symbols.Factories.ConnectionFactory, MONGO_CONSTANTS.Symbols.Factories.ModelsFactory]
   }

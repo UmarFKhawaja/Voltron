@@ -1,4 +1,5 @@
 import { Document, Model, Query, Schema } from 'mongoose';
+import { VerificationRequestPurpose } from './VerificationRequestPurpose';
 import { VerificationRequestStatus } from './VerificationRequestStatus';
 
 export const VerificationRequestSchema = new Schema<VerificationRequest, VerificationRequestModel>({
@@ -19,12 +20,22 @@ export const VerificationRequestSchema = new Schema<VerificationRequest, Verific
     type: String,
     required: true
   },
-  expiresAt: {
-    type: Date,
-    required: true
+  details: {
+    type: Schema.Types.Mixed,
+    default: {}
+  },
+  purpose: {
+    type: String,
+    required: true,
+    enum: Object.values(VerificationRequestPurpose)
   },
   status: {
     type: String,
+    required: true,
+    enum: Object.values(VerificationRequestStatus)
+  },
+  expiresAt: {
+    type: Date,
     required: true
   }
 });
@@ -38,8 +49,10 @@ export interface IVerificationRequest {
   userID: string;
   resourceID: string;
   resourceType: string;
-  expiresAt: Date;
+  details: object;
+  purpose: VerificationRequestPurpose;
   status: VerificationRequestStatus;
+  expiresAt: Date;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Result, Token } from '@voltron/common-library';
+import { Information, Result, Token } from '@voltron/common-library';
 
 @Injectable({
   providedIn: 'root'
@@ -90,7 +90,15 @@ export class UserService {
   }
 
   async verifySession(token: string) {
-    return this.http.get<Result<void>>('/api/auth/verify-session', {
+    return this.http.get<Result<boolean>>('/api/auth/verify-session', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+
+  async getInformation(token: string) {
+    return this.http.get<Result<Information>>('/api/auth/get-information', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -112,6 +120,65 @@ export class UserService {
 
   async resetPassword(token: string) {
     return this.http.get<Result<Token>>('/api/auth/reset-password', {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
+
+  async startEmailAddressChange(token: string, emailAddress: string) {
+    return this.http.post<Result<Information>>('/api/auth/start-email-address-change', {
+      emailAddress
+    }, {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
+
+  async confirmEmailAddressChange(token: string, confirmationCode: string) {
+    return this.http.post<Result<Information>>('/api/auth/confirm-email-address-change', {
+      confirmationCode
+    }, {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
+
+  async completeEmailAddressChange(token: string, confirmationCode: string) {
+    return this.http.post<Result<Token>>('/api/auth/complete-email-address-change', {
+      confirmationCode
+    }, {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
+
+  async cancelEmailAddressChange(token: string, confirmationCode: string) {
+    return this.http.post<Result<Information>>('/api/auth/cancel-email-address-change', {
+      confirmationCode
+    }, {
+      ...(token ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } : {})
+    });
+  }
+
+  async resendEmailAddressChange(token: string) {
+    return this.http.post<Result<Information>>('/api/auth/resend-email-address-change', {
+    }, {
       ...(token ? {
         headers: {
           Authorization: `Bearer ${token}`

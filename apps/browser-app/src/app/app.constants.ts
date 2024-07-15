@@ -27,6 +27,12 @@ export const constants = {
     RESET_PASSWORD: {
       CHECK: 'password-not-reset'
     },
+    CONFIRM_EMAIL_ADDRESS_CHANGE: {
+      CONFIRM: 'email-address-change-confirmed'
+    },
+    COMPLETE_EMAIL_ADDRESS_CHANGE: {
+      CONFIRM: 'email-address-change-completed'
+    },
     CHANGE_PASSWORD: {
       CONFIRM: 'password-changed'
     },
@@ -53,6 +59,12 @@ export const constants = {
     },
     RECOVER_ACCOUNT: {
       CHECK: 'Try again because there was a problem recovering your account.'
+    },
+    CONFIRM_EMAIL_ADDRESS_CHANGE: {
+      CHECK: 'Try again because there was a problem confirming the email address change'
+    },
+    COMPLETE_EMAIL_ADDRESS_CHANGE: {
+      CHECK: 'Try again because there was a problem completing the email address change'
     },
     CHANGE_PASSWORD: {
       CHECK: 'Make sure that you are providing the old password and a new password.'

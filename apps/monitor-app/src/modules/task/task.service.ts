@@ -24,6 +24,14 @@ export class TaskService {
         await this.mailService.sendResetPasswordMail(task.emailAddress, task.confirmationURL);
         break;
 
+      case 'SEND_CONFIRM_EMAIL_ADDRESS_CHANGE_MAIL':
+        await this.mailService.sendConfirmEmailAddressChange(task.emailAddress, task.confirmationURL);
+        break;
+
+      case 'SEND_COMPLETE_EMAIL_ADDRESS_CHANGE_MAIL':
+        await this.mailService.sendCompleteEmailAddressChange(task.emailAddress, task.confirmationURL);
+        break;
+
       default:
         Logger.warn(task);
         break;

@@ -35,6 +35,22 @@ export class RedisMailService implements MailService {
     });
   }
 
+  async sendConfirmEmailAddressChange(emailAddress: string, confirmationURL: string): Promise<boolean> {
+    return await this.publishMessage({
+      type: 'SEND_CONFIRM_EMAIL_ADDRESS_CHANGE_MAIL',
+      emailAddress,
+      confirmationURL
+    });
+  }
+
+  async sendCompleteEmailAddressChange(emailAddress: string, confirmationURL: string): Promise<boolean> {
+    return await this.publishMessage({
+      type: 'SEND_COMPLETE_EMAIL_ADDRESS_CHANGE_MAIL',
+      emailAddress,
+      confirmationURL
+    });
+  }
+
   private async publishMessage<T>(message: T): Promise<boolean> {
     const executedAt: Date = dayjs().toDate();
 
