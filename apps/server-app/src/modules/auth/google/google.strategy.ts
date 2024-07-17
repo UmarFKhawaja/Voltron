@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ProviderType, User } from '@voltron/core-library';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { AuthGoogleProfileService } from './auth-google-profile.service';
-import { AuthUserService } from './auth-user.service';
-import { AUTH_CONSTANTS } from './auth.constants';
+import { AUTH_CONSTANTS } from '../auth.constants';
+import { AuthUserService } from '../core/user.service';
+import { AuthGoogleProfileService } from './google-profile.service';
 
 @Injectable()
 export class AuthGoogleStrategy extends PassportStrategy(Strategy, 'google') {

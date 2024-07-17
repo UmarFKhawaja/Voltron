@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthVerificationRequestService } from './auth-verification-request.service';
+import { AuthVerificationRequestService } from './verification-request.service';
 
 describe('AuthVerificationRequestService', () => {
   let service: AuthVerificationRequestService;

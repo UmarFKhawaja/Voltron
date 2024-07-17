@@ -3,8 +3,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { MailService, User } from '@voltron/core-library';
 import { REDIS_CONSTANTS } from '@voltron/data-library';
 import Strategy from 'passport-magic-login';
-import { AuthUserService } from './auth-user.service';
-import { AUTH_CONSTANTS } from './auth.constants';
+import { AUTH_CONSTANTS } from '../auth.constants';
+import { AuthUserService } from '../core/user.service';
 
 @Injectable()
 export class AuthMagicLoginStrategy extends PassportStrategy(Strategy, 'magic-login') {

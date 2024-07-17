@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthFacebookProfileService } from './auth-facebook-profile.service';
+import { AuthFacebookProfileService } from './facebook-profile.service';
 
 describe('AuthFacebookProfileService', () => {
   let service: AuthFacebookProfileService;

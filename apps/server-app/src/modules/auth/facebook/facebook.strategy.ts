@@ -3,9 +3,9 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ProviderType, User } from '@voltron/core-library';
 import { Profile, Strategy } from 'passport-facebook';
 import { VerifyCallback } from 'passport-oauth2';
-import { AuthFacebookProfileService } from './auth-facebook-profile.service';
-import { AuthUserService } from './auth-user.service';
-import { AUTH_CONSTANTS } from './auth.constants';
+import { AUTH_CONSTANTS } from '../auth.constants';
+import { AuthUserService } from '../core/user.service';
+import { AuthFacebookProfileService } from './facebook-profile.service';
 
 @Injectable()
 export class AuthFacebookStrategy extends PassportStrategy(Strategy, 'facebook') {

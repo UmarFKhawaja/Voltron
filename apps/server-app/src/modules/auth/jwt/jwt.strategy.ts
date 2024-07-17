@@ -4,9 +4,9 @@ import { Session } from '@voltron/common-library';
 import { User } from '@voltron/core-library';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { AuthTokenService } from './auth-token.service';
-import { AuthUserService } from './auth-user.service';
-import { AUTH_CONSTANTS } from './auth.constants';
+import { AUTH_CONSTANTS } from '../auth.constants';
+import { AuthTokenService } from '../core/token.service';
+import { AuthUserService } from '../core/user.service';
 
 const {
   fromAuthHeaderAsBearerToken,

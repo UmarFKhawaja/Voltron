@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthGoogleProfileService } from './auth-google-profile.service';
+import { AuthGoogleProfileService } from './google-profile.service';
 
 describe('AuthGoogleProfileService', () => {
   let service: AuthGoogleProfileService;

@@ -1,14 +1,14 @@
-import { Body, Controller, Get, Inject, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { EmailAddressChanged, Information, Result, Token } from '@voltron/common-library';
 import { MailService, User, VerificationRequest, VerificationRequestPurpose } from '@voltron/core-library';
 import { REDIS_CONSTANTS } from '@voltron/data-library';
-import { Request } from 'express';
-import { AuthJwtAuthGuard } from './auth-jwt.guard';
-import { AuthTokenService } from './auth-token.service';
-import { AuthURLService } from './auth-url.service';
-import { AuthUserService } from './auth-user.service';
-import { AuthVerificationRequestService } from './auth-verification-request.service';
+import { Request, Response } from 'express';
 import { createEmailAddressChanged, extractSession, extractToken } from './auth.methods';
+import { AuthTokenService } from './core/token.service';
+import { AuthURLService } from './core/url.service';
+import { AuthUserService } from './core/user.service';
+import { AuthVerificationRequestService } from './core/verification-request.service';
+import { AuthJwtAuthGuard } from './jwt/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -20,6 +20,39 @@ export class AuthController {
     private readonly userService: AuthUserService,
     private readonly verificationRequestService: AuthVerificationRequestService
   ) {
+  }
+
+  @Post('register')
+  async post(@Body() {
+    displayName,
+    userName,
+    emailAddress,
+    password
+  }: {
+    displayName: string,
+    userName: string,
+    emailAddress: string,
+    password: string
+  }): Promise<Result<void>> {
+    try {
+      const user: User = await this.userService.registerUser(displayName, userName, emailAddress, password);
+
+      const verificationRequest: VerificationRequest = await this.verificationRequestService.createRegisterVerificationRequest(user);
+
+      const verificationURL: string = this.urlService.formatRegisterVerificationURL(verificationRequest);
+
+      await this.mailService.sendRegisterMail(user.emailAddress, verificationURL);
+
+      return {
+        success: true,
+        data: void 0
+      };
+    } catch (error: unknown) {
+      return {
+        success: false,
+        error: error as Error
+      };
+    }
   }
 
   @Post('request-activation-code')
@@ -58,49 +91,6 @@ export class AuthController {
       success: true,
       data: void 0
     };
-  }
-
-  @UseGuards(AuthJwtAuthGuard)
-  @Get('verify-session')
-  async verifySession(): Promise<Result<boolean>> {
-    return {
-      success: true,
-      data: true
-    };
-  }
-
-  @UseGuards(AuthJwtAuthGuard)
-  @Get('get-information')
-  async getInformation(@Req() req: Request): Promise<Result<Information>> {
-    const verificationRequest: VerificationRequest | null = await this.verificationRequestService
-      .findVerificationRequestByUserAndPurpose(req.user as User, VerificationRequestPurpose.CHANGE_EMAIL_ADDRESS);
-
-    const information: Information = {
-      emailAddressChanged: createEmailAddressChanged(verificationRequest)
-    };
-
-    return {
-      success: true,
-      data: information
-    };
-  }
-
-  @UseGuards(AuthJwtAuthGuard)
-  @Post('update-profile')
-  async updateProfile(@Req() req: Request, @Body() {
-    displayName,
-    userName
-  }: {
-    displayName: string;
-    userName: string;
-  }): Promise<Result<Token>> {
-    let user: User | null = req.user as User;
-
-    user = await this.userService.updateUser(user, displayName, userName);
-
-    await this.tokenService.invalidateToken(extractSession(req));
-
-    return await this.tokenService.generateToken(user);
   }
 
   @Post('activate-account')
@@ -145,45 +135,51 @@ export class AuthController {
     }
   }
 
-  @Post('recover-account')
-  async recoverAccount(@Req() req: Request, @Body() {
-    username
-  }: {
-    username: string;
-  }): Promise<Result<void>> {
-    const user: User | null = await this.userService.findUserByUsername(username);
-
-    if (!user) {
-      return {
-        success: true,
-        data: void 0
-      };
-    }
-
+  @UseGuards(AuthJwtAuthGuard)
+  @Post('logout')
+  async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
     await this.tokenService.invalidateToken(extractSession(req));
 
-    const result: Result<Token> = await this.tokenService.generateToken(user);
+    res.status(200).end();
+  }
 
-    if (!result.success) {
-      return result;
-    }
-
-    const confirmationURL: string = this.urlService.formatRecoverAccountConfirmationURL(result.data.token);
-
-    await this.mailService.sendResetPasswordMail(user.emailAddress, confirmationURL);
-
+  @UseGuards(AuthJwtAuthGuard)
+  @Get('verify-session')
+  async verifySession(): Promise<Result<boolean>> {
     return {
       success: true,
-      data: void 0
+      data: true
     };
   }
 
   @UseGuards(AuthJwtAuthGuard)
-  @Get('reset-password')
-  async resetPassword(@Req() req: Request): Promise<Result<Token>> {
+  @Get('get-information')
+  async getInformation(@Req() req: Request): Promise<Result<Information>> {
+    const verificationRequest: VerificationRequest | null = await this.verificationRequestService
+      .findVerificationRequestByUserAndPurpose(req.user as User, VerificationRequestPurpose.CHANGE_EMAIL_ADDRESS);
+
+    const information: Information = {
+      emailAddressChanged: createEmailAddressChanged(verificationRequest)
+    };
+
+    return {
+      success: true,
+      data: information
+    };
+  }
+
+  @UseGuards(AuthJwtAuthGuard)
+  @Post('update-profile')
+  async updateProfile(@Req() req: Request, @Body() {
+    displayName,
+    userName
+  }: {
+    displayName: string;
+    userName: string;
+  }): Promise<Result<Token>> {
     let user: User | null = req.user as User;
 
-    user = await this.userService.resetPassword(user);
+    user = await this.userService.updateUser(user, displayName, userName);
 
     await this.tokenService.invalidateToken(extractSession(req));
 
@@ -386,65 +382,6 @@ export class AuthController {
         }
       };
     }
-  }
-
-  @UseGuards(AuthJwtAuthGuard)
-  @Post('change-password')
-  async changePassword(@Req() req: Request, @Body() {
-    oldPassword,
-    newPassword
-  }: {
-    oldPassword: string;
-    newPassword: string;
-  }): Promise<Result<Token>> {
-    try {
-      let user: User | null = req.user as User;
-
-      user = await this.userService.changePassword(user, oldPassword, newPassword);
-
-      await this.tokenService.invalidateToken(extractSession(req));
-
-      return await this.tokenService.generateToken(user);
-    } catch (error: unknown) {
-      return {
-        success: false,
-        error: {
-          message: (error as Error).message
-        }
-      };
-    }
-  }
-
-  @UseGuards(AuthJwtAuthGuard)
-  @Post('set-password')
-  async setPassword(@Req() req: Request, @Body() {
-    newPassword
-  }: {
-    newPassword: string;
-  }): Promise<Result<Token>> {
-    let user: User | null = req.user as User;
-
-    user = await this.userService.setPassword(user, newPassword);
-
-    await this.tokenService.invalidateToken(extractSession(req));
-
-    return await this.tokenService.generateToken(user);
-  }
-
-  @UseGuards(AuthJwtAuthGuard)
-  @Post('unset-password')
-  async unsetPassword(@Req() req: Request, @Body() {
-    oldPassword
-  }: {
-    oldPassword: string;
-  }): Promise<Result<Token>> {
-    let user: User | null = req.user as User;
-
-    user = await this.userService.unsetPassword(user, oldPassword);
-
-    await this.tokenService.invalidateToken(extractSession(req));
-
-    return await this.tokenService.generateToken(user);
   }
 
   @UseGuards(AuthJwtAuthGuard)

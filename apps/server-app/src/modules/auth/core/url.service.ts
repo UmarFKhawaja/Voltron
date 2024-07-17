@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { VerificationRequest } from '@voltron/core-library';
-import { AUTH_CONSTANTS } from './auth.constants';
+import { AUTH_CONSTANTS } from '../auth.constants';
 
 @Injectable()
 export class AuthURLService {
