@@ -344,6 +344,8 @@ export class AuthController {
       };
     }
 
+    user = await this.userService.getUserByID(user._id);
+
     return await this.tokenService.generateToken(user);
   }
 
@@ -390,7 +392,7 @@ export class AuthController {
     try {
       const user: User = req.user as User;
 
-      let verificationRequest: VerificationRequest | null = await this.verificationRequestService
+      const verificationRequest: VerificationRequest | null = await this.verificationRequestService
         .recreateVerificationRequest(user, VerificationRequestPurpose.CHANGE_EMAIL_ADDRESS);
 
       if (!verificationRequest) {
@@ -404,6 +406,7 @@ export class AuthController {
 
       const emailAddressChanged: EmailAddressChanged = verificationRequest.details as EmailAddressChanged;
 
+      // eslint-disable-next-line @typescript-eslint/no-inferrable-types
       let isSuccess: boolean = false;
 
       switch (emailAddressChanged.status) {
