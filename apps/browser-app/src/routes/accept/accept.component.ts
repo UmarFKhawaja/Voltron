@@ -36,6 +36,7 @@ import { UserService } from '../../services/user/user.service';
 export class AcceptComponent implements OnInit {
   method: string;
   token: string;
+  path: string;
 
   constructor(
     private readonly routeService: RouteService,
@@ -44,12 +45,16 @@ export class AcceptComponent implements OnInit {
   ) {
     this.method = '';
     this.token = '';
+    this.path = '';
   }
 
   async ngOnInit(): Promise<void> {
     await this.routeService.parseParams(async (params: Params, router: Router): Promise<void> => {
       this.method = params['method'];
       this.token = params['token'];
+      this.path = params['path'];
+
+      console.log(this.path);
 
       if (this.token) {
         switch (this.method) {
@@ -58,11 +63,11 @@ export class AcceptComponent implements OnInit {
             break;
 
           case 'facebook':
-            await this.acceptOAuth(router, this.token);
+            await this.acceptOAuth(router, this.token, this.path);
             break;
 
           case 'google':
-            await this.acceptOAuth(router, this.token);
+            await this.acceptOAuth(router, this.token, this.path);
             break;
         }
       } else {
@@ -90,9 +95,9 @@ export class AcceptComponent implements OnInit {
     });
   }
 
-  private async acceptOAuth(router: Router, token: string): Promise<void> {
+  private async acceptOAuth(router: Router, token: string, path: string): Promise<void> {
     this.tokenService.saveToken(token);
 
-    await router.navigate(['']);
+    await router.navigate([path]);
   }
 }

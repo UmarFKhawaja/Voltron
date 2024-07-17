@@ -83,22 +83,6 @@ This is a work in progress.
 
 As such some features are not yet working as intended. A brief description of the missing features follows:
 
-#### Missing feature: Manage profile
-
-Once this capability is implemented, the user will be able to:
-
-* Change email address
-
-When changing their email address, the change will be completed in 2 steps. First, an email will be sent to their old email address to confirm that the change has been initiated by them. When they confirm the change, an email will be sent to their new email address to confirm it is correct and in their control.
-
-> A user who does not have a password set and does not have their account linked to an OAuth account can still login using magic login, where an email is sent to them with a link to complete the login process.
-> 
-> Not having a password is considered more secure because there is no password that can be guessed. Authentication is achieved by proving access to the registered email address.
-
-#### Incomplete feature: Connect with OAuth
-
-Once this capability is fully implemented, when the user connects their account to an OAuth provider, the user will be return to the `/app/manage-profile` page rather than the `/` page.
-
 #### Incomplete feature: Send mail
 
 An email is not sent out to the user when registering or logging in with magic login.

@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { Result, Token } from '@voltron/common-library';
 import { ProviderType, User } from '@voltron/core-library';
 import { Request, Response } from 'express';
@@ -41,7 +41,13 @@ export class AuthFacebookController {
 
   @UseGuards(AuthFacebookAuthGuard)
   @Get('accept/facebook')
-  async acceptFacebook(@Req() req: Request, @Res() res: Response): Promise<void> {
+  async acceptFacebook(@Req() req: Request, @Res() res: Response, @Query('state') state: string): Promise<void> {
+    const json: string = Buffer
+      .from(state, 'base64')
+      .toString('utf-8');
+
+    const { path }: { path: string; } = JSON.parse(json) as { path: string; };
+
     await this.tokenService.invalidateToken(extractSession(req));
 
     const result: Result<Token> = await this.tokenService.generateToken(req.user as User);
@@ -50,6 +56,7 @@ export class AuthFacebookController {
       const redirectURL: URL = new URL('/app/accept/facebook', AUTH_CONSTANTS.Strategies.Facebook.redirectURL);
 
       redirectURL.searchParams.set('token', result.data.token);
+      redirectURL.searchParams.set('path', path);
 
       res.redirect(redirectURL.toString());
     } else {

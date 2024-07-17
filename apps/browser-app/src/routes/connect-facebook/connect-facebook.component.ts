@@ -19,6 +19,6 @@ import { TitleComponent } from '../../components/title/title.component';
 })
 export class ConnectFacebookComponent implements OnInit {
   ngOnInit(): void {
-    window.location.href = '/api/auth/connect/facebook';
+    window.location.href = '/api/auth/connect/facebook?path=/app/manage-profile';
   }
 }

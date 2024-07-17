@@ -19,6 +19,6 @@ import { TitleComponent } from '../../components/title/title.component';
 })
 export class ConnectGoogleComponent implements OnInit {
   ngOnInit(): void {
-    window.location.href = '/api/auth/connect/google';
+    window.location.href = '/api/auth/connect/google?path=/app/manage-profile';
   }
 }
