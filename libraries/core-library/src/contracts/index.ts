@@ -1,3 +1,4 @@
+export * from './AccessService';
 export * from './AccountService';
 export * from './MailService';
 export * from './MessageService';
