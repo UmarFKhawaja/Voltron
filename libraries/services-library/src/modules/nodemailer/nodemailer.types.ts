@@ -1,3 +1,3 @@
-import { Transporter } from 'nodemailer';
+import { Transporter as Connection } from 'nodemailer';
 
-export type TransporterFactory = () => Transporter;
+export type ConnectionFactory = () => Promise<Connection>;

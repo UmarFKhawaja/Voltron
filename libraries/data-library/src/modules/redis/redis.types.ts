@@ -1,3 +1,3 @@
-import Redis from 'ioredis';
+import { Redis as Connection } from 'ioredis';
 
-export type ConnectionFactory = () => Promise<Redis>;
+export type ConnectionFactory = () => Promise<Connection>;

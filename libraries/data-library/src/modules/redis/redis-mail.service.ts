@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { MailService, serializeJSON } from '@voltron/core-library';
 import dayjs from 'dayjs';
-import { Redis } from 'ioredis';
+import { Redis as Connection } from 'ioredis';
 import { REDIS_CONSTANTS } from './redis.constants';
 
 @Injectable()
 export class RedisMailService implements MailService {
   constructor(
-    private redis: Redis
+    private connection: Connection
   ) {
   }
 
@@ -54,7 +54,7 @@ export class RedisMailService implements MailService {
   private async publishMessage<T>(message: T): Promise<boolean> {
     const executedAt: Date = dayjs().toDate();
 
-    const result = await this.redis.publish(REDIS_CONSTANTS.Names.Notifications, serializeJSON<T & {
+    const result = await this.connection.publish(REDIS_CONSTANTS.Names.Notifications, serializeJSON<T & {
       createdAt: Date;
       updatedAt: Date;
     }>({

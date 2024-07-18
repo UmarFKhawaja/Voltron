@@ -1,7 +1,7 @@
 export const NODEMAILER_CONSTANTS = {
   Symbols: {
     Factories: {
-      NodemailerTransportFactory: 'NODEMAILER_TRANSPORT_FACTORY'
+      NodemailerConnectionFactory: 'NODEMAILER_CONNECTION_FACTORY'
     },
     Services: {
       MailService: 'NODEMAILER_MAIL_SERVICE'

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { MongoModule, RedisModule } from '@voltron/data-library';
+import { CerbosModule, MongoModule, RedisModule } from '@voltron/data-library';
 import { AuthController } from './auth.controller';
 import { AuthCoreModule } from './core/core.module';
 import { AuthFacebookModule } from './facebook/facebook.module';
@@ -12,6 +12,7 @@ import { AuthPasswordModule } from './password/password.module';
 @Module({
   imports: [
     PassportModule,
+    CerbosModule,
     MongoModule,
     RedisModule,
     AuthCoreModule,

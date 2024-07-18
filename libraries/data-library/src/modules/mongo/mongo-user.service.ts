@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Account, AccountModel, ProviderType, User, UserModel, UserService } from '@voltron/core-library';
 import { hashSync } from 'bcryptjs';
 import dayjs from 'dayjs';

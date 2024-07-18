@@ -41,6 +41,10 @@ const files = [
   {
     name: 'apps/monitor-app/.env',
     lines: [
+      'CERBOS_HOST=localhost',
+      'CERBOS_HTTP_PORT=23592',
+      'CERBOS_GRPC_PORT=23593',
+      '',
       'MONGO_HOST=localhost',
       'MONGO_PORT=27217',
       'MONGO_USERNAME=voltron',
@@ -51,9 +55,6 @@ const files = [
       'REDIS_PORT=26379',
       'REDIS_USERNAME=',
       'REDIS_PASSWORD={{PASSWORD}}',
-      '',
-      'CERBOS_HTTP_PORT=23592',
-      'CERBOS_GRPC_PORT=23593',
       ''
     ]
   },
@@ -79,6 +80,10 @@ const files = [
       '',
       'AUTH_ACTIONS_BASE_URL=http://localhost:2080',
       '',
+      'CERBOS_HOST=localhost',
+      'CERBOS_HTTP_PORT=23592',
+      'CERBOS_GRPC_PORT=23593',
+      '',
       'MONGO_HOST=localhost',
       'MONGO_PORT=27217',
       'MONGO_USERNAME=voltron',
@@ -89,9 +94,6 @@ const files = [
       'REDIS_PORT=26379',
       'REDIS_USERNAME=',
       'REDIS_PASSWORD={{PASSWORD}}',
-      '',
-      'CERBOS_HTTP_PORT=23592',
-      'CERBOS_GRPC_PORT=23593',
       '',
       'NODEMAILER_HOST={{NODEMAILER_HOST}}',
       'NODEMAILER_PORT=587',

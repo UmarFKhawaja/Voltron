@@ -1,4 +1,4 @@
-import { Redis } from 'ioredis';
+import { Redis as Connection } from 'ioredis';
 import { RedisMailService } from './redis-mail.service';
 import { RedisMessageService } from './redis-message.service';
 import { RedisSessionService } from './redis-session.service';
@@ -9,7 +9,7 @@ export const redisProviders = [
   {
     provide: REDIS_CONSTANTS.Symbols.Factories.ConnectionFactory,
     useFactory: (): ConnectionFactory => {
-      return async (): Promise<Redis> => {
+      return async (): Promise<Connection> => {
         const options = {
           host: REDIS_CONSTANTS.Settings.host,
           port: REDIS_CONSTANTS.Settings.port,
@@ -21,36 +21,36 @@ export const redisProviders = [
           } : {})
         };
 
-        const redis: Redis = new Redis(options);
+        const connection: Connection = new Connection(options);
 
-        return redis;
+        return connection;
       };
     }
   },
   {
     provide: REDIS_CONSTANTS.Symbols.Services.MailService,
     useFactory: async (makeConnection: ConnectionFactory) => {
-      const redis: Redis = await makeConnection();
+      const connection: Connection = await makeConnection();
 
-      return new RedisMailService(redis);
+      return new RedisMailService(connection);
     },
     inject: [REDIS_CONSTANTS.Symbols.Factories.ConnectionFactory]
   },
   {
     provide: REDIS_CONSTANTS.Symbols.Services.MessageService,
     useFactory: async (makeConnection: ConnectionFactory) => {
-      const redis: Redis = await makeConnection();
+      const connection: Connection = await makeConnection();
 
-      return new RedisMessageService(redis);
+      return new RedisMessageService(connection);
     },
     inject: [REDIS_CONSTANTS.Symbols.Factories.ConnectionFactory]
   },
   {
     provide: REDIS_CONSTANTS.Symbols.Services.SessionService,
     useFactory: async (makeConnection: ConnectionFactory) => {
-      const redis: Redis = await makeConnection();
+      const connection: Connection = await makeConnection();
 
-      return new RedisSessionService(redis);
+      return new RedisSessionService(connection);
     },
     inject: [REDIS_CONSTANTS.Symbols.Factories.ConnectionFactory]
   }

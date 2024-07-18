@@ -1,7 +1,8 @@
 export const CERBOS_CONSTANTS = {
   Symbols: {
     Factories: {
-      ConnectorFactory: 'CERBOS_CONNECTOR_FACTORY'
+      GRPCConnectionFactory: 'CERBOS_GRPC_CONNECTION_FACTORY',
+      HTTPConnectionFactory: 'CERBOS_HTTP_CONNECTION_FACTORY'
     },
     Services: {
       AccessService: 'CERBOS_ACCESS_SERVICE'

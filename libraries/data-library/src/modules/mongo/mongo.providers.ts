@@ -19,9 +19,8 @@ export const mongoProviders = [
     provide: MONGO_CONSTANTS.Symbols.Factories.ConnectionFactory,
     useFactory: (): ConnectionFactory => {
       return async (): Promise<Connection> => {
-        const connectionString: string =
-          MONGO_CONSTANTS.Settings.connectionString ||
-          `mongodb://${MONGO_CONSTANTS.Settings.host}:${MONGO_CONSTANTS.Settings.port}`;
+        const connectionString: string = MONGO_CONSTANTS.Settings.connectionString || `mongodb://${MONGO_CONSTANTS.Settings.host}:${MONGO_CONSTANTS.Settings.port}`;
+
         const options: ConnectOptions = {
           dbName: MONGO_CONSTANTS.Settings.database,
           ...(MONGO_CONSTANTS.Settings.username && MONGO_CONSTANTS.Settings.password ? {
@@ -65,8 +64,9 @@ export const mongoProviders = [
   },
   {
     provide: MONGO_CONSTANTS.Symbols.Services.UserService,
-    useFactory: async (makeConnection: ConnectionFactory, makeModels: ModelsFactory) => {
+    useFactory: async (makeConnection: ConnectionFactory, makeModels: ModelsFactory): Promise<MongoUserService> => {
       const connection: Connection = await makeConnection();
+
       const {
         userModel,
         accountModel
@@ -78,8 +78,9 @@ export const mongoProviders = [
   },
   {
     provide: MONGO_CONSTANTS.Symbols.Services.AccountService,
-    useFactory: async (makeConnection: ConnectionFactory, makeModels: ModelsFactory) => {
+    useFactory: async (makeConnection: ConnectionFactory, makeModels: ModelsFactory): Promise<MongoAccountService> => {
       const connection: Connection = await makeConnection();
+
       const {
         userModel,
         accountModel
@@ -91,8 +92,9 @@ export const mongoProviders = [
   },
   {
     provide: MONGO_CONSTANTS.Symbols.Services.VerificationRequestService,
-    useFactory: async (makeConnection: ConnectionFactory, makeModels: ModelsFactory) => {
+    useFactory: async (makeConnection: ConnectionFactory, makeModels: ModelsFactory): Promise<MongoVerificationRequestService> => {
       const connection: Connection = await makeConnection();
+
       const {
         userModel,
         verificationRequestModel

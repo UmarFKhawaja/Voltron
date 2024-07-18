@@ -1,16 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
  import { MailService } from '@voltron/core-library';
-import { Transporter } from 'nodemailer';
-import { TransporterFactory } from './nodemailer.types';
+import { Transporter as Connection } from 'nodemailer';
 
 @Injectable()
 export class NodemailerMailService implements MailService {
-  private readonly transporter: Transporter;
-
   constructor(
-    private readonly makeTransporter: TransporterFactory
+    private readonly connection: Connection
   ) {
-    this.transporter = this.makeTransporter();
   }
 
   async sendRegisterMail(emailAddress: string, verificationURL: string): Promise<boolean> {
