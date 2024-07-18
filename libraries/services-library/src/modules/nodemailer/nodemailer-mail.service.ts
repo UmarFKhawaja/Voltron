@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { MailService, VerificationRequest } from '@voltron/core-library';
+ import { MailService } from '@voltron/core-library';
 import { Transporter } from 'nodemailer';
 import { TransporterFactory } from './nodemailer.types';
 
