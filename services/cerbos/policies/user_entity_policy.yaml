@@ -1,9 +1,9 @@
 apiVersion: api.cerbos.dev/v1
 resourcePolicy:
   version: default
-  resource: entity-variable
+  resource: entity-user
   importDerivedRoles:
-    - derived-roles-variable
+    - derived-roles-user
   rules:
     - actions:
         - CREATE
@@ -13,8 +13,13 @@ resourcePolicy:
 
     - actions:
         - UPDATE
-        - DELETE
         - SELECT
       effect: EFFECT_ALLOW
-      derivedRoles:
-        - VARIABLE_OWNER
+      roles:
+        - SELF_USER
+
+    - actions:
+        - DELETE
+      effect: EFFECT_DENY
+      roles:
+        - SELF_USER

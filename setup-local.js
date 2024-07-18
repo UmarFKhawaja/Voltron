@@ -132,7 +132,7 @@ const files = [
       'storage:',
       '  driver: disk',
       '  disk:',
-      '    directory: /policies',
+      '    directory: /config/policies',
       '    watchForChanges: true',
       ''
     ]

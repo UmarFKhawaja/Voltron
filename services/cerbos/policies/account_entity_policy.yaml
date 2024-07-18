@@ -1,9 +1,9 @@
 apiVersion: api.cerbos.dev/v1
 resourcePolicy:
   version: default
-  resource: entity-variable
+  resource: entity-account
   importDerivedRoles:
-    - derived-roles-variable
+    - derived-roles-account
   rules:
     - actions:
         - CREATE
@@ -17,4 +17,4 @@ resourcePolicy:
         - SELECT
       effect: EFFECT_ALLOW
       derivedRoles:
-        - VARIABLE_OWNER
+        - ACCOUNT_OWNER

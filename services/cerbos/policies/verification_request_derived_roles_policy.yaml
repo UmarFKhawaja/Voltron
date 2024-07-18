@@ -1,0 +1,10 @@
+apiVersion: api.cerbos.dev/v1
+derivedRoles:
+  name: derived-roles-verification-request
+  definitions:
+    - name: VERIFICATION_REQUEST_OWNER
+      parentRoles:
+        - USER
+      condition:
+        match:
+          expr: request.resource.attr.userID == request.principal.id
