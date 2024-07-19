@@ -43,16 +43,12 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    try {
-      const user: User = await this.userService.getUserByID(session.sub);
+    const user: User = await this.userService.getUserByID(session.sub);
 
-      if (!user.verifiedAt) {
-        throw new Error('the user with the specified user ID is not verified');
-      }
-
-      return user;
-    } catch (error: unknown) {
-      throw new UnauthorizedException(error);
+    if (!user.verifiedAt) {
+      throw new Error('the user with the specified user ID is not verified');
     }
+
+    return user;
   }
 }
