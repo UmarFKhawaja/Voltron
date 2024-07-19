@@ -306,6 +306,7 @@ export class AuthCoreService {
   }
 
   async validateUser(user: User): Promise<boolean> {
+    // eslint-disable-next-line @typescript-eslint/no-inferrable-types
     const isValid: boolean = !!user.verifiedAt;
 
     return isValid;
