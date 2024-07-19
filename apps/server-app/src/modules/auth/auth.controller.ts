@@ -74,7 +74,7 @@ export class AuthController {
     try {
       const session: Session | null = extractSession(req);
 
-      await this.coreService.logout(session);
+      await this.tokenService.invalidateToken(session);
 
       res.status(200).end();
     } catch (error: unknown) {

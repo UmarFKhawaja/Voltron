@@ -39,10 +39,6 @@ export class AuthCoreService {
     await this.mailService.sendRegisterMail(user.emailAddress, verificationURL);
   }
 
-  async logout(session: Session | null): Promise<void> {
-    await this.tokenService.invalidateToken(session);
-  }
-
   async requestActivationCode(username: string): Promise<void> {
     const user: User | null = await this.userService.findUserByUsername(username);
 
