@@ -92,13 +92,11 @@ export const routes: Routes = [
   },
   {
     path: 'app/confirm-email-address-change',
-    component: ConfirmEmailAddressChangeComponent,
-    canActivate: [authGuard]
+    component: ConfirmEmailAddressChangeComponent
   },
   {
     path: 'app/complete-email-address-change',
-    component: CompleteEmailAddressChangeComponent,
-    canActivate: [authGuard]
+    component: CompleteEmailAddressChangeComponent
   },
   {
     path: 'app/reset-password',
