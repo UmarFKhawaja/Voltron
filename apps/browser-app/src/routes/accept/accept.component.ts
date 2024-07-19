@@ -54,8 +54,6 @@ export class AcceptComponent implements OnInit {
       this.token = params['token'];
       this.path = params['path'];
 
-      console.log(this.path);
-
       if (this.token) {
         switch (this.method) {
           case 'magic-login':

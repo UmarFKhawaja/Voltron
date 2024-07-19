@@ -104,7 +104,6 @@ export class ChangeEmailAddressFormComponent implements OnInit {
   }
 
   async onResendRequestLink(): Promise<void> {
-    console.log(new Date());
     if (this.code) {
       const token: string = this.tokenService.token;
 
