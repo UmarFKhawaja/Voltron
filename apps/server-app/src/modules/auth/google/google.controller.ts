@@ -1,19 +1,19 @@
 import { Controller, Get, Query, Req, Res, UseGuards } from '@nestjs/common';
-import { Result, Token } from '@voltron/common-library';
+import { FAILURE, Result, Session, Token } from '@voltron/common-library';
 import { ProviderType, User } from '@voltron/core-library';
 import { Request, Response } from 'express';
 import { AUTH_CONSTANTS } from '../auth.constants';
 import { extractSession } from '../auth.methods';
+import { AuthCoreService } from '../core/core.service';
 import { AuthTokenService } from '../core/token.service';
-import { AuthUserService } from '../core/user.service';
 import { AuthJwtAuthGuard } from '../jwt/jwt.guard';
 import { AuthGoogleAuthGuard } from './google.guard';
 
 @Controller('auth')
 export class AuthGoogleController {
   constructor(
-    private readonly tokenService: AuthTokenService,
-    private readonly userService: AuthUserService
+    private readonly coreService: AuthCoreService,
+    private readonly tokenService: AuthTokenService
   ) {
   }
 
@@ -32,11 +32,17 @@ export class AuthGoogleController {
   @UseGuards(AuthJwtAuthGuard)
   @Get('disconnect/google')
   async disconnectGoogle(@Req() req: Request): Promise<Result<Token>> {
-    const user: User = await this.userService.ensureUserNotWithProvider(req.user as User, ProviderType.GOOGLE);
+    try {
+      const session: Session | null = extractSession(req);
 
-    await this.tokenService.invalidateToken(extractSession(req));
+      let user: User = req.user as User;
 
-    return await this.tokenService.generateToken(user);
+      user = await this.coreService.ensureUserNotWithProvider(user, ProviderType.GOOGLE);
+
+      return await this.tokenService.regenerateToken(session, user);
+    } catch (error: unknown) {
+      return FAILURE<Token>(error as Error);
+    }
   }
 
   @UseGuards(AuthGoogleAuthGuard)
@@ -48,21 +54,15 @@ export class AuthGoogleController {
 
     const { path }: { path: string; } = JSON.parse(json) as { path: string; };
 
-    await this.tokenService.invalidateToken(extractSession(req));
+    const user: User = req.user as User;
 
-    const result: Result<Token> = await this.tokenService.generateToken(req.user as User);
+    const token: string = await this.tokenService.createToken(user);
 
-    if (result.success) {
-      const redirectURL: URL = new URL('/app/accept/google', AUTH_CONSTANTS.Strategies.Google.redirectURL);
+    const redirectURL: URL = new URL('/app/accept/google', AUTH_CONSTANTS.Strategies.Google.redirectURL);
 
-      redirectURL.searchParams.set('token', result.data.token);
-      redirectURL.searchParams.set('path', path);
+    redirectURL.searchParams.set('token', token);
+    redirectURL.searchParams.set('path', path);
 
-      res.redirect(redirectURL.toString());
-    } else {
-      const redirectURL: URL = new URL('/app/login', AUTH_CONSTANTS.Strategies.Google.redirectURL);
-
-      res.redirect(redirectURL.toString());
-    }
+    res.redirect(redirectURL.toString());
   }
 }

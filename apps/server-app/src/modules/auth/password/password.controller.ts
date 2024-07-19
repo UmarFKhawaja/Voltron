@@ -1,32 +1,33 @@
-import { Body, Controller, Get, Inject, Post, Req, UseGuards } from '@nestjs/common';
-import { FAILURE, Result, SUCCESS, Token } from '@voltron/common-library';
-import { MailService, User } from '@voltron/core-library';
-import { REDIS_CONSTANTS } from '@voltron/data-library';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { FAILURE, Result, Session, SUCCESS, Token } from '@voltron/common-library';
+import { User } from '@voltron/core-library';
 import { Request } from 'express';
 import { extractSession } from '../auth.methods';
+import { AuthCoreService } from '../core/core.service';
 import { AuthTokenService } from '../core/token.service';
-import { AuthURLService } from '../core/url.service';
-import { AuthUserService } from '../core/user.service';
 import { AuthJwtAuthGuard } from '../jwt/jwt.guard';
 import { AuthPasswordAuthGuard } from './password.guard';
 
 @Controller('auth')
 export class AuthPasswordController {
   constructor(
-    @Inject(REDIS_CONSTANTS.Symbols.Services.MailService)
-    private readonly mailService: MailService,
-    private readonly tokenService: AuthTokenService,
-    private readonly urlService: AuthURLService,
-    private readonly userService: AuthUserService
+    private readonly coreService: AuthCoreService,
+    private readonly tokenService: AuthTokenService
   ) {
   }
 
   @UseGuards(AuthPasswordAuthGuard)
   @Post('login/password')
   async loginWithPassword(@Req() req: Request): Promise<Result<Token>> {
-    await this.tokenService.invalidateToken(extractSession(req));
+    try {
+      const session: Session | null = extractSession(req);
 
-    return await this.tokenService.generateToken(req.user as User);
+      const user: User = req.user as User;
+
+      return await this.tokenService.regenerateToken(session, user);
+    } catch (error: unknown) {
+      return FAILURE<Token>(error as Error);
+    }
   }
 
   @Post('recover-account')
@@ -35,37 +36,29 @@ export class AuthPasswordController {
   }: {
     username: string;
   }): Promise<Result<void>> {
-    const user: User | null = await this.userService.findUserByUsername(username);
+    try {
+      await this.coreService.recoverAccount(username);
 
-    if (!user) {
       return SUCCESS<void>(void 0);
+    } catch (error: unknown) {
+      return FAILURE<void>(error as Error);
     }
-
-    await this.tokenService.invalidateToken(extractSession(req));
-
-    const result: Result<Token> = await this.tokenService.generateToken(user);
-
-    if (!result.success) {
-      return FAILURE<void>(result.error.message);
-    }
-
-    const confirmationURL: string = this.urlService.formatRecoverAccountConfirmationURL(result.data.token);
-
-    await this.mailService.sendResetPasswordMail(user.emailAddress, confirmationURL);
-
-    return SUCCESS<void>(void 0);
   }
 
   @UseGuards(AuthJwtAuthGuard)
   @Get('reset-password')
   async resetPassword(@Req() req: Request): Promise<Result<Token>> {
-    let user: User | null = req.user as User;
+    try {
+      const session: Session | null = extractSession(req);
 
-    user = await this.userService.resetPassword(user);
+      let user: User | null = req.user as User;
 
-    await this.tokenService.invalidateToken(extractSession(req));
+      user = await this.coreService.resetPassword(user);
 
-    return await this.tokenService.generateToken(user);
+      return await this.tokenService.regenerateToken(session, user);
+    } catch (error: unknown) {
+      return FAILURE<Token>(error as Error);
+    }
   }
 
   @UseGuards(AuthJwtAuthGuard)
@@ -78,13 +71,13 @@ export class AuthPasswordController {
     newPassword: string;
   }): Promise<Result<Token>> {
     try {
+      const session: Session | null = extractSession(req);
+
       let user: User | null = req.user as User;
 
-      user = await this.userService.changePassword(user, oldPassword, newPassword);
+      user = await this.coreService.changePassword(user, oldPassword, newPassword);
 
-      await this.tokenService.invalidateToken(extractSession(req));
-
-      return await this.tokenService.generateToken(user);
+      return await this.tokenService.regenerateToken(session, user);
     } catch (error: unknown) {
       return FAILURE<Token>(error as Error);
     }
@@ -97,13 +90,17 @@ export class AuthPasswordController {
   }: {
     newPassword: string;
   }): Promise<Result<Token>> {
-    let user: User | null = req.user as User;
+    try {
+      const session: Session | null = extractSession(req);
 
-    user = await this.userService.setPassword(user, newPassword);
+      let user: User | null = req.user as User;
 
-    await this.tokenService.invalidateToken(extractSession(req));
+      user = await this.coreService.setPassword(user, newPassword);
 
-    return await this.tokenService.generateToken(user);
+      return await this.tokenService.regenerateToken(session, user);
+    } catch (error: unknown) {
+      return FAILURE<Token>(error as Error);
+    }
   }
 
   @UseGuards(AuthJwtAuthGuard)
@@ -113,12 +110,16 @@ export class AuthPasswordController {
   }: {
     oldPassword: string;
   }): Promise<Result<Token>> {
-    let user: User | null = req.user as User;
+    try {
+      const session: Session | null = extractSession(req);
 
-    user = await this.userService.unsetPassword(user, oldPassword);
+      let user: User | null = req.user as User;
 
-    await this.tokenService.invalidateToken(extractSession(req));
+      user = await this.coreService.unsetPassword(user, oldPassword);
 
-    return await this.tokenService.generateToken(user);
+      return await this.tokenService.regenerateToken(session, user);
+    } catch (error: unknown) {
+      return FAILURE<Token>(error as Error);
+    }
   }
 }

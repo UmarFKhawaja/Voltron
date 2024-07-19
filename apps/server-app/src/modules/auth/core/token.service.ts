@@ -70,6 +70,12 @@ export class AuthTokenService {
     });
   }
 
+  async regenerateToken(session: Session | null, user: User): Promise<Result<Token>> {
+    await this.invalidateToken(session);
+
+    return await this.generateToken(user);
+  }
+
   async invalidateToken(session: Session | null): Promise<void> {
     if (session) {
       await this.sessionService.unsetSessionExpiry(session.id);
