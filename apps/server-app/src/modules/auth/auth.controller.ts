@@ -1,7 +1,14 @@
-import { Body, Controller, Get, Inject, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
-import { EmailAddressChanged, Information, Result, Token } from '@voltron/common-library';
-import { MailService, User, VerificationRequest, VerificationRequestPurpose } from '@voltron/core-library';
-import { REDIS_CONSTANTS } from '@voltron/data-library';
+import { Body, Controller, Get, Inject, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { EmailAddressChanged, FAILURE, Information, Result, SUCCESS, Token } from '@voltron/common-library';
+import {
+  AccessService,
+  AccessAction,
+  MailService,
+  User,
+  VerificationRequest,
+  VerificationRequestPurpose
+} from '@voltron/core-library';
+import { CERBOS_CONSTANTS, REDIS_CONSTANTS } from '@voltron/data-library';
 import { Request, Response } from 'express';
 import { createEmailAddressChanged, extractSession, extractToken } from './auth.methods';
 import { AuthTokenService } from './core/token.service';
@@ -13,6 +20,8 @@ import { AuthJwtAuthGuard } from './jwt/jwt.guard';
 @Controller('auth')
 export class AuthController {
   constructor(
+    @Inject(CERBOS_CONSTANTS.Symbols.Services.AccessService)
+    private readonly accessService: AccessService,
     @Inject(REDIS_CONSTANTS.Symbols.Services.MailService)
     private readonly mailService: MailService,
     private readonly tokenService: AuthTokenService,
@@ -43,15 +52,9 @@ export class AuthController {
 
       await this.mailService.sendRegisterMail(user.emailAddress, verificationURL);
 
-      return {
-        success: true,
-        data: void 0
-      };
+      return SUCCESS<void>(void 0);
     } catch (error: unknown) {
-      return {
-        success: false,
-        error: error as Error
-      };
+      return FAILURE<void>(error as Error);
     }
   }
 
@@ -61,36 +64,27 @@ export class AuthController {
   }: {
     username: string;
   }): Promise<Result<void>> {
-    const user: User | null = await this.userService.findUserByUsername(username);
+    try {
+      const user: User | null = await this.userService.findUserByUsername(username);
 
-    if (!user) {
-      return {
-        success: false,
-        error: {
-          message: 'a user with the specified username could not be found'
-        }
-      };
+      if (!user) {
+        return FAILURE<void>('a user with the specified username could not be found');
+      }
+
+      if (user.verifiedAt) {
+        return FAILURE<void>('the user with the specified username is already activated');
+      }
+
+      const verificationRequest: VerificationRequest = await this.verificationRequestService.createRegisterVerificationRequest(user);
+
+      const verificationURL: string = this.urlService.formatRegisterVerificationURL(verificationRequest);
+
+      await this.mailService.sendRegisterMail(user.emailAddress, verificationURL);
+
+      return SUCCESS<void>(void 0);
+    } catch (error: unknown) {
+      return FAILURE<void>(error as Error);
     }
-
-    if (user.verifiedAt) {
-      return {
-        success: false,
-        error: {
-          message: 'the user with the specified username is already activated'
-        }
-      };
-    }
-
-    const verificationRequest: VerificationRequest = await this.verificationRequestService.createRegisterVerificationRequest(user);
-
-    const verificationURL: string = this.urlService.formatRegisterVerificationURL(verificationRequest);
-
-    await this.mailService.sendRegisterMail(user.emailAddress, verificationURL);
-
-    return {
-      success: true,
-      data: void 0
-    };
   }
 
   @Post('activate-account')
@@ -107,65 +101,62 @@ export class AuthController {
       user = await this.userService.verifyUser(user);
 
       if (!user) {
-        return {
-          success: false,
-          error: new UnauthorizedException(
-            new Error('a user with the specified ID could not be found')
-          )
-        };
+        return FAILURE<Token>('a user with the specified ID could not be found');
       }
 
       if (!user.verifiedAt) {
-        return {
-          success: false,
-          error: new UnauthorizedException(
-            new Error('the user with the specified user ID is not verified')
-          )
-        };
+        return FAILURE<Token>('the user with the specified user ID is not verified');
       }
 
       await this.tokenService.invalidateToken(extractSession(req));
 
       return await this.tokenService.generateToken(user);
     } catch (error: unknown) {
-      return {
-        success: false,
-        error: new UnauthorizedException(error as Error)
-      };
+      return FAILURE<Token>(error as Error);
     }
   }
 
   @UseGuards(AuthJwtAuthGuard)
   @Post('logout')
   async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
-    await this.tokenService.invalidateToken(extractSession(req));
+    try {
+      await this.tokenService.invalidateToken(extractSession(req));
 
-    res.status(200).end();
+      res.status(200).end();
+    } catch (error: unknown) {
+      res.status(500).end();
+    }
   }
 
   @UseGuards(AuthJwtAuthGuard)
   @Get('verify-session')
   async verifySession(): Promise<Result<boolean>> {
-    return {
-      success: true,
-      data: true
-    };
+    return SUCCESS<boolean>(true);
   }
 
   @UseGuards(AuthJwtAuthGuard)
   @Get('get-information')
   async getInformation(@Req() req: Request): Promise<Result<Information>> {
-    const verificationRequest: VerificationRequest | null = await this.verificationRequestService
-      .findVerificationRequestByUserAndPurpose(req.user as User, VerificationRequestPurpose.CHANGE_EMAIL_ADDRESS);
+    try {
+      const user: User = req.user as User;
 
-    const information: Information = {
-      emailAddressChanged: createEmailAddressChanged(verificationRequest)
-    };
+      const verificationRequest: VerificationRequest | null = await this.verificationRequestService
+        .findVerificationRequestByUserAndPurpose(user, VerificationRequestPurpose.CHANGE_EMAIL_ADDRESS);
 
-    return {
-      success: true,
-      data: information
-    };
+      const hasAccess: boolean = await this.accessService.checkVerificationRequestAccess(user, verificationRequest, AccessAction.SELECT);
+
+      if (!hasAccess) {
+        return FAILURE<Information>('you do not have access to the information');
+      }
+
+      const information: Information = {
+        emailAddressChanged: createEmailAddressChanged(verificationRequest)
+      };
+
+      return SUCCESS<Information>(information);
+    } catch (error: unknown) {
+      return FAILURE<Information>(error as Error);
+    }
   }
 
   @UseGuards(AuthJwtAuthGuard)
@@ -177,13 +168,23 @@ export class AuthController {
     displayName: string;
     userName: string;
   }): Promise<Result<Token>> {
-    let user: User | null = req.user as User;
+    try {
+      let user: User = req.user as User;
 
-    user = await this.userService.updateUser(user, displayName, userName);
+      const hasAccess: boolean = await this.accessService.checkUserAccess(user, user, AccessAction.UPDATE);
 
-    await this.tokenService.invalidateToken(extractSession(req));
+      if (!hasAccess) {
+        return FAILURE<Token>('you do not have access to the profile');
+      }
 
-    return await this.tokenService.generateToken(user);
+      user = await this.userService.updateUser(user, displayName, userName);
+
+      await this.tokenService.invalidateToken(extractSession(req));
+
+      return await this.tokenService.generateToken(user);
+    } catch (error: unknown) {
+      return FAILURE<Token>(error as Error);
+    }
   }
 
   @UseGuards(AuthJwtAuthGuard)
@@ -194,9 +195,15 @@ export class AuthController {
     emailAddress: string;
   }): Promise<Result<Information>> {
     try {
-      const token: string = extractToken(req);
+      const user: User = req.user as User;
 
-      const user: User | null = req.user as User;
+      const hasAccess: boolean = await this.accessService.checkUserAccess(user, user, AccessAction.UPDATE);
+
+      if (!hasAccess) {
+        return FAILURE<Information>('you do not have access to change the email address');
+      }
+
+      const token: string = await this.tokenService.createToken(user);
 
       const verificationRequest: VerificationRequest = await this.verificationRequestService
         .createChangeEmailVerificationRequest(user, emailAddress, 'OLD_EMAIL_ADDRESS_NOT_CONFIRMED');
@@ -208,28 +215,15 @@ export class AuthController {
         confirmationURL
       );
 
-      if (hasSucceeded) {
-        return {
-          success: true,
-          data: {
-            emailAddressChanged: createEmailAddressChanged(verificationRequest)
-          }
-        };
-      } else {
-        return {
-          success: false,
-          error: {
-            message: 'the email containing confirmation link could not be sent'
-          }
-        };
+      if (!hasSucceeded) {
+        return FAILURE<Information>('the email containing confirmation link could not be sent');
       }
+
+      return SUCCESS<Information>({
+        emailAddressChanged: createEmailAddressChanged(verificationRequest)
+      });
     } catch (error: unknown) {
-      return {
-        success: false,
-        error: {
-          message: (error as Error).message
-        }
-      };
+      return FAILURE<Information>(error as Error);
     }
   }
 
@@ -240,58 +234,44 @@ export class AuthController {
   }: {
     confirmationCode: string;
   }): Promise<Result<Information>> {
-    const user: User | null = req.user as User;
+    try {
+      const user: User = req.user as User;
 
-    let verificationRequest: VerificationRequest | null = await this.verificationRequestService.completeVerificationRequest(user, confirmationCode);
+      const hasAccess: boolean = await this.accessService.checkUserAccess(user, user, AccessAction.UPDATE);
 
-    if (!verificationRequest) {
-      return {
-        success: false,
-        error: {
-          message: 'a verification request corresponding to the specified confirmation code could not be found'
-        }
-      };
-    }
+      if (!hasAccess) {
+        return FAILURE<Information>('you do not have access to confirm the email address');
+      }
 
-    const { newEmailAddress: emailAddress } = verificationRequest.details as EmailAddressChanged;
+      let verificationRequest: VerificationRequest | null = await this.verificationRequestService.completeVerificationRequest(user, confirmationCode);
 
-    verificationRequest = await this.verificationRequestService
-      .createChangeEmailVerificationRequest(user, emailAddress, 'NEW_EMAIL_ADDRESS_NOT_CONFIRMED');
+      if (!verificationRequest) {
+        return FAILURE<Information>('a verification request corresponding to the specified confirmation code could not be found');
+      }
 
-    const result: Result<Token> = await this.tokenService.generateToken(user);
+      const { newEmailAddress: emailAddress } = verificationRequest.details as EmailAddressChanged;
 
-    if (!result.success) {
-      return {
-        success: false,
-        error: {
-          message: 'a token could not be generated'
-        }
-      };
-    }
+      verificationRequest = await this.verificationRequestService
+        .createChangeEmailVerificationRequest(user, emailAddress, 'NEW_EMAIL_ADDRESS_NOT_CONFIRMED');
 
-    const token: string = result.data.token;
+      const token: string = await this.tokenService.createToken(user);
 
-    const confirmationURL: string = this.urlService.formatCompleteEmailAddressChangeConfirmationURL(token, verificationRequest.code);
+      const confirmationURL: string = this.urlService.formatCompleteEmailAddressChangeConfirmationURL(token, verificationRequest.code);
 
-    const hasSucceeded: boolean = await this.mailService.sendConfirmEmailAddressChange(
-      emailAddress,
-      confirmationURL
-    );
+      const hasSucceeded: boolean = await this.mailService.sendConfirmEmailAddressChange(
+        emailAddress,
+        confirmationURL
+      );
 
-    if (hasSucceeded) {
-      return {
-        success: true,
-        data: {
-          emailAddressChanged: createEmailAddressChanged(verificationRequest)
-        }
-      };
-    } else {
-      return {
-        success: false,
-        error: {
-          message: 'the email containing confirmation link could not be sent'
-        }
-      };
+      if (!hasSucceeded) {
+        return FAILURE<Information>('the email containing confirmation link could not be sent');
+      }
+
+      return SUCCESS<Information>({
+        emailAddressChanged: createEmailAddressChanged(verificationRequest)
+      });
+    } catch (error: unknown) {
+      return FAILURE<Information>(error as Error);
     }
   }
 
@@ -302,51 +282,48 @@ export class AuthController {
   }: {
     confirmationCode: string;
   }): Promise<Result<Token>> {
-    let user: User | null = req.user as User;
+    try {
+      let user: User = req.user as User;
 
-    let verificationRequest: VerificationRequest | null = await this.verificationRequestService.findVerificationRequestByCode(confirmationCode);
+      const hasAccess: boolean = await this.accessService.checkUserAccess(user, user, AccessAction.UPDATE);
 
-    if (!verificationRequest) {
-      return {
-        success: false,
-        error: {
-          message: 'the verification code with the specified confirmation code could not be found'
-        }
+      if (!hasAccess) {
+        return FAILURE<Token>('you do not have access to complete the email address');
+      }
+
+      let verificationRequest: VerificationRequest | null = await this.verificationRequestService.findVerificationRequestByCode(confirmationCode);
+
+      if (!verificationRequest) {
+        return FAILURE<Token>('the verification code with the specified confirmation code could not be found');
+      }
+
+      if (verificationRequest.userID !== user._id.toString()) {
+        return FAILURE<Token>('the verification request with the specified confirmation code belongs to a different user');
+      }
+
+      const {
+        newEmailAddress: emailAddress
+      } = verificationRequest.details as {
+        oldEmailAddress: string;
+        newEmailAddress: string
       };
+
+      user = await this.userService.changeEmailAddress(user, emailAddress);
+
+      verificationRequest = await this.verificationRequestService.completeVerificationRequest(user, confirmationCode);
+
+      if (!verificationRequest) {
+        return FAILURE<Token>('a verification request corresponding to the specified confirmation code could not be found');
+      }
+
+      user = await this.userService.getUserByID(user._id);
+
+      await this.tokenService.invalidateToken(extractSession(req));
+
+      return await this.tokenService.generateToken(user);
+    } catch (error: unknown) {
+      return FAILURE<Token>(error as Error);
     }
-
-    if (verificationRequest.userID !== user._id.toString()) {
-      return {
-        success: false,
-        error: {
-          message: 'the verification request with the specified confirmation code belongs to a different user'
-        }
-      };
-    }
-
-    const {
-      newEmailAddress: emailAddress
-    } = verificationRequest.details as {
-      oldEmailAddress: string;
-      newEmailAddress: string
-    };
-
-    user = await this.userService.changeEmailAddress(user, emailAddress);
-
-    verificationRequest = await this.verificationRequestService.completeVerificationRequest(user, confirmationCode);
-
-    if (!verificationRequest) {
-      return {
-        success: false,
-        error: {
-          message: 'a verification request corresponding to the specified confirmation code could not be found'
-        }
-      };
-    }
-
-    user = await this.userService.getUserByID(user._id);
-
-    return await this.tokenService.generateToken(user);
   }
 
   @UseGuards(AuthJwtAuthGuard)
@@ -359,30 +336,23 @@ export class AuthController {
     try {
       const user: User = req.user as User;
 
+      const hasAccess: boolean = await this.accessService.checkUserAccess(user, user, AccessAction.UPDATE);
+
+      if (!hasAccess) {
+        return FAILURE<Information>('you do not have access to cancel the email address');
+      }
+
       const verificationRequest: VerificationRequest | null = await this.verificationRequestService.cancelVerificationRequest(user, confirmationCode);
 
       if (!verificationRequest) {
-        return {
-          success: false,
-          error: {
-            message: 'a verification request corresponding to the specified confirmation code could not be found'
-          }
-        };
+        return FAILURE<Information>('a verification request corresponding to the specified confirmation code could not be found');
       }
 
-      return {
-        success: true,
-        data: {
-          emailAddressChanged: null
-        }
-      };
+      return SUCCESS<Information>({
+        emailAddressChanged: null
+      });
     } catch (error: unknown) {
-      return {
-        success: false,
-        error: {
-          message: (error as Error).message
-        }
-      };
+      return FAILURE<Information>(error as Error);
     }
   }
 
@@ -392,63 +362,51 @@ export class AuthController {
     try {
       const user: User = req.user as User;
 
+      const hasAccess: boolean = await this.accessService.checkUserAccess(user, user, AccessAction.UPDATE);
+
+      if (!hasAccess) {
+        return FAILURE<Information>('you do not have access to confirm the email address');
+      }
+
       const verificationRequest: VerificationRequest | null = await this.verificationRequestService
         .recreateVerificationRequest(user, VerificationRequestPurpose.CHANGE_EMAIL_ADDRESS);
 
       if (!verificationRequest) {
-        return {
-          success: false,
-          error: {
-            message: 'a verification request to resend could not be found'
-          }
-        };
+        return FAILURE<Information>('a verification request to resend could not be found');
       }
 
       const emailAddressChanged: EmailAddressChanged = verificationRequest.details as EmailAddressChanged;
 
       // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-      let isSuccess: boolean = false;
+      let hasSuccess: boolean = false;
 
       switch (emailAddressChanged.status) {
         case 'OLD_EMAIL_ADDRESS_NOT_CONFIRMED': {
-          const token: string = extractToken(req);
+          const token: string = await this.tokenService.createToken(user);
           const confirmationURL: string = this.urlService.formatConfirmEmailAddressChangeConfirmationURL(token, verificationRequest.code);
 
-          isSuccess = await this.mailService.sendConfirmEmailAddressChange(emailAddressChanged.oldEmailAddress, confirmationURL);
+          hasSuccess = await this.mailService.sendConfirmEmailAddressChange(emailAddressChanged.oldEmailAddress, confirmationURL);
           break;
         }
 
         case 'NEW_EMAIL_ADDRESS_NOT_CONFIRMED': {
-          const token: string = extractToken(req);
+          const token: string = await this.tokenService.createToken(user);
           const confirmationURL: string = this.urlService.formatCompleteEmailAddressChangeConfirmationURL(token, verificationRequest.code);
 
-          isSuccess = await this.mailService.sendCompleteEmailAddressChange(emailAddressChanged.newEmailAddress, confirmationURL);
+          hasSuccess = await this.mailService.sendCompleteEmailAddressChange(emailAddressChanged.newEmailAddress, confirmationURL);
           break;
         }
       }
 
-      if (isSuccess) {
-        return {
-          success: true,
-          data: {
-            emailAddressChanged: createEmailAddressChanged(verificationRequest)
-          }
-        };
-      } else {
-        return {
-          success: false,
-          error: {
-            message: 'an email could not be sent'
-          }
-        };
+      if (!hasSuccess) {
+        return FAILURE<Information>('an email could not be sent');
       }
+
+      return SUCCESS<Information>({
+        emailAddressChanged: createEmailAddressChanged(verificationRequest)
+      });
     } catch (error: unknown) {
-      return {
-        success: false,
-        error: {
-          message: (error as Error).message
-        }
-      };
+      return FAILURE<Information>(error as Error);
     }
   }
 }

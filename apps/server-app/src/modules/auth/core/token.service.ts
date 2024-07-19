@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Result, Session, Token } from '@voltron/common-library';
+import { FAILURE, Result, Session, SUCCESS, Token } from '@voltron/common-library';
 import { Account, ProviderType, SessionService, User } from '@voltron/core-library';
 import { REDIS_CONSTANTS } from '@voltron/data-library';
 import dayjs from 'dayjs';
@@ -29,16 +29,7 @@ export class AuthTokenService {
     return dayjs().isBefore(dayjs(expiresAt));
   }
 
-  async generateToken(user: User | null): Promise<Result<Token>> {
-    if (!user) {
-      return {
-        success: false,
-        error: {
-          message: 'a user must be provided to generate a token'
-        }
-      };
-    }
-
+  async createToken(user: User): Promise<string> {
     const session: Session = {
       id: generateUUID(),
       sub: user._id,
@@ -64,19 +55,24 @@ export class AuthTokenService {
 
     await this.sessionService.setSessionExpiry(session.id, dayjs(timestamp).toDate());
 
-    return {
-      success: true,
-      data: {
-        token: encodedToken
-      }
-    };
+    return encodedToken;
+  }
+
+  async generateToken(user: User | null): Promise<Result<Token>> {
+    if (!user) {
+      return FAILURE<Token>('a user must be provided to generate a token');
+    }
+
+    const token: string = await this.createToken(user);
+
+    return SUCCESS<Token>({
+      token
+    });
   }
 
   async invalidateToken(session: Session | null): Promise<void> {
-    if (!session) {
-      return;
+    if (session) {
+      await this.sessionService.unsetSessionExpiry(session.id);
     }
-
-    await this.sessionService.unsetSessionExpiry(session.id);
   }
 }

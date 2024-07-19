@@ -1,5 +1,5 @@
 import { GRPC as GRPCConnection } from '@cerbos/grpc';
-import { AccessService, Account, User, VerificationRequest } from '@voltron/core-library';
+import { AccessService, AccessAction, Account, User, VerificationRequest } from '@voltron/core-library';
 
 export class CerbosAccessService implements AccessService {
   constructor(
@@ -7,15 +7,15 @@ export class CerbosAccessService implements AccessService {
   ) {
   }
 
-  async checkUserAccess(principal: User, user: User, action: string): Promise<boolean> {
+  async checkUserAccess(principal: User, resource: User | null, action: AccessAction): Promise<boolean> {
     return true;
   }
 
-  async checkAccountAccess(principal: User, account: Account, action: string): Promise<boolean> {
+  async checkAccountAccess(principal: User, resource: Account | null, action: AccessAction): Promise<boolean> {
     return true;
   }
 
-  async checkVerificationRequestAccess(principal: User, verificationRequest: VerificationRequest, action: string): Promise<boolean> {
+  async checkVerificationRequestAccess(principal: User, resource: VerificationRequest | null, action: AccessAction): Promise<boolean> {
     return true;
   }
 }

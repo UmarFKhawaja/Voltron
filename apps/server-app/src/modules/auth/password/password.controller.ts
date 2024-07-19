@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Inject, Post, Req, UseGuards } from '@nestjs/common';
-import { Result, Token } from '@voltron/common-library';
+import { FAILURE, Result, SUCCESS, Token } from '@voltron/common-library';
 import { MailService, User } from '@voltron/core-library';
 import { REDIS_CONSTANTS } from '@voltron/data-library';
 import { Request } from 'express';
@@ -38,10 +38,7 @@ export class AuthPasswordController {
     const user: User | null = await this.userService.findUserByUsername(username);
 
     if (!user) {
-      return {
-        success: true,
-        data: void 0
-      };
+      return SUCCESS<void>(void 0);
     }
 
     await this.tokenService.invalidateToken(extractSession(req));
@@ -49,17 +46,14 @@ export class AuthPasswordController {
     const result: Result<Token> = await this.tokenService.generateToken(user);
 
     if (!result.success) {
-      return result;
+      return FAILURE<void>(result.error.message);
     }
 
     const confirmationURL: string = this.urlService.formatRecoverAccountConfirmationURL(result.data.token);
 
     await this.mailService.sendResetPasswordMail(user.emailAddress, confirmationURL);
 
-    return {
-      success: true,
-      data: void 0
-    };
+    return SUCCESS<void>(void 0);
   }
 
   @UseGuards(AuthJwtAuthGuard)
@@ -92,12 +86,7 @@ export class AuthPasswordController {
 
       return await this.tokenService.generateToken(user);
     } catch (error: unknown) {
-      return {
-        success: false,
-        error: {
-          message: (error as Error).message
-        }
-      };
+      return FAILURE<Token>(error as Error);
     }
   }
 
