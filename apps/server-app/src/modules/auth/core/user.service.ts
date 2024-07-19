@@ -142,16 +142,4 @@ export class AuthUserService {
 
     return user;
   }
-
-  async validateUser(user: User, password: string): Promise<boolean> {
-    if (!user.saltHash) {
-      return false;
-    }
-
-    if (!compareSync(password, user.saltHash)) {
-      return false;
-    }
-
-    return true;
-  }
 }

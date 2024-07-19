@@ -2,33 +2,21 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { User } from '@voltron/core-library';
 import { Strategy } from 'passport-local';
-import { AuthUserService } from '../core/user.service';
+import { AuthCoreService } from '../core/core.service';
 
 @Injectable()
 export class AuthPasswordStrategy extends PassportStrategy(Strategy, 'password') {
   constructor(
-    private userService: AuthUserService
+    private coreService: AuthCoreService
   ) {
     super();
   }
 
-  async validate(username: string, password: string): Promise<User | null> {
-    const user: User | null = await this.userService.findUserByUsername(username);
-
-    if (!user) {
-      throw new UnauthorizedException();
+  async validate(username: string, password: string): Promise<User> {
+    try {
+      return await this.coreService.checkUserByUsernameAndPassword(username, password);
+    } catch (error: unknown) {
+      throw new UnauthorizedException(error);
     }
-
-    if (!user.verifiedAt) {
-      throw new UnauthorizedException();
-    }
-
-    const hasValidated: boolean = await this.userService.validateUser(user, password);
-
-    if (!hasValidated) {
-      throw new UnauthorizedException();
-    }
-
-    return user;
   }
 }

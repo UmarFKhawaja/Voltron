@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { EmailAddressChanged, Information, Session } from '@voltron/common-library';
+import { EmailAddressChanged, Information } from '@voltron/common-library';
 import {
   AccessAction,
   AccessService,
@@ -10,6 +10,8 @@ import {
   VerificationRequestPurpose
 } from '@voltron/core-library';
 import { CERBOS_CONSTANTS, REDIS_CONSTANTS } from '@voltron/data-library';
+import { compareSync } from 'bcryptjs';
+import { AUTH_CONSTANTS } from '../auth.constants';
 import { AuthTokenService } from './token.service';
 import { AuthURLService } from './url.service';
 import { AuthUserService } from './user.service';
@@ -87,6 +89,22 @@ export class AuthCoreService {
     const confirmationURL: string = this.urlService.formatRecoverAccountConfirmationURL(token);
 
     await this.mailService.sendResetPasswordMail(user.emailAddress, confirmationURL);
+  }
+
+  async getUserByID(id: string): Promise<User> {
+    const user: User = await this.userService.getUserByID(id);
+
+    return user;
+  }
+
+  async getUserByUsername(username: string): Promise<User> {
+    const user: User | null = await this.userService.findUserByUsername(username);
+
+    if (!user) {
+      throw new Error('a user with that username could not be found');
+    }
+
+    return user;
   }
 
   async getInformation(user: User): Promise<Information> {
@@ -287,6 +305,22 @@ export class AuthCoreService {
     return information;
   }
 
+  async validateUser(user: User): Promise<boolean> {
+    const isValid: boolean = !!user.verifiedAt;
+
+    return isValid;
+  }
+
+  async checkPassword(user: User, password: string): Promise<boolean> {
+    if (!user.saltHash) {
+      return false;
+    }
+
+    const isValid: boolean = compareSync(password, user.saltHash);
+
+    return isValid;
+  }
+
   async resetPassword(user: User): Promise<User> {
     user = await this.userService.resetPassword(user);
 
@@ -311,10 +345,121 @@ export class AuthCoreService {
     return user;
   }
 
+  async ensureUserWithProvider(displayName: string, userName: string, emailAddress: string, providerType: ProviderType, providerID: string): Promise<User> {
+    const user: User = await this.userService.ensureUserWithProvider(displayName, userName, emailAddress, providerType, providerID);
+
+    return user;
+  }
+
   async ensureUserNotWithProvider(user: User, providerType: ProviderType): Promise<User> {
     user = await this.userService.ensureUserNotWithProvider(user, providerType);
 
     return user;
+  }
+
+  async checkUsername(username: string): Promise<User> {
+    const user: User | null = await this.userService.findUserByUsername(username);
+
+    if (!user) {
+      throw new Error('a user could not be found');
+    }
+
+    const isValid: boolean = (
+      await Promise.all(
+        [
+          await this.validateUser(user)
+        ]
+      )
+    )
+      .every((value: boolean) => value);
+
+    if (!isValid) {
+      throw new Error('the user could not be validated');
+    }
+
+    return user;
+  }
+
+  async checkUserByUsernameAndPassword(username: string, password: string): Promise<User> {
+    const user: User | null = await this.userService.findUserByUsername(username);
+
+    if (!user) {
+      throw new Error('a user could not be found');
+    }
+
+    const isValid: boolean = (
+      await Promise.all(
+        [
+          await this.validateUser(user),
+          await this.checkPassword(user, password)
+        ]
+      )
+    )
+      .every((value: boolean) => value);
+
+    if (!isValid) {
+      throw new Error('the user could not be validated');
+    }
+
+    return user;
+  }
+
+  async checkUserByUsername(username: string): Promise<User> {
+    const user: User | null = await this.userService.findUserByUsername(username);
+
+    if (!user) {
+      throw new Error('a user could not be found');
+    }
+
+    const isValid: boolean = (
+      await Promise.all(
+        [
+          await this.validateUser(user)
+        ]
+      )
+    )
+      .every((value: boolean) => value);
+
+    if (!isValid) {
+      throw new Error('the user could not be validated');
+    }
+
+    return user;
+  }
+
+  async checkUserByID(id: string): Promise<User> {
+    const user: User = await this.userService.getUserByID(id);
+
+    const isValid: boolean = (
+      await Promise.all(
+        [
+          await this.validateUser(user)
+        ]
+      )
+    )
+      .every((value: boolean) => value);
+
+    if (!isValid) {
+      throw new Error('the user could not be validated');
+    }
+
+    return user;
+  }
+
+  async sendMagicLink(username: string, confirmationURL: string): Promise<void> {
+    const user: User | null = await this.userService.findUserByUsername(username);
+
+    if (!user) {
+      throw new Error('a user with that username could not be found');
+    }
+
+    const magicLoginConfirmationURL: string = new URL(confirmationURL, AUTH_CONSTANTS.Strategies.MagicLogin.baseURL).toString();
+
+    const isSuccess: boolean = await this.mailService.sendLoginWithMagicLoginMail(user.emailAddress, magicLoginConfirmationURL);
+
+    if (!isSuccess) {
+      throw new Error('an email containing the confirmation link could not be sent');
+    }
   }
 
   private createEmailAddressChanged(verificationRequest: VerificationRequest | null): EmailAddressChanged | null {

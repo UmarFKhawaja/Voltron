@@ -4,13 +4,13 @@ import { ProviderType, User } from '@voltron/core-library';
 import { Profile, Strategy } from 'passport-facebook';
 import { VerifyCallback } from 'passport-oauth2';
 import { AUTH_CONSTANTS } from '../auth.constants';
-import { AuthUserService } from '../core/user.service';
+import { AuthCoreService } from '../core/core.service';
 import { AuthFacebookProfileService } from './facebook-profile.service';
 
 @Injectable()
 export class AuthFacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
   constructor(
-    private readonly userService: AuthUserService,
+    private readonly coreService: AuthCoreService,
     private readonly profileService: AuthFacebookProfileService
   ) {
     super({
@@ -37,7 +37,7 @@ export class AuthFacebookStrategy extends PassportStrategy(Strategy, 'facebook')
       emailAddress
     } = await this.profileService.extractProfile(profile);
 
-    const user: User | null = await this.userService.ensureUserWithProvider(displayName, userName, emailAddress, ProviderType.FACEBOOK, id);
+    const user: User | null = await this.coreService.ensureUserWithProvider(displayName, userName, emailAddress, ProviderType.FACEBOOK, id);
 
     if (!user) {
       done(new Error('a user linked to the Facebook ID could not be found'));

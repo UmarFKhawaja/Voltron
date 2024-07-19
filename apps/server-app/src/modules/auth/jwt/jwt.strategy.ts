@@ -5,8 +5,8 @@ import { User } from '@voltron/core-library';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AUTH_CONSTANTS } from '../auth.constants';
+import { AuthCoreService } from '../core/core.service';
 import { AuthTokenService } from '../core/token.service';
-import { AuthUserService } from '../core/user.service';
 
 const {
   fromAuthHeaderAsBearerToken,
@@ -22,8 +22,8 @@ function fromAuthCookie(req: Request): string | null {
 @Injectable()
 export class AuthJwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private readonly tokenService: AuthTokenService,
-    private readonly userService: AuthUserService
+    private readonly coreService: AuthCoreService,
+    private readonly tokenService: AuthTokenService
   ) {
     super({
       jwtFromRequest: fromExtractors([
@@ -43,12 +43,10 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    const user: User = await this.userService.getUserByID(session.sub);
-
-    if (!user.verifiedAt) {
-      throw new Error('the user with the specified user ID is not verified');
+    try {
+      return await this.coreService.checkUserByID(session.sub);
+    } catch (error: unknown) {
+      throw new UnauthorizedException(error);
     }
-
-    return user;
   }
 }

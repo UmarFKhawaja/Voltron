@@ -3,13 +3,13 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ProviderType, User } from '@voltron/core-library';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { AUTH_CONSTANTS } from '../auth.constants';
-import { AuthUserService } from '../core/user.service';
+import { AuthCoreService } from '../core/core.service';
 import { AuthGoogleProfileService } from './google-profile.service';
 
 @Injectable()
 export class AuthGoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(
-    private readonly userService: AuthUserService,
+    private readonly coreService: AuthCoreService,
     private readonly profileService: AuthGoogleProfileService
   ) {
     super({
@@ -31,7 +31,7 @@ export class AuthGoogleStrategy extends PassportStrategy(Strategy, 'google') {
       emailAddress
     } = await this.profileService.extractProfile(profile);
 
-    const user: User | null = await this.userService.ensureUserWithProvider(displayName, userName, emailAddress, ProviderType.GOOGLE, id);
+    const user: User | null = await this.coreService.ensureUserWithProvider(displayName, userName, emailAddress, ProviderType.GOOGLE, id);
 
     if (!user) {
       done(new Error('a user linked to the Google ID could not be found'));
