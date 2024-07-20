@@ -1,5 +1,14 @@
+import { CheckResourceRequest, CheckResourcesResult, Principal, Resource } from '@cerbos/core';
 import { GRPC as GRPCConnection } from '@cerbos/grpc';
-import { AccessService, AccessAction, Account, User, VerificationRequest } from '@voltron/core-library';
+import {
+  AccessService,
+  AccessAction,
+  Account,
+  User,
+  VerificationRequest,
+  AccessRole,
+  AccessResourceKind
+} from '@voltron/core-library';
 
 export class CerbosAccessService implements AccessService {
   constructor(
@@ -7,15 +16,79 @@ export class CerbosAccessService implements AccessService {
   ) {
   }
 
-  async checkUserAccess(principal: User, resource: User | null, action: AccessAction): Promise<boolean> {
-    return true;
+  async checkUserAccess(principal: User, resource: User | null, ...actions: AccessAction[]): Promise<boolean> {
+    const request: CheckResourceRequest = {
+      principal: this.createUserPrincipal(principal),
+      resource: this.createUserResource(resource),
+      actions
+    };
+
+    const result: CheckResourcesResult = await this.connection.checkResource(request);
+
+    const isAllowed: boolean = result.allAllowed();
+
+    return isAllowed;
   }
 
-  async checkAccountAccess(principal: User, resource: Account | null, action: AccessAction): Promise<boolean> {
-    return true;
+  async checkAccountAccess(principal: User, resource: Account | null, ...actions: AccessAction[]): Promise<boolean> {
+    const request: CheckResourceRequest = {
+      principal: this.createUserPrincipal(principal),
+      resource: this.createAccountResource(resource),
+      actions
+    };
+
+    const result: CheckResourcesResult = await this.connection.checkResource(request);
+
+    const isAllowed: boolean = result.allAllowed();
+
+    return isAllowed;
   }
 
-  async checkVerificationRequestAccess(principal: User, resource: VerificationRequest | null, action: AccessAction): Promise<boolean> {
-    return true;
+  async checkVerificationRequestAccess(principal: User, resource: VerificationRequest | null, ...actions: AccessAction[]): Promise<boolean> {
+    const request: CheckResourceRequest = {
+      principal: this.createUserPrincipal(principal),
+      resource: this.createVerificationRequestResource(resource),
+      actions
+    };
+
+    const result: CheckResourcesResult = await this.connection.checkResource(request);
+
+    const isAllowed: boolean = result.allAllowed();
+
+    return isAllowed;
+  }
+
+  private createUserPrincipal(principal: User): Principal {
+    return {
+      id: principal._id,
+      roles: [
+        AccessRole.USER
+      ],
+      attr: {}
+    };
+  }
+
+  private createUserResource(resource: User | null): Resource {
+    return {
+      id: resource?._id || '',
+      kind: AccessResourceKind.USER,
+      attr: {}
+    };
+  }
+
+  private createAccountResource(resource: Account | null): Resource {
+    return {
+      id: resource?._id || '',
+      kind: AccessResourceKind.ACCOUNT,
+      attr: {}
+    };
+  }
+
+  private createVerificationRequestResource(resource: VerificationRequest | null): Resource {
+    return {
+      id: resource?._id || '',
+      kind: AccessResourceKind.VERIFICATION_REQUEST,
+      attr: {}
+    };
   }
 }

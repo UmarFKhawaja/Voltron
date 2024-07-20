@@ -14,7 +14,9 @@
         "outputPath": "dist/libraries/common-library",
         "main": "libraries/common-library/src/index.ts",
         "tsConfig": "libraries/common-library/tsconfig.lib.json",
-        "assets": []
+        "assets": [
+          "libraries/common-library/*.md"
+        ]
       }
     },
     "test": {

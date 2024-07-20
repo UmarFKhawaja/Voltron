@@ -2,6 +2,7 @@
   "name": "@voltron/core-library",
   "version": "0.0.0",
   "dependencies": {
+    "mongoose": "*",
     "tslib": "*"
   },
   "type": "commonjs",

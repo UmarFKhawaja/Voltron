@@ -62,6 +62,7 @@ export class AuthCoreService {
   async activateAccount(activationCode: string): Promise<User> {
     let user: User | null = await this.verificationRequestService.getUserForVerificationRequest(activationCode);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const verificationRequest: VerificationRequest = await this.verificationRequestService.completeVerificationRequest(user, activationCode);
 
     user = await this.userService.verifyUser(user);

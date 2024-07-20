@@ -26,7 +26,7 @@ export class AuthMagicLoginController {
     try {
       const session: Session | null = extractSession(req);
 
-      let user: User | null = req.user as User;
+      const user: User | null = req.user as User;
 
       return await this.tokenService.regenerateToken(session, user);
     } catch (error: unknown) {

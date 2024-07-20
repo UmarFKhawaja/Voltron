@@ -54,6 +54,7 @@ export class RedisMailService implements MailService {
   private async publishMessage<T>(message: T): Promise<boolean> {
     const executedAt: Date = dayjs().toDate();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const result = await this.connection.publish(REDIS_CONSTANTS.Names.Notifications, serializeJSON<T & {
       createdAt: Date;
       updatedAt: Date;

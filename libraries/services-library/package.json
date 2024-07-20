@@ -2,6 +2,9 @@
   "name": "@voltron/services-library",
   "version": "0.0.0",
   "dependencies": {
+    "@nestjs/common": "*",
+    "@voltron/core-library": "*",
+    "nodemailer": "*",
     "tslib": "*"
   },
   "type": "commonjs",

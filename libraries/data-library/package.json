@@ -2,7 +2,17 @@
   "name": "@voltron/data-library",
   "version": "0.0.0",
   "dependencies": {
-    "tslib": "*"
+    "@cerbos/core": "*",
+    "@cerbos/grpc": "*",
+    "@voltron/core-library": "*",
+    "@nestjs/common": "*",
+    "@cerbos/http": "*",
+    "mongoose":  "*",
+    "bcryptjs": "*",
+    "dayjs":  "*",
+    "ioredis":  "*",
+    "tslib": "*",
+    "uuid": "*"
   },
   "type": "commonjs",
   "main": "./src/index.js",
