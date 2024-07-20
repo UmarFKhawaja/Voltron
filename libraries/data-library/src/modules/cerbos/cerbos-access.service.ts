@@ -1,13 +1,14 @@
 import { CheckResourceRequest, CheckResourcesResult, Principal, Resource } from '@cerbos/core';
 import { GRPC as GRPCConnection } from '@cerbos/grpc';
 import {
-  AccessService,
   AccessAction,
-  Account,
-  User,
-  VerificationRequest,
+  AccessResourceKind,
   AccessRole,
-  AccessResourceKind
+  AccessService,
+  Account,
+  EMPTY_OBJECT_ID,
+  User,
+  VerificationRequest
 } from '@voltron/core-library';
 
 export class CerbosAccessService implements AccessService {
@@ -60,7 +61,7 @@ export class CerbosAccessService implements AccessService {
 
   private createUserPrincipal(principal: User): Principal {
     return {
-      id: principal._id,
+      id: principal._id.toString(),
       roles: [
         AccessRole.USER
       ],
@@ -70,7 +71,7 @@ export class CerbosAccessService implements AccessService {
 
   private createUserResource(resource: User | null): Resource {
     return {
-      id: resource?._id || '',
+      id: resource?._id.toString() || EMPTY_OBJECT_ID,
       kind: AccessResourceKind.USER,
       attr: {}
     };
@@ -78,7 +79,7 @@ export class CerbosAccessService implements AccessService {
 
   private createAccountResource(resource: Account | null): Resource {
     return {
-      id: resource?._id || '',
+      id: resource?._id.toString() || EMPTY_OBJECT_ID,
       kind: AccessResourceKind.ACCOUNT,
       attr: {}
     };
@@ -86,7 +87,7 @@ export class CerbosAccessService implements AccessService {
 
   private createVerificationRequestResource(resource: VerificationRequest | null): Resource {
     return {
-      id: resource?._id || '',
+      id: resource?._id.toString() || EMPTY_OBJECT_ID,
       kind: AccessResourceKind.VERIFICATION_REQUEST,
       attr: {}
     };
