@@ -15,11 +15,11 @@ resourcePolicy:
         - UPDATE
         - SELECT
       effect: EFFECT_ALLOW
-      roles:
+      derivedRoles:
         - SELF_USER
 
     - actions:
         - DELETE
       effect: EFFECT_DENY
-      roles:
+      derivedRoles:
         - SELF_USER

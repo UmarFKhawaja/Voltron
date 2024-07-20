@@ -10,6 +10,7 @@ import {
   User,
   VerificationRequest
 } from '@voltron/core-library';
+import { Types } from 'mongoose';
 
 export class CerbosAccessService implements AccessService {
   constructor(
@@ -81,7 +82,13 @@ export class CerbosAccessService implements AccessService {
     return {
       id: resource?._id.toString() || EMPTY_OBJECT_ID,
       kind: AccessResourceKind.ACCOUNT,
-      attr: {}
+      attr: {
+        ...(!!resource ? {
+          userID: resource.user instanceof Types.ObjectId
+            ? resource.user.toString()
+            : resource.user['_id'] as string
+        } : {})
+      }
     };
   }
 
@@ -89,7 +96,11 @@ export class CerbosAccessService implements AccessService {
     return {
       id: resource?._id.toString() || EMPTY_OBJECT_ID,
       kind: AccessResourceKind.VERIFICATION_REQUEST,
-      attr: {}
+      attr: {
+        ...(!!resource ? {
+          userID: resource.userID
+        } : {})
+      }
     };
   }
 }

@@ -112,17 +112,25 @@ export class AuthCoreService {
     const verificationRequest: VerificationRequest | null = await this.verificationRequestService
       .findVerificationRequestByUserAndPurpose(user, VerificationRequestPurpose.CHANGE_EMAIL_ADDRESS);
 
-    const hasAccess: boolean = await this.accessService.checkVerificationRequestAccess(user, verificationRequest, AccessAction.SELECT);
+    if (verificationRequest) {
+      const hasAccess: boolean = await this.accessService.checkVerificationRequestAccess(user, verificationRequest, AccessAction.SELECT);
 
-    if (!hasAccess) {
-      throw new Error('you do not have access to the information');
+      if (!hasAccess) {
+        throw new Error('you do not have access to the information');
+      }
+
+      const information: Information = {
+        emailAddressChanged: this.createEmailAddressChanged(verificationRequest)
+      };
+
+      return information;
+    } else {
+      const information: Information = {
+        emailAddressChanged: null
+      };
+
+      return information;
     }
-
-    const information: Information = {
-      emailAddressChanged: this.createEmailAddressChanged(verificationRequest)
-    };
-
-    return information;
   }
 
   async updateProfile(user: User, displayName: string, userName: string): Promise<User> {
