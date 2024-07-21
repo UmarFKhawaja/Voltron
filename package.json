@@ -2,7 +2,8 @@
   "name": "@voltron/source",
   "version": "0.0.0",
   "scripts": {
-    "setup-local": "dotenv -- ./setup-local.js"
+    "setup-local": "dotenv -- ./setup-environment.js local",
+    "setup-ecosystem": "dotenv -- ./setup-environment.js ecosystem"
   },
   "private": true,
   "devDependencies": {
@@ -49,9 +50,11 @@
     "@typescript-eslint/parser": "7.16.1",
     "@typescript-eslint/utils": "7.16.1",
     "browser-sync": "^3.0.2",
+    "chalk": "^4.1.2",
     "dotenv-cli": "^7.4.2",
     "eslint": "~8.57.0",
     "eslint-config-prettier": "^9.1.0",
+    "glob": "^11.0.0",
     "inquirer": "^8.2.6",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
