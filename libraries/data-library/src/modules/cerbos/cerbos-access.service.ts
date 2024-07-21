@@ -83,7 +83,7 @@ export class CerbosAccessService implements AccessService {
       id: resource?._id.toString() || EMPTY_OBJECT_ID,
       kind: AccessResourceKind.ACCOUNT,
       attr: {
-        ...(!!resource ? {
+        ...(resource ? {
           userID: resource.user instanceof Types.ObjectId
             ? resource.user.toString()
             : resource.user['_id'] as string
@@ -97,7 +97,7 @@ export class CerbosAccessService implements AccessService {
       id: resource?._id.toString() || EMPTY_OBJECT_ID,
       kind: AccessResourceKind.VERIFICATION_REQUEST,
       attr: {
-        ...(!!resource ? {
+        ...(resource ? {
           userID: resource.userID
         } : {})
       }
