@@ -7,9 +7,11 @@
     <a class="mat-title-medium user-name" [routerLink]="'/app/manage-profile'">
       {{ session?.displayName }}
     </a>
-    <a mat-button class="button" [routerLink]="'/app/logout'">
-      <span>Logout</span>
-    </a>
+    <button mat-icon-button class="button" aria-label="Manage settings" [routerLink]="'/app/manage-profile'">
+      <mat-icon>
+        settings
+      </mat-icon>
+    </button>
   } @else {
     <a mat-button class="button" [routerLink]="'/app/register'">
       <span>Register</span>
@@ -18,11 +20,6 @@
       <span>Login</span>
     </a>
   }
-  <button mat-icon-button class="button" aria-label="Manage settings" [routerLink]="'/app/manage-profile'">
-    <mat-icon>
-      settings
-    </mat-icon>
-  </button>
   <button mat-icon-button class="button" aria-label="Switch to light mode" (click)="onSwitchTheme()">
     <mat-icon>
       light_mode
@@ -55,6 +52,10 @@
           <span>Set password</span>
         </button>
       }
+      <button mat-menu-item [routerLink]="'/app/logout'">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
     </mat-menu>
   } @else {
     <button mat-icon-button class="button" aria-label="Reveal menu">
