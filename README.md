@@ -4,13 +4,13 @@
 
 ### Purpose
 
-This sample solution demonstrates a full-stack application implemented using [Angular](https://angular.dev), [Nest](https://nestjs.com), [Docker](https://www.docker.com) and [Nx](https://nx.dev).
+This sample solution demonstrates a full-stack application implemented using [Angular](https://angular.dev), [Nest](https://nestjs.com), [Docker](https://www.docker.com), [Nx](https://nx.dev) and [PM2](https://pm2.keymetrics.io/).
 
-It also uses [Passport](https://www.passportjs.org) and [Apollo](https://www.apollographql.com).
+It also uses [Passport](https://www.passportjs.org) and will use [Apollo](https://www.apollographql.com).
 
 ### Features
 
-See the description for `browser-app` application.
+See the description for [`browser-app`](#browser-app) application.
 
 ### Applications
 
@@ -22,6 +22,9 @@ The solution has the following applications:
 
 * `SEND_REGISTER_MAIL` -- send a mail when a user registers with a verification link that the user can use to verify their account
 * `SEND_LOGIN_WITH_MAGIC_LOGIN_MAIL` -- send a mail when a user logs in with a magic login with a confirmation link that the user can use to log in
+* `SEND_RESET_PASSWORD_MAIL` -- send a mail with a confirmation link that the user can use to reset their password
+* `SEND_CONFIRM_EMAIL_ADDRESS_CHANGE_MAIL` -- send a mail with a confirmation link that the user can use to confirm their old email address to change their email address
+* `SEND_COMPLETE_EMAIL_ADDRESS_CHANGE_MAIL` -- send a mail with a confirmation link that the user can use to confirm their new email address to change their email address
 
 #### server-app
 
@@ -37,6 +40,13 @@ The solution has the following applications:
 * `/api/auth/accept/google` -- finish logging in a user with a Google account
 * `/api/auth/logout` -- logout the user
 * `/api/auth/verify/session` -- verify if the user is logged in
+* `/api/auth/get/information` -- get information regarding the state of the user's account, e.g., if they are in the middle of changing email addresses
+* `/api/auth/update-profile` -- change the display name or user name
+* `/api/auth/start-email-address-change` -- starting changing the email address
+* `/api/auth/confirm-email-address-change` -- confirm the change of email address from the old email address
+* `/api/auth/complete-email-address-change` -- complete the change of email address from the new email address
+* `/api/auth/cancel-email-address-change` -- cancel the change of email address
+* `/api/auth/resend-email-address-change` -- resend the confirmation link to the old email address or completion link to the new email address 
 * `/api/auth/reset/password` -- reset the password
 * `/api/auth/set/password` -- set a password if a password is not set
 * `/api/auth/unset/password` -- unset a password if a password is set
@@ -52,12 +62,13 @@ The solution has the following applications:
   * a magic link
   * a Facebook account
   * a Google account
+* Update the profile
+* Change the email address
+* Change the password if one is set
 * Set the password if one is not set
 * Unset the password if one isset
-* Change the password if one is set
 * Logout of the account
 * Switch the theme between light and dark modes
-* Access a protected area if logged in
 
 ### Libraries
 
@@ -110,42 +121,80 @@ npx nx run-many -t lint -t build
 
 #### Create Facebook OAuth credentials
 
-1. Go to [Facebook's Apps](https://developers.facebook.com/apps) page.
-2. Register a new application with the following details.
-   1. `Authorization callback URL` set to `http://localhost:2180/api/auth/accept/facebook`
-3. Note the **Client ID** and **Client Secret**.
+Go to [Facebook's Apps](https://developers.facebook.com/apps) page.
+
+Register a new application with the following details.
+   * `Authorization callback URL` set to `http://localhost:2180/api/auth/accept/facebook`
+
+Note the **Client ID** and **Client Secret**.
 
 #### Create Google OAuth credentials
 
-1. Go to [Google's Developer Console](https://console.cloud.google.com) page.
-2. Register a new application.
-3. Create OAuth credentials with the following details:
-   1. `Authorised JavaScript origins` set to `http://localhost:2180`
-   2. `Authorised redirect URIs` set to `http://localhost:2180/api/auth/accept/google`
-4. Note the **Client ID** and **Client Secret**.
+Go to [Google's Developer Console](https://console.cloud.google.com) page.
 
-#### Configure .env for `npm run setup-local`
+Register a new application.
 
-1. Run the following command:
+Create OAuth credentials with the following details:
+   * `Authorised JavaScript origins` set to `http://localhost:2180`
+   * `Authorised redirect URIs` set to `http://localhost:2180/api/auth/accept/google`
+
+Note the **Client ID** and **Client Secret**.
+
+#### Configure Solution
+
+Run the following command:
 
 ```bash
 cp .env.sample .env
 ```
 
-2. Fill in the values in the `.env` file.
-3. Run the following command:
+Fill in the values in the `.env` file.
+
+#### Prepare Solution for Development
+
+Run the following command:
 
 ```bash
 npm run setup-local
 ```
 
-4. Answer the questions; tapping through the answers should suffice.
+Answer the questions; tapping through the answers should suffice, but you can customize the offered values.
 
-### Run Solution
+> The default answers are set up in the `.env` file in the root of the repository.
+
+`setup-local` creates the following files in the repository.
+
+* `apps/monitor-app/.env`
+* `apps/server-app/.env`
+* `services/.env`
+* `services/cerbos/conf.yaml`
+* `services/redis/conf`
+
+#### Prepare Solution for Deployment
+
+Run the following command:
+
+```bash
+npm run setup-ecosystem
+```
+
+Answer the questions; tapping through the answers should suffice, but you can customize the offered values.
+
+> The default answers are set up in the `.env` file in the root of the repository.
+
+`setup-ecosystem` creates the following files in the repository.
+
+* `ecosystem/envs/monitor-app.json`
+* `ecosystem/envs/server-app.json`
+* `services/.env`
+* `services/cerbos/conf.yaml`
+* `services/redis/conf`
+
+### Run Solution in Development
 
 #### Start the Docker services
 
-1. Open a bash prompt:
+Open a bash prompt:
 
 ```bash
 cd services
@@ -154,7 +203,7 @@ docker compose up -d
 
 #### Start the `monitor-app` application
 
-1. Open a bash prompt:
+Open a bash prompt:
 
 ```bash
 nx serve monitor-app
@@ -162,7 +211,7 @@ nx serve monitor-app
 
 #### Start the `server-app` application
 
-1. Open a bash prompt:
+Open a bash prompt:
 
 ```bash
 nx serve server-app
@@ -170,10 +219,38 @@ nx serve server-app
 
 #### Start the `browser-app` application
 
-1. Open a bash prompt:
+Open a bash prompt:
 
 ```bash
 nx serve browser-app
 ```
 
-2. Navigate to [http://localhost:2080](http://localhost:2080) in the browser.
+Navigate to [http://localhost:2080](http://localhost:2080) in the browser.
+
+### Run Solution in Deployment
+
+#### Start the Docker services
+
+Open a bash prompt:
+
+```bash
+cd services
+docker compose up -d
+```
+
+#### Start the backend applications
+
+Open a bash prompt:
+
+```bash
+cd ecosystem
+pm2 start
+```
+
+#### Serve the frontend application
+
+Configure the webserver to serve `dist/apps/browser-app` at `https://example.com`.
+
+Configure the webserver to forward requests for `https://example.com/api` to `http://localhost:2180/api`.
+
+Navigate to `https://example.com` in the browser.
