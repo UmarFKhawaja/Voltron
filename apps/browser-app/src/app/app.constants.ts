@@ -76,20 +76,10 @@ export const constants = {
       CHECK: 'Make sure that you are providing the old password.'
     },
     CONNECT_ACCOUNT: {
-      FACEBOOK: {
-        CHECK: 'Try again because there was a problem connecting your account.'
-      },
-      GOOGLE: {
-        CHECK: 'Try again because there was a problem connecting your account.'
-      }
+      CHECK: 'Try again because there was a problem connecting your account.'
     },
     DISCONNECT_ACCOUNT: {
-      FACEBOOK: {
-        CHECK: 'Try again because there was a problem disconnecting your account.'
-      },
-      GOOGLE: {
-        CHECK: 'Try again because there was a problem disconnecting your account.'
-      }
+      CHECK: 'Try again because there was a problem disconnecting your account.'
     },
     GENERAL: {
       TRY_LATER: 'Try again later because the response from the server was unexpected.'

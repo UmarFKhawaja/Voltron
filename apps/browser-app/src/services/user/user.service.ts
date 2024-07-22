@@ -59,18 +59,8 @@ export class UserService {
     });
   }
 
-  async disconnectFacebook(token: string) {
-    return this.http.get<Result<Token>>('/api/auth/disconnect/facebook', {
-      ...(token ? {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      } : {})
-    });
-  }
-
-  async disconnectGoogle(token: string) {
-    return this.http.get<Result<Token>>('/api/auth/disconnect/google', {
+  async disconnectOAuth(token: string, provider: string) {
+    return this.http.get<Result<Token>>(`/api/auth/disconnect/${provider}`, {
       ...(token ? {
         headers: {
           Authorization: `Bearer ${token}`

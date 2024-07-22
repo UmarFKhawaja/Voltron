@@ -10,12 +10,9 @@ import {
 import {
   ConfirmEmailAddressChangeComponent
 } from '../routes/confirm-email-address-change/confirm-email-address-change.component';
-import { ConnectFacebookComponent } from '../routes/connect-facebook/connect-facebook.component';
-import { ConnectGoogleComponent } from '../routes/connect-google/connect-google.component';
-import { DisconnectFacebookComponent } from '../routes/disconnect-facebook/disconnect-facebook.component';
-import { DisconnectGoogleComponent } from '../routes/disconnect-google/disconnect-google.component';
-import { LoginFacebookComponent } from '../routes/login-facebook/login-facebook.component';
-import { LoginGoogleComponent } from '../routes/login-google/login-google.component';
+import { ConnectOAuthComponent } from '../routes/connect-oauth/connect-oauth.component';
+import { DisconnectOAuthComponent } from '../routes/disconnect-oauth/disconnect-oauth.component';
+import { LoginOAuthComponent } from '../routes/login-oauth/login-oauth.component';
 import { LoginComponent } from '../routes/login/login.component';
 import { LogoutComponent } from '../routes/logout/logout.component';
 import { ManageProfileComponent } from '../routes/manage-profile/manage-profile.component';
@@ -37,12 +34,8 @@ export const routes: Routes = [
     component: LoginComponent
   },
   {
-    path: 'app/login/facebook',
-    component: LoginFacebookComponent
-  },
-  {
-    path: 'app/login/google',
-    component: LoginGoogleComponent
+    path: 'app/login/:provider',
+    component: LoginOAuthComponent
   },
   {
     path: 'app/logout',
@@ -53,20 +46,12 @@ export const routes: Routes = [
     component: AcceptComponent
   },
   {
-    path: 'app/connect/facebook',
-    component: ConnectFacebookComponent
+    path: 'app/connect/:provider',
+    component: ConnectOAuthComponent
   },
   {
-    path: 'app/connect/google',
-    component: ConnectGoogleComponent
-  },
-  {
-    path: 'app/disconnect/facebook',
-    component: DisconnectFacebookComponent
-  },
-  {
-    path: 'app/disconnect/google',
-    component: DisconnectGoogleComponent
+    path: 'app/disconnect/:provider',
+    component: DisconnectOAuthComponent
   },
   {
     path: 'app/activate-account',
