@@ -1,0 +1,20 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          We have received a request to change your email address from {OLD_EMAIL_ADDRESS} to {NEW_EMAIL_ADDRESS}.
+        </mj-text>
+        <mj-text>
+          If you do not want to complete this change, or have not started it, you can ignore this email. The attempt to change your email address will expire in one day.
+        </mj-text>
+        <mj-text>
+          If you do want to complete this change, click the button below.
+        </mj-text>
+        <mj-button href="{CONFIRMATION_URL}">
+          Complete email address change
+        </mj-button>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

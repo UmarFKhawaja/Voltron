@@ -31,12 +31,14 @@ export interface SendResetAccountMailTask extends BaseTask {
 
 export interface SendConfirmEmailAddressChangeMailTask extends BaseTask {
   type: 'SEND_CONFIRM_EMAIL_ADDRESS_CHANGE_MAIL';
-  emailAddress: string;
+  oldEmailAddress: string;
+  newEmailAddress: string;
   confirmationURL: string;
 }
 
 export interface SendCompleteEmailAddressChangeMailTask extends BaseTask {
   type: 'SEND_COMPLETE_EMAIL_ADDRESS_CHANGE_MAIL';
-  emailAddress: string;
+  oldEmailAddress: string;
+  newEmailAddress: string;
   confirmationURL: string;
 }

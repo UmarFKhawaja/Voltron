@@ -71,6 +71,12 @@ const files = [
       'REDIS_PORT=26379',
       'REDIS_USERNAME=',
       'REDIS_PASSWORD={{PASSWORD}}',
+      '',
+      'NODEMAILER_HOST={{NODEMAILER_HOST}}',
+      'NODEMAILER_PORT=587',
+      'NODEMAILER_USE_TLS=false',
+      'NODEMAILER_USERNAME={{NODEMAILER_USERNAME}}',
+      'NODEMAILER_PASSWORD={{NODEMAILER_PASSWORD}}',
       ''
     ]
   },
@@ -95,7 +101,12 @@ const files = [
       REDIS_HOST: 'localhost',
       REDIS_PORT: '26379',
       REDIS_USERNAME: '',
-      REDIS_PASSWORD: '{{PASSWORD}}'
+      REDIS_PASSWORD: '{{PASSWORD}}',
+      NODEMAILER_HOST: '{{NODEMAILER_HOST}}',
+      NODEMAILER_PORT: '587',
+      NODEMAILER_USE_TLS: 'false',
+      NODEMAILER_USERNAME: '{{NODEMAILER_USERNAME}}',
+      NODEMAILER_PASSWORD: '{{NODEMAILER_PASSWORD}}'
     }
   },
   {
@@ -139,12 +150,6 @@ const files = [
       'REDIS_PORT=26379',
       'REDIS_USERNAME=',
       'REDIS_PASSWORD={{PASSWORD}}',
-      '',
-      'NODEMAILER_HOST={{NODEMAILER_HOST}}',
-      'NODEMAILER_PORT=587',
-      'NODEMAILER_USE_TLS=false',
-      'NODEMAILER_USERNAME={{NODEMAILER_USERNAME}}',
-      'NODEMAILER_PASSWORD={{NODEMAILER_PASSWORD}}',
       ''
     ]
   },
@@ -184,12 +189,7 @@ const files = [
       REDIS_HOST: 'localhost',
       REDIS_PORT: '26379',
       REDIS_USERNAME: '',
-      REDIS_PASSWORD: '{{PASSWORD}}',
-      NODEMAILER_HOST: '{{NODEMAILER_HOST}}',
-      NODEMAILER_PORT: '587',
-      NODEMAILER_USE_TLS: 'false',
-      NODEMAILER_USERNAME: '{{NODEMAILER_USERNAME}}',
-      NODEMAILER_PASSWORD: '{{NODEMAILER_PASSWORD}}'
+      REDIS_PASSWORD: '{{PASSWORD}}'
     }
   },
   {

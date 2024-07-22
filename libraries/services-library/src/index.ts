@@ -1,2 +1,2 @@
-export * from './modules/nodemailer/nodemailer.constants';
-export * from './modules/nodemailer/nodemailer.module';
+export * from './modules/simple/simple.constants';
+export * from './modules/simple/simple.module';

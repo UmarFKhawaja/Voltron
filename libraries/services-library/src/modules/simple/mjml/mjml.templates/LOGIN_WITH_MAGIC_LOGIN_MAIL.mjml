@@ -1,0 +1,20 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          We have received a request to login with your email address.
+        </mj-text>
+        <mj-text>
+          If you do not want to login, or have not requested it, you can ignore this email. The attempt to login with your email address will expire in 10 minutes.
+        </mj-text>
+        <mj-text>
+          If you do want to login, click the button below.
+        </mj-text>
+        <mj-button href="{CONFIRMATION_URL}">
+          Login
+        </mj-button>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -1,11 +1,11 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { MailService, Task } from '@voltron/core-library';
-import { NODEMAILER_CONSTANTS } from '@voltron/services-library';
+import { SIMPLE_CONSTANTS } from '@voltron/services-library';
 
 @Injectable()
 export class TaskService {
   constructor(
-    @Inject(NODEMAILER_CONSTANTS.Symbols.Services.MailService)
+    @Inject(SIMPLE_CONSTANTS.Symbols.Services.MailService)
     private readonly mailService: MailService
   ) {
   }
@@ -25,11 +25,11 @@ export class TaskService {
         break;
 
       case 'SEND_CONFIRM_EMAIL_ADDRESS_CHANGE_MAIL':
-        await this.mailService.sendConfirmEmailAddressChange(task.emailAddress, task.confirmationURL);
+        await this.mailService.sendConfirmEmailAddressChange(task.oldEmailAddress, task.newEmailAddress, task.confirmationURL);
         break;
 
       case 'SEND_COMPLETE_EMAIL_ADDRESS_CHANGE_MAIL':
-        await this.mailService.sendCompleteEmailAddressChange(task.emailAddress, task.confirmationURL);
+        await this.mailService.sendCompleteEmailAddressChange(task.oldEmailAddress, task.newEmailAddress, task.confirmationURL);
         break;
 
       default:

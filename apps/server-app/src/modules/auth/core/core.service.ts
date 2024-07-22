@@ -163,6 +163,7 @@ export class AuthCoreService {
     const hasSucceeded: boolean = await this.mailService
       .sendConfirmEmailAddressChange(
         user.emailAddress,
+        emailAddress,
         confirmationURL
       );
 
@@ -188,19 +189,21 @@ export class AuthCoreService {
       throw new Error('a verification request corresponding to the specified confirmation code could not be found');
     }
 
-    const { newEmailAddress: emailAddress } = verificationRequest.details as EmailAddressChanged;
+    const { oldEmailAddress, newEmailAddress } = verificationRequest.details as EmailAddressChanged;
 
     verificationRequest = await this.verificationRequestService
-      .createChangeEmailVerificationRequest(user, emailAddress, 'NEW_EMAIL_ADDRESS_NOT_CONFIRMED');
+      .createChangeEmailVerificationRequest(user, newEmailAddress, 'NEW_EMAIL_ADDRESS_NOT_CONFIRMED');
 
     const token: string = await this.tokenService.createToken(user);
 
     const confirmationURL: string = this.urlService.formatCompleteEmailAddressChangeConfirmationURL(token, verificationRequest.code);
 
-    const hasSucceeded: boolean = await this.mailService.sendConfirmEmailAddressChange(
-      emailAddress,
-      confirmationURL
-    );
+    const hasSucceeded: boolean = await this.mailService
+      .sendConfirmEmailAddressChange(
+        oldEmailAddress,
+        newEmailAddress,
+        confirmationURL
+      );
 
     if (!hasSucceeded) {
       throw new Error('the email containing confirmation link could not be sent');
@@ -290,7 +293,12 @@ export class AuthCoreService {
         const token: string = await this.tokenService.createToken(user);
         const confirmationURL: string = this.urlService.formatConfirmEmailAddressChangeConfirmationURL(token, verificationRequest.code);
 
-        hasSuccess = await this.mailService.sendConfirmEmailAddressChange(emailAddressChanged.oldEmailAddress, confirmationURL);
+        hasSuccess = await this.mailService
+          .sendConfirmEmailAddressChange(
+            emailAddressChanged.oldEmailAddress,
+            emailAddressChanged.newEmailAddress,
+            confirmationURL
+          );
         break;
       }
 
@@ -298,7 +306,12 @@ export class AuthCoreService {
         const token: string = await this.tokenService.createToken(user);
         const confirmationURL: string = this.urlService.formatCompleteEmailAddressChangeConfirmationURL(token, verificationRequest.code);
 
-        hasSuccess = await this.mailService.sendCompleteEmailAddressChange(emailAddressChanged.newEmailAddress, confirmationURL);
+        hasSuccess = await this.mailService
+          .sendCompleteEmailAddressChange(
+            emailAddressChanged.oldEmailAddress,
+            emailAddressChanged.newEmailAddress,
+            confirmationURL
+          );
         break;
       }
     }

@@ -4,7 +4,7 @@ export const NODEMAILER_CONSTANTS = {
       NodemailerConnectionFactory: 'NODEMAILER_CONNECTION_FACTORY'
     },
     Services: {
-      MailService: 'NODEMAILER_MAIL_SERVICE'
+      MailSenderService: 'NODEMAILER_MAIL_SENDER_SERVICE'
     }
   },
   Settings: {

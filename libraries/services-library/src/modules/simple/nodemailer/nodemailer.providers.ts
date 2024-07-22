@@ -1,5 +1,5 @@
 import { createTransport, Transporter as Connection } from 'nodemailer';
-import { NodemailerMailService } from './nodemailer-mail.service';
+import { NodemailerMailSenderService } from './nodemailer-mail-sender.service';
 import { NODEMAILER_CONSTANTS } from './nodemailer.constants';
 import { ConnectionFactory } from './nodemailer.types';
 
@@ -19,11 +19,11 @@ export const nodemailerProviders = [
     }
   },
   {
-    provide: NODEMAILER_CONSTANTS.Symbols.Services.MailService,
-    useFactory: async (makeConnection: ConnectionFactory): Promise<NodemailerMailService> => {
+    provide: NODEMAILER_CONSTANTS.Symbols.Services.MailSenderService,
+    useFactory: async (makeConnection: ConnectionFactory): Promise<NodemailerMailSenderService> => {
       const connection: Connection = await makeConnection();
 
-      return new NodemailerMailService(connection);
+      return new NodemailerMailSenderService(connection);
     },
     inject: [NODEMAILER_CONSTANTS.Symbols.Factories.NodemailerConnectionFactory]
   }
