@@ -4,6 +4,7 @@
   "dependencies": {
     "@nestjs/common": "*",
     "@voltron/core-library": "*",
+    "mjml": "*",
     "nodemailer": "*",
     "tslib": "*"
   },
