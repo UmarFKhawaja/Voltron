@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import mjml2html from 'mjml';
 import { Mail, MailFormatterService } from '../simple.types';
 import { MJML_CONSTANTS } from './mjml.constants';
@@ -83,12 +83,7 @@ export class MJMLMailFormatterService implements MailFormatterService {
   }
 
   private renderTemplate(template: string, values: Record<string, string>): string {
-    template = template.replace(/\{([A-Za-z0-9_ |]+)}/ig, (_, match: string) => {
-      Logger.log(match);
-      Logger.log(values[match]);
-
-      return values[match] || '';
-    });
+    template = template.replace(/\{([A-Za-z0-9_ |]+)}/ig, (_, match: string) => values[match] || '');
 
     const result = mjml2html(template);
 
