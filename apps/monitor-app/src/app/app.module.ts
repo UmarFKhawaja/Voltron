@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TaskModule } from '../modules/task/task.module';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { RedisModule } from '@voltron/data-library';
+import { SimpleModule } from '@voltron/services-library';
 
 @Module({
-  imports: [TaskModule],
-  controllers: [AppController],
-  providers: [AppService]
+  imports: [
+    RedisModule,
+    SimpleModule
+  ]
 })
 export class AppModule {
 }

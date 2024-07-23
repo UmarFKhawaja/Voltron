@@ -1,11 +1,9 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { MailService, Task } from '@voltron/core-library';
-import { SIMPLE_CONSTANTS } from '@voltron/services-library';
+import { Injectable, Logger } from '@nestjs/common';
+import { MailService, Task, TaskService } from '@voltron/core-library';
 
 @Injectable()
-export class TaskService {
+export class SimpleTaskService implements TaskService {
   constructor(
-    @Inject(SIMPLE_CONSTANTS.Symbols.Services.MailService)
     private readonly mailService: MailService
   ) {
   }
