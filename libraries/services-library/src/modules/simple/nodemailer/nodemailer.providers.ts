@@ -5,7 +5,7 @@ import { ConnectionFactory } from './nodemailer.types';
 
 export const nodemailerProviders = [
   {
-    provide: NODEMAILER_CONSTANTS.Symbols.Factories.NodemailerConnectionFactory,
+    provide: NODEMAILER_CONSTANTS.Symbols.Factories.ConnectionFactory,
     useFactory: (): ConnectionFactory => {
       return async (): Promise<Connection> => createTransport({
         host: NODEMAILER_CONSTANTS.Settings.host,
@@ -15,7 +15,7 @@ export const nodemailerProviders = [
           user: NODEMAILER_CONSTANTS.Settings.auth.username,
           pass: NODEMAILER_CONSTANTS.Settings.auth.password
         }
-      })
+      });
     }
   },
   {
@@ -25,6 +25,6 @@ export const nodemailerProviders = [
 
       return new NodemailerMailSenderService(connection);
     },
-    inject: [NODEMAILER_CONSTANTS.Symbols.Factories.NodemailerConnectionFactory]
+    inject: [NODEMAILER_CONSTANTS.Symbols.Factories.ConnectionFactory]
   }
 ];
