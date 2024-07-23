@@ -21,6 +21,9 @@ import { RegisterComponent } from '../routes/register/register.component';
 import { RequestActivationCodeComponent } from '../routes/request-activation-code/request-activation-code.component';
 import { ResetPasswordComponent } from '../routes/reset-password/reset-password.component';
 import { SetPasswordComponent } from '../routes/set-password/set-password.component';
+import {
+  ShowDataDeletionInstructionsComponent
+} from '../routes/show-data-deletion-instructions/show-data-deletion-instructions.component';
 import { ShowMessageComponent } from '../routes/show-message/show-message.component';
 import { ShowPrivacyPolicyComponent } from '../routes/show-privacy-policy/show-privacy-policy.component';
 import { UnsetPasswordComponent } from '../routes/unset-password/unset-password.component';
@@ -114,5 +117,9 @@ export const routes: Routes = [
   {
     path: 'app/show-privacy-policy',
     component: ShowPrivacyPolicyComponent
+  },
+  {
+    path: 'app/show-data-deletion-instructions',
+    component: ShowDataDeletionInstructionsComponent
   }
 ];
