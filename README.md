@@ -94,14 +94,6 @@ This is a work in progress.
 
 As such some features are not yet working as intended. A brief description of the missing features follows:
 
-#### Incomplete feature: Send mail
-
-An email is not sent out to the user when registering or logging in with magic login.
-
-The email address where the link will be sent and the link itself are printed on the console by the `monitor-app`.
-
-Note that the mail is generated on the `server-app` and the mail event is published to Redis. This mail event is then picked up by the `monitor-app` and the details published on its console.
-
 #### Missing feature: Publish GraphQL endpoint
 
 This has not been done yet.
