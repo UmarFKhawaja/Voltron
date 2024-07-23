@@ -26,6 +26,9 @@ import {
 } from '../routes/show-data-deletion-instructions/show-data-deletion-instructions.component';
 import { ShowMessageComponent } from '../routes/show-message/show-message.component';
 import { ShowPrivacyPolicyComponent } from '../routes/show-privacy-policy/show-privacy-policy.component';
+import {
+  ShowTermsAndConditionsComponent
+} from '../routes/show-terms-and-conditions/show-terms-and-conditions.component';
 import { UnsetPasswordComponent } from '../routes/unset-password/unset-password.component';
 
 export const routes: Routes = [
@@ -117,6 +120,10 @@ export const routes: Routes = [
   {
     path: 'app/show-privacy-policy',
     component: ShowPrivacyPolicyComponent
+  },
+  {
+    path: 'app/show-terms-and-conditions',
+    component: ShowTermsAndConditionsComponent
   },
   {
     path: 'app/show-data-deletion-instructions',
