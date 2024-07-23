@@ -25,18 +25,17 @@
       light_mode
     </mat-icon>
   </button>
-  @if (hasToken) {
-    <button mat-icon-button class="button" aria-label="Reveal menu" [matMenuTriggerFor]="accountMenu">
-      <mat-icon>
-        more_vert
-      </mat-icon>
-    </button>
-    <mat-menu #accountMenu="matMenu">
+  <button mat-icon-button class="button" aria-label="Reveal menu" [matMenuTriggerFor]="accountMenu">
+    <mat-icon>
+      more_vert
+    </mat-icon>
+  </button>
+  <mat-menu #accountMenu="matMenu">
+    @if (hasToken) {
       <button mat-menu-item [routerLink]="'/app/change-email-address'">
         <mat-icon>alternate_email</mat-icon>
         <span>Change email address</span>
       </button>
-      <mat-divider/>
       @if (session?.accounts?.local) {
         <button mat-menu-item [routerLink]="'/app/change-password'">
           <mat-icon>password_2</mat-icon>
@@ -56,12 +55,11 @@
         <mat-icon>logout</mat-icon>
         <span>Logout</span>
       </button>
-    </mat-menu>
-  } @else {
-    <button mat-icon-button class="button" aria-label="Reveal menu">
-      <mat-icon>
-        more_vert
-      </mat-icon>
+      <mat-divider/>
+    }
+    <button mat-menu-item [routerLink]="'/app/show-privacy-policy'">
+      <mat-icon>shield</mat-icon>
+      <span>Show privacy policy</span>
     </button>
-  }
+  </mat-menu>
 </mat-toolbar>

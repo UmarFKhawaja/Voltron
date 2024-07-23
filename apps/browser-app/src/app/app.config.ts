@@ -3,6 +3,7 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
+import { provideMarkdown } from 'ngx-markdown';
 import { routes } from './app.routes';
 
 export const config: ApplicationConfig = {
@@ -18,6 +19,7 @@ export const config: ApplicationConfig = {
       provide: ErrorStateMatcher,
       useClass: ShowOnDirtyErrorStateMatcher
     },
+    provideMarkdown(),
     provideRouter(routes)
   ]
 };

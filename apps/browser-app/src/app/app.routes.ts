@@ -22,6 +22,7 @@ import { RequestActivationCodeComponent } from '../routes/request-activation-cod
 import { ResetPasswordComponent } from '../routes/reset-password/reset-password.component';
 import { SetPasswordComponent } from '../routes/set-password/set-password.component';
 import { ShowMessageComponent } from '../routes/show-message/show-message.component';
+import { ShowPrivacyPolicyComponent } from '../routes/show-privacy-policy/show-privacy-policy.component';
 import { UnsetPasswordComponent } from '../routes/unset-password/unset-password.component';
 
 export const routes: Routes = [
@@ -109,5 +110,9 @@ export const routes: Routes = [
   {
     path: 'app/show-message/:code',
     component: ShowMessageComponent
+  },
+  {
+    path: 'app/show-privacy-policy',
+    component: ShowPrivacyPolicyComponent
   }
 ];
