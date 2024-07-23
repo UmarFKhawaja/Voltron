@@ -13,7 +13,7 @@ async function bootstrap() {
 
   await messageService.watchForMessages(taskService.handleTask.bind(taskService));
 
-  Logger.log(`🚀 Application is running`);
+  Logger.log(`🚀 MonitorApp is running`);
 }
 
 bootstrap().then().catch((error: unknown): void => {
