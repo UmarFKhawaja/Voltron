@@ -1,9 +1,4 @@
-export interface Mail {
-  from: string;
-  to: string;
-  subject: string;
-  content: string;
-}
+import { Mail } from '../types';
 
 export interface MailFormatterService {
   formatRegisterMail(emailAddress: string, verificationURL: string): Promise<Mail>;
@@ -15,8 +10,4 @@ export interface MailFormatterService {
   formatConfirmEmailAddressChange(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<Mail>;
 
   formatCompleteEmailAddressChange(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<Mail>;
-}
-
-export interface MailSenderService {
-  sendMail(mail: Mail): Promise<boolean>;
 }

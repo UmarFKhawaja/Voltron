@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MJMLModule } from './mjml/mjml.module';
-import { NodemailerModule } from './nodemailer/nodemailer.module';
+import { MJMLModule, NodemailerModule } from '@voltron/services-library';
 import { simpleProviders } from './simple.providers';
 
 @Module({

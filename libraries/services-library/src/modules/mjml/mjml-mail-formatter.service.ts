@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import mjml2html from 'mjml';
-import { Mail, MailFormatterService } from '../simple.types';
+import { MailFormatterService } from '../../contracts';
+import { Mail } from '../../types';
 import { MJML_CONSTANTS } from './mjml.constants';
 
 @Injectable()

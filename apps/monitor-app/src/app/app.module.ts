@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RedisModule } from '@voltron/data-library';
-import { SimpleModule } from '@voltron/services-library';
+import { SimpleModule } from '../modules';
 
 @Module({
   imports: [

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailService } from '@voltron/core-library';
-import { Mail, MailFormatterService, MailSenderService } from './simple.types';
+import { Mail, MailFormatterService, MailSenderService } from '@voltron/services-library';
 
 @Injectable()
 export class SimpleMailService implements MailService {

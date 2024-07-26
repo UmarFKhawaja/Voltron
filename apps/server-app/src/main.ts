@@ -12,7 +12,7 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  Logger.log(`🚀 ServerApp is running on http://localhost:${port}/${globalPrefix}`);
+  Logger.log(`🚀 Server application is running on http://localhost:${port}/${globalPrefix}`);
 }
 
 bootstrap().then().catch((error: unknown) => {

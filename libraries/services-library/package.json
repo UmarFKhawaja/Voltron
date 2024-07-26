@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "dependencies": {
     "@nestjs/common": "*",
-    "@voltron/core-library": "*",
     "mjml": "*",
     "nodemailer": "*",
     "tslib": "*"

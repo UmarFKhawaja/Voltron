@@ -1,10 +1,13 @@
 import { MailService } from '@voltron/core-library';
-import { MJML_CONSTANTS } from './mjml/mjml.constants';
-import { NODEMAILER_CONSTANTS } from './nodemailer/nodemailer.constants';
+import {
+  MailFormatterService,
+  MailSenderService,
+  MJML_CONSTANTS,
+  NODEMAILER_CONSTANTS
+} from '@voltron/services-library';
 import { SimpleMailService } from './simple-mail.service';
 import { SimpleTaskService } from './simple-task.service';
 import { SIMPLE_CONSTANTS } from './simple.constants';
-import { MailFormatterService, MailSenderService } from './simple.types';
 
 export const simpleProviders = [
   {

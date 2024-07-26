@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Transporter as Connection } from 'nodemailer';
-import { Mail, MailSenderService } from '../simple.types';
+import { MailSenderService } from '../../contracts';
+import { Mail } from '../../types';
 
 @Injectable()
 export class NodemailerMailSenderService implements MailSenderService {
