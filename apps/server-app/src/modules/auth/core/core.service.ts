@@ -161,7 +161,7 @@ export class AuthCoreService {
       .formatConfirmEmailAddressChangeConfirmationURL(token, verificationRequest.code);
 
     const hasSucceeded: boolean = await this.mailService
-      .sendConfirmEmailAddressChange(
+      .sendConfirmEmailAddressChangeMail(
         user.emailAddress,
         emailAddress,
         confirmationURL
@@ -199,7 +199,7 @@ export class AuthCoreService {
     const confirmationURL: string = this.urlService.formatCompleteEmailAddressChangeConfirmationURL(token, verificationRequest.code);
 
     const hasSucceeded: boolean = await this.mailService
-      .sendCompleteEmailAddressChange(
+      .sendCompleteEmailAddressChangeMail(
         oldEmailAddress,
         newEmailAddress,
         confirmationURL
@@ -294,7 +294,7 @@ export class AuthCoreService {
         const confirmationURL: string = this.urlService.formatConfirmEmailAddressChangeConfirmationURL(token, verificationRequest.code);
 
         hasSuccess = await this.mailService
-          .sendConfirmEmailAddressChange(
+          .sendConfirmEmailAddressChangeMail(
             emailAddressChanged.oldEmailAddress,
             emailAddressChanged.newEmailAddress,
             confirmationURL
@@ -307,7 +307,7 @@ export class AuthCoreService {
         const confirmationURL: string = this.urlService.formatCompleteEmailAddressChangeConfirmationURL(token, verificationRequest.code);
 
         hasSuccess = await this.mailService
-          .sendCompleteEmailAddressChange(
+          .sendCompleteEmailAddressChangeMail(
             emailAddressChanged.oldEmailAddress,
             emailAddressChanged.newEmailAddress,
             confirmationURL

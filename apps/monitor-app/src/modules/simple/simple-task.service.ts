@@ -23,11 +23,11 @@ export class SimpleTaskService implements TaskService {
         break;
 
       case 'SEND_CONFIRM_EMAIL_ADDRESS_CHANGE_MAIL':
-        await this.mailService.sendConfirmEmailAddressChange(task.oldEmailAddress, task.newEmailAddress, task.confirmationURL);
+        await this.mailService.sendConfirmEmailAddressChangeMail(task.oldEmailAddress, task.newEmailAddress, task.confirmationURL);
         break;
 
       case 'SEND_COMPLETE_EMAIL_ADDRESS_CHANGE_MAIL':
-        await this.mailService.sendCompleteEmailAddressChange(task.oldEmailAddress, task.newEmailAddress, task.confirmationURL);
+        await this.mailService.sendCompleteEmailAddressChangeMail(task.oldEmailAddress, task.newEmailAddress, task.confirmationURL);
         break;
 
       default:

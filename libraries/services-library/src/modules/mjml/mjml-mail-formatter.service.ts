@@ -51,7 +51,7 @@ export class MJMLMailFormatterService implements MailFormatterService {
     };
   }
 
-  async formatConfirmEmailAddressChange(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<Mail> {
+  async formatConfirmEmailAddressChangeMail(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<Mail> {
     const content: string = this.renderTemplate(MJML_CONSTANTS.Templates.ConfirmEmailAddressChange, {
       FRONTEND_PUBLIC_URL: MJML_CONSTANTS.Settings.FrontendPublicURL,
       OLD_EMAIL_ADDRESS: oldEmailAddress,
@@ -67,7 +67,7 @@ export class MJMLMailFormatterService implements MailFormatterService {
     };
   }
 
-  async formatCompleteEmailAddressChange(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<Mail> {
+  async formatCompleteEmailAddressChangeMail(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<Mail> {
     const content: string = this.renderTemplate(MJML_CONSTANTS.Templates.CompleteEmailAddressChange, {
       FRONTEND_PUBLIC_URL: MJML_CONSTANTS.Settings.FrontendPublicURL,
       OLD_EMAIL_ADDRESS: oldEmailAddress,

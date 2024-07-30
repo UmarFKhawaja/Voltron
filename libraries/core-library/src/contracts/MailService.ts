@@ -5,7 +5,7 @@ export interface MailService {
 
   sendResetPasswordMail(emailAddress: string, confirmationURL: string): Promise<boolean>;
 
-  sendConfirmEmailAddressChange(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<boolean>;
+  sendConfirmEmailAddressChangeMail(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<boolean>;
 
-  sendCompleteEmailAddressChange(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<boolean>;
+  sendCompleteEmailAddressChangeMail(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<boolean>;
 }

@@ -13,6 +13,9 @@ export class AuthMagicLoginStrategy extends PassportStrategy(Strategy, 'magic-lo
     super(
       {
         secret: AUTH_CONSTANTS.Strategies.MagicLogin.secret,
+        jwtOptions: {
+          expiresIn: AUTH_CONSTANTS.Strategies.MagicLogin.expiresIn
+        },
         callbackUrl: AUTH_CONSTANTS.Strategies.MagicLogin.acceptPath,
         sendMagicLink: async (username: string, confirmationURL: string): Promise<void> => {
           await this.coreService.sendMagicLink(username, confirmationURL);
@@ -31,9 +34,6 @@ export class AuthMagicLoginStrategy extends PassportStrategy(Strategy, 'magic-lo
           } catch (error: unknown) {
             callback(error as Error, null);
           }
-        },
-        jwtOptions: {
-          expiresIn: AUTH_CONSTANTS.Strategies.MagicLogin.expiresIn
         }
       }
     );

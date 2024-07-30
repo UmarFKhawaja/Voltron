@@ -28,14 +28,14 @@ export class SimpleMailService implements MailService {
     return await this.mailSenderService.sendMail(mail);
   }
 
-  async sendConfirmEmailAddressChange(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<boolean> {
-    const mail: Mail = await this.mailFormatterService.formatConfirmEmailAddressChange(oldEmailAddress, newEmailAddress, confirmationURL);
+  async sendConfirmEmailAddressChangeMail(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<boolean> {
+    const mail: Mail = await this.mailFormatterService.formatConfirmEmailAddressChangeMail(oldEmailAddress, newEmailAddress, confirmationURL);
 
     return await this.mailSenderService.sendMail(mail);
   }
 
-  async sendCompleteEmailAddressChange(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<boolean> {
-    const mail: Mail = await this.mailFormatterService.formatCompleteEmailAddressChange(oldEmailAddress, newEmailAddress, confirmationURL);
+  async sendCompleteEmailAddressChangeMail(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<boolean> {
+    const mail: Mail = await this.mailFormatterService.formatCompleteEmailAddressChangeMail(oldEmailAddress, newEmailAddress, confirmationURL);
 
     return await this.mailSenderService.sendMail(mail);
   }

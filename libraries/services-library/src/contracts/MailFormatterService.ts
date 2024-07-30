@@ -7,7 +7,7 @@ export interface MailFormatterService {
 
   formatResetPasswordMail(emailAddress: string, confirmationURL: string): Promise<Mail>;
 
-  formatConfirmEmailAddressChange(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<Mail>;
+  formatConfirmEmailAddressChangeMail(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<Mail>;
 
-  formatCompleteEmailAddressChange(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<Mail>;
+  formatCompleteEmailAddressChangeMail(oldEmailAddress: string, newEmailAddress: string, confirmationURL: string): Promise<Mail>;
 }
